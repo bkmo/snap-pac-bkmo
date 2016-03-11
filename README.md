@@ -174,11 +174,10 @@ To undo the upgrade:
 
 ## References
 
-[snapper homepage](http://snapper.io/)
-[Btrfs homepage](Btrfs homepage](https://wiki.archlinux.org/index.php/Btrfs)
-[ArchWiki Snapper article](https://wiki.archlinux.org/index.php/Snapper)
-[ArchWiki Btrfs article](https://wiki.archlinux.org/index.php/Btrfs)
-
-`man alpm-hooks`
-`man snapper`
-`man btrfs`
+* [snapper homepage](http://snapper.io/)
+* [Btrfs homepage](Btrfs homepage](https://wiki.archlinux.org/index.php/Btrfs)
+* [ArchWiki Snapper article](https://wiki.archlinux.org/index.php/Snapper)
+* [ArchWiki Btrfs article](https://wiki.archlinux.org/index.php/Btrfs)
+* `man alpm-hooks`
+* `man snapper`
+* `man btrfs`
