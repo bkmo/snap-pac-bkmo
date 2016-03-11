@@ -169,13 +169,15 @@ To undo the upgrade:
 	$ sudo snapper -c root undochange 112..113
 	create:0 modify:3 delete:100
 
+And `nano` is now gone:
+
 	$ pacman -Qi nano
 	error: package 'nano' was not found
 
 ## References
 
 * [snapper homepage](http://snapper.io/)
-* [Btrfs homepage](Btrfs homepage](https://wiki.archlinux.org/index.php/Btrfs)
+* [Btrfs homepage](https://wiki.archlinux.org/index.php/Btrfs)
 * [ArchWiki Snapper article](https://wiki.archlinux.org/index.php/Snapper)
 * [ArchWiki Btrfs article](https://wiki.archlinux.org/index.php/Btrfs)
 * `man alpm-hooks`
