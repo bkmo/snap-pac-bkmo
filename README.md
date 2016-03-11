@@ -1,7 +1,7 @@
 # snap-pac
 
 This makes Arch Linux's pacman use
-[snapper](https://wiki.archlinux.org/index.php/Snapper) to automatically takes a
+[snapper](https://wiki.archlinux.org/index.php/Snapper) to automatically take a
 pre and post snapshot before and after pacman transactions, similar to how YaST
 does with OpenSuse.
 
