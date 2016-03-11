@@ -5,7 +5,7 @@ This makes Arch Linux's pacman use
 pre and post snapshot before and after pacman transactions, similar to how YaST
 does with OpenSuse.
 
-*Note:* The scripts only take snapshots of the subvolume mounted at '/'; other
+*Note:* The scripts only take snapshots of the subvolume mounted at `/`; other
 subvolumes are not included. You must modify the scripts to include other
 subvolumes.
 
