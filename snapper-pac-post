@@ -1,9 +1,10 @@
 #!/bin/bash
 
-if [ -f /.snapperpacpre ]; then
-    SNAPPERPACPRE=$(cat /.snapperpacpre)
+PREFILE=/etc/snapper/.snap-pac-pre
+if [ -f $PREFILE]; then
+    SNAPPERPACPRE=$(cat $PREFILE)
     snapper --config root create --type post --pre-number $SNAPPERPACPRE --description "pacman posttransaction"
-    rm /.snapperpacpre
+    rm $PREFILE
 else
-    echo "No pacman pre snapshot was performed, so not performing post snapshot. If you are installing pac-snap, this is normal."
+    echo "WARNING: $PREFILE does not exist, so not performing post snapshot. If you are initially installing snap-pac, this is normal."
 fi
