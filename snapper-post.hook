@@ -1,0 +1,12 @@
+[Trigger]
+Operation = Upgrade
+Operation = Install
+Operation = Remove
+Type = Package
+Target = *
+
+[Action]
+Description = Snapper snapshot after a transaction
+Depends = snapper
+When = PostTransaction
+Exec = /usr/bin/snapper-pac-post
