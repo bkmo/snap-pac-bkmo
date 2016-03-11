@@ -1,7 +1,7 @@
 #!/bin/bash
 
 PREFILE=/etc/snapper/.snap-pac-pre
-if [ -f $PREFILE]; then
+if [ -f $PREFILE ]; then
     SNAPPERPACPRE=$(cat $PREFILE)
     snapper --config root create --type post --pre-number $SNAPPERPACPRE --description "pacman posttransaction"
     rm $PREFILE
