@@ -6,7 +6,7 @@ Type = Package
 Target = *
 
 [Action]
-Description = Snapper snapshot before a transaction
+Description = snapper pre transaction
 Depends = snapper
 When = PreTransaction
 Exec = /usr/bin/snapper-pac-pre
