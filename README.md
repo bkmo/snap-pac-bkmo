@@ -19,10 +19,12 @@ Install [the package from the AUR](https://aur.archlinux.org/packages/snap-pac/)
 
 ## Usage
 
-Continue to use pacman as normal and watch snapper do its thing.  Because these
-are pacman hooks, it doesn't matter how you call pacman (whether directly,
-through an AUR helper, or an alias) -- snapper will create the snapshots whenever
-pacman is asked to install, upgrade, or remove a package.
+**Use pacman (and AUR helpers) as normal and watch snapper do its thing.** No
+bash scripts for you to call. No bash aliases to setup.
+
+Because these are pacman hooks, it doesn't matter how you call pacman (whether
+directly, through an AUR helper, or an alias) -- snapper will create the
+snapshots whenever pacman is asked to install, upgrade, or remove a package.
 
 ### Example
 
