@@ -1,16 +1,17 @@
 # snap-pac
 
-These are used for Arch Linux's pacman, so that [snapper](http://snapper.io)
-automatically takes a pre and post snapshot before and after pacman
-transactions, similar to how YaST does with OpenSuse.
+This makes Arch Linux's pacman use
+[snapper](https://wiki.archlinux.org/index.php/Snapper) to automatically takes a
+pre and post snapshot before and after pacman transactions, similar to how YaST
+does with OpenSuse.
 
-*Note:* The scripts only take snapshots of the subvolume mounted at "/"; other
+*Note:* The scripts only take snapshots of the subvolume mounted at '/'; other
 subvolumes are not included. You must modify the scripts to include other
 subvolumes.
 
 The scripts are set up to use the `number` algorithm. That is, snapper will
-cleanup snapshots tagged with `number` after reaching a set threshold in the
-configuration file.
+periodically clean up snapshots tagged with `number` after reaching a set
+threshold in the configuration file.
 
 See `man alpm-hooks` and `man snapper` for more information.
 
