@@ -7,7 +7,8 @@ does with OpenSuse.
 
 *Note:* The scripts only take snapshots of the subvolume mounted at `/`; other
 subvolumes are not included. You must modify the scripts to include other
-subvolumes.
+subvolumes. It's recommended that you create subvolumes of directories you do
+*not* want included (*e.g.* `/var/cache/pacman/pkg`). 
 
 The scripts are set up to use the `number` algorithm. That is, snapper will
 periodically clean up snapshots tagged with `number` after reaching a set
