@@ -11,7 +11,7 @@ subvolumes.
 
 The scripts are set up to use the `number` algorithm. That is, snapper will
 periodically clean up snapshots tagged with `number` after reaching a set
-threshold in the configuration file.
+threshold in the snapper configuration file.
 
 ## Installation
 
