@@ -9,4 +9,4 @@ Target = *
 Description = generate GRUB configuration file
 Depends = grub-btrfs-git
 When = PostTransaction
-Exec = /usr/bin/snapper-pac-grub-config
+Exec = /usr/bin/snapper-pac-grub
