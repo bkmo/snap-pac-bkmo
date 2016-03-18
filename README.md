@@ -14,9 +14,16 @@ The scripts are set up to use the `number` algorithm. That is, snapper will
 periodically clean up snapshots tagged with `number` after reaching a set
 threshold in the snapper configuration file.
 
+Additionally the package provides a hook to regenerate your GRUB configuration
+file after every pacman transaction. This useful for use with `grub-btrfs-git`
+(see below).
+
 ## Installation
 
-Install [the package from the AUR](https://aur.archlinux.org/packages/snap-pac/).
+Install [the package from the
+AUR](https://aur.archlinux.org/packages/snap-pac/). Optionally install
+[grub-btrfs](https://aur.archlinux.org/packages/grub-btrfs-git/) to populate
+your GRUB menu with the ability to boot into snapshots.
 
 ## Usage
 
