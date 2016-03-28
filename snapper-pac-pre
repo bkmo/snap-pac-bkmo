@@ -1,3 +1,3 @@
 #!/bin/bash
 
-snapper --config root create --type pre --cleanup-algorithm number --print-number --description "pacman pretransaction" > /etc/snapper/.snap-pac-pre
+snapper --config root create --type pre --cleanup-algorithm number --print-number --description "$(xargs -0 printf '%s ' < /proc/$PPID/cmdline)" > /etc/snapper/.snap-pac-pre
