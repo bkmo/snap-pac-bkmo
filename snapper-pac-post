@@ -1,9 +1,10 @@
 #!/bin/bash
 
+PACMAN_CMD=$(ps -C pacman -o args=)
 PREFILE=/etc/snapper/.snap-pac-pre
 if [ -f $PREFILE ]; then
     SNAPPERPACPRE=$(cat $PREFILE)
-    snapper --config root create --cleanup-algorithm number --type post --pre-number $SNAPPERPACPRE --description "pacman posttransaction"
+    snapper --config root create --cleanup-algorithm number --type post --pre-number $SNAPPERPACPRE --description "pacman posttransaction ($PACMAN_CMD)"
     rm $PREFILE
 else
     echo "WARNING: $PREFILE does not exist, so not performing post snapshot. If you are initially installing snap-pac, this is normal."

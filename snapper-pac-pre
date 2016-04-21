@@ -1,3 +1,4 @@
 #!/bin/bash
 
-snapper --config root create --type pre --cleanup-algorithm number --print-number --description "pacman pretransaction" > /etc/snapper/.snap-pac-pre
+PACMAN_CMD=$(ps -C pacman -o args=)
+snapper --config root create --type pre --cleanup-algorithm number --print-number --description "pacman pretransaction ($PACMAN_CMD)" > /etc/snapper/.snap-pac-pre
