@@ -34,13 +34,15 @@ bash scripts for you to call. No bash aliases to setup.
 
 Because these are pacman hooks, it doesn't matter how you call pacman (whether
 directly, through an AUR helper, or an alias) -- snapper will create the
-snapshots whenever pacman is asked to install, upgrade, or remove a package.
+snapshots whenever pacman is asked to install, upgrade, or remove a package. The
+description for the snapshot is the pacman command that called the hook in the
+first place.
 
 ### Example
 
 Installing the `nano` package as normal:
 
-	$ sudo pacman -S nano
+	# pacman -S nano
 	resolving dependencies...
 	looking for conflicting packages...
 
@@ -63,13 +65,12 @@ Installing the `nano` package as normal:
 
 And here are the snapshots:
 
-    $ sudo snapper -c root list | tail -n 2 
-	pre    | 112 |       | Fri 11 Mar 2016 01:59:04 PM CST | root | number   | pacman pretransaction     |         
-	post   | 113 | 112   | Fri 11 Mar 2016 01:59:04 PM CST | root | number   | pacman posttransaction    |         
+    # snapper -c root list -t pre-post | tail -n 1
+    1033  | 1034   | Fri 22 Apr 2016 01:54:13 PM CDT | Fri 22 Apr 2016 01:54:14 PM CDT | pacman -S nano                                  |         
 
 What changed (see the man page for what each symbol means)?
 
-	$ sudo snapper -c root status 112..113
+	# snapper -c root status 1033..1034
 	+..... /etc/nanorc
 	c..... /etc/snapper/.snap-pac-pre
 	+..... /usr/bin/nano
@@ -87,11 +88,11 @@ What changed (see the man page for what each symbol means)?
 	+..... /usr/share/info/nano.info.gz
 
 (I truncated the above output, but it continues...) You can also do `snapper
-diff` in the same way - I'll spare you that one.
+diff` in the same way---I'll spare you that one.
 
 To undo the upgrade:
 
-	$ sudo snapper -c root undochange 112..113
+	# snapper -c root undochange 1033..1034
 	create:0 modify:3 delete:100
 
 And `nano` is now gone:
