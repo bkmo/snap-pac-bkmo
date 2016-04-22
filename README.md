@@ -33,7 +33,7 @@ your GRUB menu with the ability to boot into snapshots.
 bash scripts for you to call. No bash aliases to setup.
 
 Because these are pacman hooks, it doesn't matter how you call pacman (whether
-directly, through an AUR helper, or an alias) -- snapper will create the
+directly, through an AUR helper, or an alias)---snapper will create the
 snapshots whenever pacman is asked to install, upgrade, or remove a package. The
 description for the snapshot is the pacman command that called the hook in the
 first place.
