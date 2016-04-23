@@ -3,21 +3,23 @@
 This makes Arch Linux's pacman use
 [snapper](https://wiki.archlinux.org/index.php/Snapper) to automatically take a
 pre and post snapshot before and after pacman transactions, similar to how YaST
-does with OpenSuse.
+does with OpenSuse. This provides a simple way to undo changes to a system after
+a pacman transaction.
 
-*Note:* The scripts only take snapshots of the subvolume mounted at `/`; other
-subvolumes are not included. You must modify the scripts to include other
-subvolumes. It's recommended that you create subvolumes of directories you do
-*not* want included (*e.g.* `/var/cache/pacman/pkg`). 
-
-The scripts are set up to use the `number` algorithm. That is, snapper will
-periodically clean up snapshots tagged with `number` after reaching a set
+The snapshots are set up to use snapper's `number` algorithm. That is, snapper
+will periodically clean up snapshots tagged with `number` after reaching a set
 threshold in the snapper configuration file.
 
 Additionally the package provides a hook to regenerate your GRUB configuration
 file after every pacman transaction. This is useful when using
 [grub-btrfs](https://aur.archlinux.org/packages/grub-btrfs-git/). If you don't
 use grub-btrfs, then you should remove `99_grub-config.hook` after installation.
+
+**Note:** Snapshots are only taken of the subvolume corresponding with the
+`root` snapper config; other subvolumes are not included. You must modify the
+scripts to include other subvolumes. Additionally, you should create subvolumes
+of directories you do *not* want included in your snapshots (*e.g.*
+`/var/cache/pacman/pkg`). 
 
 ## Installation
 
@@ -32,13 +34,13 @@ your GRUB menu with the ability to boot into snapshots.
 
 ### Taking snapshots
 
-**Use pacman (and AUR helpers) as normal and watch snapper do its thing.** No
+**Use pacman—and AUR helpers—as normal and watch snapper do its thing.** No
 bash scripts for you to call. No bash aliases to setup.
 
 Because these are pacman hooks, it doesn't matter how you call pacman—whether
 directly, through an AUR helper, or using an alias—snapper will create the
-snapshots whenever pacman is asked to install, upgrade, or remove a package. The
-specific pacman command used is logged in the snapper description for the
+snapshots when pacman installs, upgrades, or removes a package. The
+pacman command used is logged in the snapper description for the
 snapshots.
 
 ### Undoing a transaction
