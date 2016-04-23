@@ -17,8 +17,10 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
+# Takes a snapper post snapshot after a pacman transaction
+
 PACMAN_CMD=$(ps -C pacman -o args=)
-PREFILE=/etc/snapper/.snap-pac-pre
+PREFILE=/usr/share/libalpm/hooks.bin/snap-pac/.pre
 if [ -f $PREFILE ]; then
     SNAPPERPACPRE=$(cat $PREFILE)
     snapper --config root create --cleanup-algorithm number --type post --pre-number $SNAPPERPACPRE --description "$PACMAN_CMD"

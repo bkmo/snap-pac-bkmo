@@ -17,4 +17,6 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
+# Regenerates grub configuration file. Useful with grub-btrfs-git.
+
 /usr/bin/grub-mkconfig -o /boot/grub/grub.cfg 2> /dev/null
