@@ -125,6 +125,7 @@ And `nano` is now gone, along with all the files it changed:
 ## License
 
 snap-pac
+
 Copyright (C) 2016 James W. Barnett
 
 This program is free software; you can redistribute it and/or modify
