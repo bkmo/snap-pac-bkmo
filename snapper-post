@@ -20,12 +20,19 @@
 
 # Takes a snapper post snapshot after a pacman transaction
 
+# Change this variable to include other configs in the post snapshot
+# You must also change it in the pre snapshot script
+CONFIGS="root"
+#CONFIGS="root home"
+
 PACMAN_CMD=$(ps -C pacman -o args=)
 PREFILE=/usr/share/libalpm/hooks.bin/snap-pac/.pre
-if [ -f $PREFILE ]; then
-    SNAPPERPACPRE=$(cat $PREFILE)
-    snapper --config root create --cleanup-algorithm number --type post --pre-number $SNAPPERPACPRE --description "$PACMAN_CMD"
-    rm $PREFILE
-else
-    echo "WARNING: $PREFILE does not exist, so not performing post snapshot. If you are initially installing snap-pac, this is normal."
-fi
+for x in $CONFIGS; do
+    if [ -f $PREFILE"_"$x ]; then
+        SNAPPERPACPRE=$(cat $PREFILE"_"$x)
+        snapper --config $x create --cleanup-algorithm number --type post --pre-number $SNAPPERPACPRE --description "$PACMAN_CMD"
+        rm $PREFILE"_"$x
+    else
+        echo "WARNING: $PREFILE"_"$x does not exist, so not performing post snapshot. If you are initially installing snap-pac, this is normal."
+    fi
+done
