@@ -26,4 +26,4 @@ Target = *
 Description = generate GRUB configuration file
 Depends = grub
 When = PostTransaction
-Exec = /usr/share/libalpm/hooks.bin/snap-pac/snapper-pac-grub
+Exec = /usr/share/libalpm/hooks.bin/snap-pac/grub-config
