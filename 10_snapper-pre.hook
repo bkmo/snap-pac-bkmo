@@ -26,4 +26,4 @@ Target = *
 Description = snapper pre snapshot
 Depends = snapper
 When = PreTransaction
-Exec = /usr/bin/snapper-pac-pre
+Exec = /usr/share/libalpm/hooks.bin/snap-pac/snapper-pac-pre
