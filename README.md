@@ -13,7 +13,8 @@ threshold in the snapper configuration file.
 Additionally the package provides a hook to regenerate your GRUB configuration
 file after every pacman transaction. This is useful when using
 [grub-btrfs](https://aur.archlinux.org/packages/grub-btrfs-git/). If you don't
-use grub-btrfs, then you should remove `99_grub-config.hook` after installation.
+use GRUB, or if you don't want your configuration file generated every
+transaction, then you should remove `99_grub-config.hook` after installation.
 
 **Note:** Snapshots are only taken of the subvolume corresponding with the
 `root` snapper config; other subvolumes are not included. You must modify the
