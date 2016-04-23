@@ -44,7 +44,7 @@ snapshots.
 ### Undoing a transaction
 
 To undo changes from a pacman transaction, use `snapper undochange`. See the
-manpage for snapper and the following example.
+snapper manpage and the following example.
 
 ## Example
 
