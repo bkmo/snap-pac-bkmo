@@ -16,14 +16,15 @@ threshold in the snapper configuration file.
 
 Additionally the package provides a hook to regenerate your GRUB configuration
 file after every pacman transaction. This is useful when using
-[grub-btrfs](https://aur.archlinux.org/packages/grub-btrfs-git/).
+[grub-btrfs](https://aur.archlinux.org/packages/grub-btrfs-git/). If you don't
+use grub-btrfs, then you should remove `99_grub-config.hook` after installation.
 
 ## Installation
 
 Install [the package from the
 AUR](https://aur.archlinux.org/packages/snap-pac/).
 
-Optionally install
+Optionally, install
 [grub-btrfs](https://aur.archlinux.org/packages/grub-btrfs-git/) to populate
 your GRUB menu with the ability to boot into snapshots.
 
@@ -32,11 +33,11 @@ your GRUB menu with the ability to boot into snapshots.
 **Use pacman (and AUR helpers) as normal and watch snapper do its thing.** No
 bash scripts for you to call. No bash aliases to setup.
 
-Because these are pacman hooks, it doesn't matter how you call pacman (whether
-directly, through an AUR helper, or an alias)---snapper will create the
+Because these are pacman hooks, it doesn't matter how you call pacman—whether
+directly, through an AUR helper, or an alias, snapper will create the
 snapshots whenever pacman is asked to install, upgrade, or remove a package. The
-description for the snapshot is the pacman command that called the hook in the
-first place.
+specific pacman command used is noted in the snapper description for the
+snapshots.
 
 ### Example
 
@@ -60,42 +61,40 @@ Installing the `nano` package as normal:
 	(1/1) snapper pre snapshot
 	:: Processing package changes...
 	(1/1) installing nano                                               [######################################] 100%
-	:: Running post-transaction hooks...
-	(1/1) snapper post snapshot
+    :: Running post-transaction hooks...
+    (1/2) snapper post snapshot
+    (2/2) generate GRUB configuration file
 
 And here are the snapshots:
 
     # snapper -c root list -t pre-post | tail -n 1
     1033  | 1034   | Fri 22 Apr 2016 01:54:13 PM CDT | Fri 22 Apr 2016 01:54:14 PM CDT | pacman -S nano                                  |         
 
-What changed (see the man page for what each symbol means)?
+What changed?
 
 	# snapper -c root status 1033..1034
-	+..... /etc/nanorc
-	c..... /etc/snapper/.snap-pac-pre
-	+..... /usr/bin/nano
-	+..... /usr/bin/rnano
-	+..... /usr/share/doc/nano
-	+..... /usr/share/doc/nano/faq.html
-	+..... /usr/share/doc/nano/fr
-	+..... /usr/share/doc/nano/fr/nano.1.html
-	+..... /usr/share/doc/nano/fr/nanorc.5.html
-	+..... /usr/share/doc/nano/fr/rnano.1.html
-	+..... /usr/share/doc/nano/nano.1.html
-	+..... /usr/share/doc/nano/nanorc.5.html
-	+..... /usr/share/doc/nano/rnano.1.html
-	c..... /usr/share/info/dir
-	+..... /usr/share/info/nano.info.gz
+    +..... /etc/nanorc
+    c..... /etc/snapper/.snap-pac-pre
+    +..... /usr/bin/nano
+    +..... /usr/bin/rnano
+    +..... /usr/share/doc/nano
+    +..... /usr/share/doc/nano/faq.html
+    +..... /usr/share/doc/nano/fr
+    +..... /usr/share/doc/nano/fr/nano.1.html
+    +..... /usr/share/doc/nano/fr/nanorc.5.html
+    +..... /usr/share/doc/nano/fr/rnano.1.html
 
-(I truncated the above output, but it continues...) You can also do `snapper
-diff` in the same way---I'll spare you that one.
+
+I truncated the above output, but it continues. See the manpage for snapper to
+see what each symbol means. You can also do `snapper diff` in the same
+way—I'll spare you that one.
 
 To undo the upgrade:
 
 	# snapper -c root undochange 1033..1034
 	create:0 modify:3 delete:100
 
-And `nano` is now gone:
+And `nano` is now gone, along with all the files it changed:
 
 	$ pacman -Qi nano
 	error: package 'nano' was not found
