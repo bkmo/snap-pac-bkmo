@@ -30,16 +30,23 @@ your GRUB menu with the ability to boot into snapshots.
 
 ## Usage
 
+### Taking snapshots
+
 **Use pacman (and AUR helpers) as normal and watch snapper do its thing.** No
 bash scripts for you to call. No bash aliases to setup.
 
 Because these are pacman hooks, it doesn't matter how you call pacman—whether
-directly, through an AUR helper, or an alias, snapper will create the
+directly, through an AUR helper, or using an alias—snapper will create the
 snapshots whenever pacman is asked to install, upgrade, or remove a package. The
-specific pacman command used is noted in the snapper description for the
+specific pacman command used is logged in the snapper description for the
 snapshots.
 
-### Example
+### Undoing a transaction
+
+To undo changes from a pacman transaction, use `snapper undochange`. See the
+manpage for snapper and the following example.
+
+## Example
 
 Installing the `nano` package as normal:
 
@@ -68,7 +75,7 @@ Installing the `nano` package as normal:
 And here are the snapshots:
 
     # snapper -c root list -t pre-post | tail -n 1
-    1033  | 1034   | Fri 22 Apr 2016 01:54:13 PM CDT | Fri 22 Apr 2016 01:54:14 PM CDT | pacman -S nano                                  |         
+    1033  | 1034   | Fri 22 Apr 2016 01:54:13 PM CDT | Fri 22 Apr 2016 01:54:14 PM CDT | pacman -S nano      |         
 
 What changed?
 
