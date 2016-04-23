@@ -31,6 +31,9 @@ Optionally, install
 [grub-btrfs](https://aur.archlinux.org/packages/grub-btrfs-git/) to populate
 your GRUB menu with the ability to boot into snapshots.
 
+After installation, the hooks are located at `/usr/share/libalpm/hooks` and the
+scripts are located at `/usr/share/libalpm/hooks.bin/snap-pac`.
+
 ## Usage
 
 ### Taking snapshots
