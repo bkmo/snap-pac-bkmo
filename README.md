@@ -59,15 +59,15 @@ Installing the `nano` package as normal:
 	Total Installed Size:  2.14 MiB
 
 	:: Proceed with installation? [Y/n] Y
-	(1/1) checking keys in keyring                                      [######################################] 100%
-	(1/1) checking package integrity                                    [######################################] 100%
-	(1/1) loading package files                                         [######################################] 100%
-	(1/1) checking for file conflicts                                   [######################################] 100%
-	(1/1) checking available disk space                                 [######################################] 100%
+	(1/1) checking keys in keyring                               [######################################] 100%
+	(1/1) checking package integrity                             [######################################] 100%
+	(1/1) loading package files                                  [######################################] 100%
+	(1/1) checking for file conflicts                            [######################################] 100%
+	(1/1) checking available disk space                          [######################################] 100%
 	:: Running pre-transaction hooks...
 	(1/1) snapper pre snapshot
 	:: Processing package changes...
-	(1/1) installing nano                                               [######################################] 100%
+	(1/1) installing nano                                        [######################################] 100%
     :: Running post-transaction hooks...
     (1/2) snapper post snapshot
     (2/2) generate GRUB configuration file
@@ -75,7 +75,7 @@ Installing the `nano` package as normal:
 And here are the snapshots:
 
     # snapper -c root list -t pre-post | tail -n 1
-    1033  | 1034   | Fri 22 Apr 2016 01:54:13 PM CDT | Fri 22 Apr 2016 01:54:14 PM CDT | pacman -S nano      |         
+    1033  | 1034   | Fri 22 Apr 2016 01:54:13 PM CDT | Fri 22 Apr 2016 01:54:14 PM CDT | pacman -S nano      | 
 
 What changed?
 
