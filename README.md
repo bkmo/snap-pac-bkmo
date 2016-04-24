@@ -2,9 +2,9 @@
 
 This makes Arch Linux's pacman use
 [snapper](https://wiki.archlinux.org/index.php/Snapper) to automatically take a
-pre and post snapshot before and after pacman transactions, similar to how YaST
-does with OpenSuse. This provides a simple way to undo changes to a system after
-a pacman transaction.
+pre and post snapshot before and after pacman transactions using pacman's hooks
+feature, similar to how YaST does with OpenSuse. This provides a simple way to
+undo changes to a system after a pacman transaction.
 
 The snapshots are set up to use snapper's `number` algorithm. That is, snapper
 will periodically clean up snapshots tagged with `number` after reaching a set
@@ -31,7 +31,7 @@ Optionally, install
 [grub-btrfs](https://aur.archlinux.org/packages/grub-btrfs-git/) to populate
 your GRUB menu with the ability to boot into snapshots.
 
-After installation, the hooks are located at `/usr/share/libalpm/hooks` and the
+After installation, the hooks are located at `/usr/share/libalpm/hooks`, and the
 scripts are located at `/usr/share/libalpm/hooks.bin/snap-pac`.
 
 ## Usage
@@ -112,16 +112,6 @@ And `nano` is now gone, along with all the files it changed:
 	$ pacman -Qi nano
 	error: package 'nano' was not found
 
-## References
-
-* [snapper homepage](http://snapper.io/)
-* [Btrfs homepage](https://wiki.archlinux.org/index.php/Btrfs)
-* [ArchWiki Snapper article](https://wiki.archlinux.org/index.php/Snapper)
-* [ArchWiki Btrfs article](https://wiki.archlinux.org/index.php/Btrfs)
-* `man alpm-hooks`
-* `man snapper`
-* `man btrfs`
-
 ## License
 
 snap-pac
@@ -141,3 +131,13 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+## See also
+
+* [ArchWiki Btrfs article](https://wiki.archlinux.org/index.php/Btrfs)
+* [ArchWiki Snapper article](https://wiki.archlinux.org/index.php/Snapper)
+* [Btrfs homepage](https://wiki.archlinux.org/index.php/Btrfs)
+* [snapper homepage](http://snapper.io/)
+* `man alpm-hooks`
+* `man btrfs`
+* `man snapper`
