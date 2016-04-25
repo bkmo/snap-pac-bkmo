@@ -18,8 +18,4 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-# Takes a snapper pre snapshot before a pacman transaction
-
-source /etc/snap-pac.conf
-rm "$PREFIX_PREFILE"*
 echo "NOTE: No post snapshot will be performed for this transaction, since you are removing the pacman hooks."
