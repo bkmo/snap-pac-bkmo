@@ -21,13 +21,14 @@ scripts are located at `/usr/share/libalpm/hooks.bin/snap-pac`.
 ## Configuration
 
 The configuration file is located at `/etc/snap-pac.conf`. There you can choose
-which snapper configurations of which to take snapshots, the descriptions used
-for the snapshots, and the snapper algorithm to use. Changing the file should be
-self-explanatory. The defaults should be sufficient for most users.
+which snapper configurations, descriptions, and cleanup algorithm to use.
+Changing the file should be self-explanatory.  The defaults should be sufficient
+for most users.
 
 By default, the snapshots are set up to use snapper's `number` algorithm.
 Additionally, by default, snapshots are only taken of the subvolume
-corresponding with the `root` snapper configuration.
+corresponding with the `root` snapper configuration. Descriptions are of the
+pacman command that initiated the snapshots.
 
 ## Usage
 
@@ -46,6 +47,13 @@ snapshots.
 
 To undo changes from a pacman transaction, use `snapper undochange`. See the
 snapper manpage and the following example.
+
+If you have severe breakage—like snapper is gone for some reason and you can't
+get it back—you'll have to resort to more extreme methods, such as taking a
+snapshot of the pre snapshot and making it the default subvolume or mounting it
+as `/`. Most likely you'll need to use a live USB to get into a chroot
+environment to do any of these things. The exact procedure depends on your
+specific setup. Be careful.
 
 ## Example
 
