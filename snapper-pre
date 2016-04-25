@@ -23,7 +23,7 @@
 source /etc/snap-pac.conf
 
 cleanupalgo=${CLEANUP_ALGORITHM:-"number"}
-description=${PRE_DESCRIPTION:-"$echo $(ps -C pacman -o args=) | sed 's'/usr/bin/pacman'pacman/g')"}
+description=${PRE_DESCRIPTION:-"$(echo $(ps -C pacman -o args=) | sed 's'/usr/bin/pacman'pacman/g')"}
 configurations=${CONFIGS:-"root"}
 PREFILE_PREFIX="/usr/share/libalpm/hooks.bin/snap-pac/.pre"
 for x in $configurations; do
