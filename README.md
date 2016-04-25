@@ -52,8 +52,9 @@ If you have severe breakage—like snapper is gone for some reason and you can't
 get it back—you'll have to resort to more extreme methods, such as taking a
 snapshot of the pre snapshot and making it the default subvolume or mounting it
 as `/`. Most likely you'll need to use a live USB to get into a chroot
-environment to do any of these things. The exact procedure depends on your
-specific setup. Be careful.
+environment to do any of these things. Snapper has a `snapper rollback` feature,
+but your setup has to be properly configured to use it. The exact procedure
+depends on your specific setup. Be careful.
 
 ## Example
 
