@@ -25,12 +25,9 @@ which snapper configurations of which to take snapshots, the descriptions used
 for the snapshots, and the snapper algorithm to use. Changing the file should be
 self-explanatory. The defaults should be sufficient for most users.
 
-By default, the snapshots are set up to use snapper's `number` algorithm. That
-is, snapper will periodically clean up snapshots tagged with `number` after
-reaching a set threshold in the snapper configuration file.
-
+By default, the snapshots are set up to use snapper's `number` algorithm.
 Additionally, by default, snapshots are only taken of the subvolume
-corresponding with the `root` snapper config; other subvolumes are not included.
+corresponding with the `root` snapper configuration.
 
 ## Usage
 
