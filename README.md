@@ -15,8 +15,8 @@ undo changes to a system after a pacman transaction.
 Install [the package from the
 AUR](https://aur.archlinux.org/packages/snap-pac/).
 
-After installation, the hooks are located at `/usr/share/libalpm/hooks`, and the
-scripts are located at `/usr/share/libalpm/hooks.bin/snap-pac`.
+After installation, the hooks will be located at `/usr/share/libalpm/hooks`, and
+the scripts are located at `/usr/share/libalpm/hooks.bin/snap-pac`.
 
 ## Configuration
 
