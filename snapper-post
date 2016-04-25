@@ -22,11 +22,14 @@
 
 source /etc/snap-pac.conf
 
+cleanupalgo=${CLEANUP_ALGORITHM:-"number"}
+description=${POST_DESCRIPTION:-"$(ps -C pacman -o args=)"}
+configurations=${CONFIGS:-"root"}
 PREFILE_PREFIX="/usr/share/libalpm/hooks.bin/snap-pac/.pre"
-for x in $CONFIGS; do
+for x in $configurations; do
     if [ -f $PREFILE_PREFIX"_"$x ]; then
         SNAPPERPACPRE=$(cat $PREFILE_PREFIX"_"$x)
-        snapper --config $x create --cleanup-algorithm $CLEANUP_ALGORITHM --type post --pre-number $SNAPPERPACPRE --description "$PRE_DESCRIPTION"
+        snapper --config $x create --cleanup-algorithm $cleanupalgo --type post --pre-number $SNAPPERPACPRE --description "$description"
         rm $PREFILE_PREFIX"_"$x
     else
         echo "WARNING: $PREFILE_PREFIX"_"$x does not exist, so not performing post snapshot. If you are initially installing snap-pac, this is normal."

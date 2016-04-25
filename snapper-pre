@@ -22,7 +22,10 @@
 
 source /etc/snap-pac.conf
 
+cleanupalgo=${CLEANUP_ALGORITHM:-"number"}
+description=${PRE_DESCRIPTION:-"$(ps -C pacman -o args=)"}
+configurations=${CONFIGS:-"root"}
 PREFILE_PREFIX="/usr/share/libalpm/hooks.bin/snap-pac/.pre"
-for x in $CONFIGS; do
-    snapper --config $x create --type pre --cleanup-algorithm $CLEANUP_ALGORITHM --print-number --description "$POST_DESCRIPTION" > $PREFILE_PREFIX"_"$x
+for x in $configurations; do
+    snapper --config $x create --type pre --cleanup-algorithm $cleanupalgo --print-number --description "$description" > $PREFILE_PREFIX"_"$x
 done

@@ -28,6 +28,12 @@ AUR](https://aur.archlinux.org/packages/snap-pac/).
 After installation, the hooks are located at `/usr/share/libalpm/hooks`, and the
 scripts are located at `/usr/share/libalpm/hooks.bin/snap-pac`.
 
+## Configuration
+
+The configuration file is located at `/etc/snap-pac.conf`. There you can choose
+which snapper configurations of which to take snapshots, the descriptions used
+for the snapshots, and the snapper algorithm to use.
+
 ## Usage
 
 ### Taking snapshots
