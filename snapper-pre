@@ -20,7 +20,11 @@
 
 # Takes a snapper pre snapshot before a pacman transaction
 
-source /etc/snap-pac.conf
+if [ -f /etc/snap-pac.conf ]; then
+    source /etc/snap-pac.conf
+else
+    echo "WARNING: /etc/snap-pac.conf is missing. Using default settings."
+fi
 
 cleanupalgo=${CLEANUP_ALGORITHM:-"number"}
 description=${POST_DESCRIPTION:-"$(echo $(ps -C pacman -o args=) | sed 'sX/usr/bin/pacmanXpacmanXg')"}

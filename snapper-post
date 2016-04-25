@@ -20,7 +20,11 @@
 
 # Takes a snapper post snapshot after a pacman transaction
 
-source /etc/snap-pac.conf
+if [ -f /etc/snap-pac.conf ]; then
+    source /etc/snap-pac.conf
+else
+    echo "WARNING: /etc/snap-pac.conf is missing. Using default settings."
+fi
 
 cleanupalgo=${CLEANUP_ALGORITHM:-"number"}
 description=${POST_DESCRIPTION:-"$(echo $(ps -C pacman -o args=) | sed 'sX/usr/bin/pacmanXpacmanXg')"}
@@ -32,6 +36,6 @@ for x in $configurations; do
         snapper --config $x create --cleanup-algorithm $cleanupalgo --type post --pre-number $SNAPPERPACPRE --description "$description"
         rm $PREFILE_PREFIX"_"$x
     else
-        echo "WARNING: $PREFILE_PREFIX"_"$x does not exist, so not performing post snapshot. If you are initially installing snap-pac, this is normal."
+        echo "WARNING: $PREFILE_PREFIX"_"$x does not exist, so no post snapshot will be taken. If you are initially installing snap-pac, this is normal."
     fi
 done
