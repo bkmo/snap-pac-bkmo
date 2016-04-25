@@ -26,7 +26,7 @@ PREFILE_PREFIX="/usr/share/libalpm/hooks.bin/snap-pac/.pre"
 for x in $CONFIGS; do
     if [ -f $PREFILE_PREFIX"_"$x ]; then
         SNAPPERPACPRE=$(cat $PREFILE_PREFIX"_"$x)
-        snapper --config $x create --cleanup-algorithm number --type post --pre-number $SNAPPERPACPRE --description "$PRE_DESCRIPTION"
+        snapper --config $x create --cleanup-algorithm $CLEANUP_ALGORITHM --type post --pre-number $SNAPPERPACPRE --description "$PRE_DESCRIPTION"
         rm $PREFILE_PREFIX"_"$x
     else
         echo "WARNING: $PREFILE_PREFIX"_"$x does not exist, so not performing post snapshot. If you are initially installing snap-pac, this is normal."
