@@ -18,7 +18,7 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-# Main script
+# Main script. Is sourced by other scripts and functions are called
 
 if [ -f /etc/snap-pac.conf ]; then
     source /etc/snap-pac.conf
@@ -49,4 +49,10 @@ function post
         fi
     done
 
+}
+
+function clean
+{
+    rm /usr/share/libalpm/hooks.bin/snap-pac/.pre*
+    echo "NOTE: No post snapshot will be performed for this transaction, since you are removing the pacman hooks."
 }
