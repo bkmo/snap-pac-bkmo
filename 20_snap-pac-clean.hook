@@ -23,5 +23,5 @@ Target = snap-pac
 
 [Action]
 Description = snap-pac cleanup upon removal
-When = PostTransaction
+When = PreTransaction
 Exec = /usr/share/libalpm/hooks.bin/snap-pac/snap-pac-clean
