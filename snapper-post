@@ -29,12 +29,20 @@ fi
 cleanupalgo=${CLEANUP_ALGORITHM:-"number"}
 description=${POST_DESCRIPTION:-"$(echo $(ps -C pacman -o args=) | sed 'sX/usr/bin/pacmanXpacmanXg')"}
 configurations=${CONFIGS:-"root"}
+be_verbose=${VERBOSE:-"false"}
 PREFILE_PREFIX="/usr/share/libalpm/hooks.bin/snap-pac/.pre"
 for x in $configurations; do
     if [ -f $PREFILE_PREFIX"_"$x ]; then
         SNAPPERPACPRE=$(cat $PREFILE_PREFIX"_"$x)
         snapper --config $x create --cleanup-algorithm $cleanupalgo --type post --pre-number $SNAPPERPACPRE --description "$description"
-        rm $PREFILE_PREFIX"_"$x
+	    case "${be_verbose}" in
+            true)
+            snapper -v --config $x create --cleanup-algorithm $cleanupalgo --type post --pre-number $SNAPPERPACPRE --description "$description"
+            rm -v $PREFILE_PREFIX"_"$x;;
+            *) 
+            snapper --config $x create --cleanup-algorithm $cleanupalgo --type post --pre-number $SNAPPERPACPRE --description "$description"
+            rm $PREFILE_PREFIX"_"$x
+        esac
     else
         echo "WARNING: $PREFILE_PREFIX"_"$x does not exist, so no post snapshot will be taken. If you are initially installing snap-pac, this is normal."
     fi
