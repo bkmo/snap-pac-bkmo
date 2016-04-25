@@ -32,4 +32,5 @@ install -Dm 755 snap-pac-clean $SCRIPTS_DIR
 install -Dm 644 10_snapper-pre.hook $HOOKS_DIR
 install -Dm 644 10_snapper-post.hook $HOOKS_DIR
 install -Dm 644 20_snap-pac-clean.hook $HOOKS_DIR
+install -Dm 644 snap-pac.conf /etc/
 install -Dm 644 LICENSE "$INSTALL_DIR/usr/share/licenses/snap-pac/LICENSE"

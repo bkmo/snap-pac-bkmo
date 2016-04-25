@@ -20,5 +20,6 @@
 
 # Takes a snapper pre snapshot before a pacman transaction
 
-rm /usr/share/libalpm/hooks.bin/snap-pac/.pre*
+source /etc/snap-pac.conf
+rm "$PREFIX_PREFILE"*
 echo "NOTE: No post snapshot will be performed for this transaction, since you are removing the pacman hooks."

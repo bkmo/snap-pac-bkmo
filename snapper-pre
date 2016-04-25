@@ -20,13 +20,8 @@
 
 # Takes a snapper pre snapshot before a pacman transaction
 
-# Change this variable to include other configs in the pre snapshot
-# You must also change it in the post snapshot script
-CONFIGS="root"
-#CONFIGS="root home"
+source /etc/snap-pac.conf
 
-PACMAN_CMD=$(ps -C pacman -o args=)
-PREFILE=/usr/share/libalpm/hooks.bin/snap-pac/.pre
 for x in $CONFIGS; do
-    snapper --config $x create --type pre --cleanup-algorithm number --print-number --description "$PACMAN_CMD" > $PREFILE"_"$x
+    snapper --config $x create --type pre --cleanup-algorithm number --print-number --description "$POST_DESCRIPTION" > $PREFILE_PREFIX"_"$x
 done
