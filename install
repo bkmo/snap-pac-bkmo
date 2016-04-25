@@ -24,10 +24,10 @@
 INSTALL_DIR=$1
 install -d $INSTALL_DIR/usr/share/libalpm/hooks
 install -d $INSTALL_DIR/usr/share/libalpm/hooks.bin/snap-pac
-install -D snapper-pre $INSTALL_DIR/usr/share/libalpm/hooks.bin/snap-pac/
-install -D snapper-post $INSTALL_DIR/usr/share/libalpm/hooks.bin/snap-pac/
-install -D snap-pac-clean $INSTALL_DIR/usr/share/libalpm/hooks.bin/snap-pac/
-install -D 10_snapper-pre.hook $INSTALL_DIR/usr/share/libalpm/hooks/
-install -D 10_snapper-post.hook $INSTALL_DIR/usr/share/libalpm/hooks/
-install -D 20_snap-pac-clean.hook $INSTALL_DIR/usr/share/libalpm/hooks/
-install -D LICENSE "$INSTALL_DIR/usr/share/licenses/snap-pac/LICENSE"
+install -Dm 755 snapper-pre $INSTALL_DIR/usr/share/libalpm/hooks.bin/snap-pac/
+install -Dm 755 snapper-post $INSTALL_DIR/usr/share/libalpm/hooks.bin/snap-pac/
+install -Dm 755 snap-pac-clean $INSTALL_DIR/usr/share/libalpm/hooks.bin/snap-pac/
+install -Dm 644 10_snapper-pre.hook $INSTALL_DIR/usr/share/libalpm/hooks/
+install -Dm 644 10_snapper-post.hook $INSTALL_DIR/usr/share/libalpm/hooks/
+install -Dm 644 20_snap-pac-clean.hook $INSTALL_DIR/usr/share/libalpm/hooks/
+install -Dm 644 LICENSE "$INSTALL_DIR/usr/share/licenses/snap-pac/LICENSE"
