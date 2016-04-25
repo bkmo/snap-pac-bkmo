@@ -18,4 +18,5 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
+rm /usr/share/libalpm/hooks.bin/snap-pac/.pre*
 echo "NOTE: No post snapshot will be performed for this transaction, since you are removing the pacman hooks."

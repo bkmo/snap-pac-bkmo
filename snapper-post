@@ -22,6 +22,7 @@
 
 source /etc/snap-pac.conf
 
+PREFILE_PREFIX="/usr/share/libalpm/hooks.bin/snap-pac/.pre"
 for x in $CONFIGS; do
     if [ -f $PREFILE_PREFIX"_"$x ]; then
         SNAPPERPACPRE=$(cat $PREFILE_PREFIX"_"$x)
