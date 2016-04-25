@@ -10,12 +10,6 @@ The snapshots are set up to use snapper's `number` algorithm. That is, snapper
 will periodically clean up snapshots tagged with `number` after reaching a set
 threshold in the snapper configuration file.
 
-Additionally the package provides a hook to regenerate your GRUB configuration
-file after every pacman transaction. This is useful when using
-[grub-btrfs](https://aur.archlinux.org/packages/grub-btrfs/). If you don't
-use GRUB, or if you don't want your configuration file generated every
-transaction, then you should remove `99_grub-config.hook` after installation.
-
 **Note:** Snapshots are only taken of the subvolume corresponding with the
 `root` snapper config; other subvolumes are not included. You must modify the
 scripts to include other subvolumes. Additionally, you should create subvolumes
@@ -26,10 +20,6 @@ of directories you do *not* want included in your snapshots (*e.g.*
 
 Install [the package from the
 AUR](https://aur.archlinux.org/packages/snap-pac/).
-
-Optionally, install
-[grub-btrfs](https://aur.archlinux.org/packages/grub-btrfs/) to populate
-your GRUB menu with the ability to boot into snapshots.
 
 After installation, the hooks are located at `/usr/share/libalpm/hooks`, and the
 scripts are located at `/usr/share/libalpm/hooks.bin/snap-pac`.
