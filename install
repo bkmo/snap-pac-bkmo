@@ -22,14 +22,11 @@
 # PKGBUILD that installs using "./install $pkgdir".
 
 INSTALL_DIR=$1
-SCRIPTS_DIR=$INSTALL_DIR/usr/share/libalpm/hooks.bin/snap-pac/
+SCRIPTS_DIR=$INSTALL_DIR/usr/share/libalpm/hooks.bin/
 HOOKS_DIR=$INSTALL_DIR/usr/share/libalpm/hooks/
 install -d $HOOKS_DIR
 install -d $SCRIPTS_DIR
 install -d $INSTALL_DIR/etc
-install -Dm 755 snapper-pre $SCRIPTS_DIR
-install -Dm 755 snapper-post $SCRIPTS_DIR
-install -Dm 755 snap-pac-clean $SCRIPTS_DIR
 install -Dm 755 snap-pac $SCRIPTS_DIR
 install -Dm 644 10_snapper-pre.hook $HOOKS_DIR
 install -Dm 644 10_snapper-post.hook $HOOKS_DIR
