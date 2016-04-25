@@ -26,10 +26,10 @@ else
     echo "WARNING: /etc/snap-pac.conf is missing. Using default settings."
 fi
 
-cleanupalgo=${CLEANUP_ALGORITHM:-"number"}
-description=${POST_DESCRIPTION:-"$(echo $(ps -C pacman -o args=) | sed 'sX/usr/bin/pacmanXpacmanXg')"}
-configurations=${CONFIGS:-"root"}
-PREFILE_PREFIX="/usr/share/libalpm/hooks.bin/snap-pac/.pre"
+declare -r cleanupalgo=${CLEANUP_ALGORITHM:-"number"}
+declare -r description=${POST_DESCRIPTION:-"$(echo $(ps -C pacman -o args=) | sed 'sX/usr/bin/pacmanXpacmanXg')"}
+declare -r configurations=${CONFIGS:-"root"}
+declare -r prefile_prefix="/usr/share/libalpm/hooks.bin/snap-pac/.pre"
 for x in $configurations; do
-    snapper --config $x create --type pre --cleanup-algorithm $cleanupalgo --print-number --description "$description" > $PREFILE_PREFIX"_"$x
+    snapper --config $x create --type pre --cleanup-algorithm $cleanupalgo --print-number --description "$description" > $prefile_prefix"_"$x
 done
