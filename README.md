@@ -10,16 +10,6 @@ pre and post snapshot before and after pacman transactions using pacman's hooks
 feature, similar to how YaST does with OpenSuse. This provides a simple way to
 undo changes to a system after a pacman transaction.
 
-The snapshots are set up to use snapper's `number` algorithm. That is, snapper
-will periodically clean up snapshots tagged with `number` after reaching a set
-threshold in the snapper configuration file.
-
-**Note:** Snapshots are only taken of the subvolume corresponding with the
-`root` snapper config; other subvolumes are not included. You must modify the
-scripts to include other subvolumes. Additionally, you should create subvolumes
-of directories you do *not* want included in your snapshots (*e.g.*
-`/var/cache/pacman/pkg`). 
-
 ## Installation
 
 Install [the package from the
@@ -32,7 +22,15 @@ scripts are located at `/usr/share/libalpm/hooks.bin/snap-pac`.
 
 The configuration file is located at `/etc/snap-pac.conf`. There you can choose
 which snapper configurations of which to take snapshots, the descriptions used
-for the snapshots, and the snapper algorithm to use.
+for the snapshots, and the snapper algorithm to use. Changing the file should be
+self-explanatory.
+
+By default, the snapshots are set up to use snapper's `number` algorithm. That
+is, snapper will periodically clean up snapshots tagged with `number` after
+reaching a set threshold in the snapper configuration file.
+
+Additionally, by default, snapshots are only taken of the subvolume
+corresponding with the `root` snapper config; other subvolumes are not included.
 
 ## Usage
 
