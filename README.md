@@ -23,7 +23,7 @@ scripts are located at `/usr/share/libalpm/hooks.bin/snap-pac`.
 The configuration file is located at `/etc/snap-pac.conf`. There you can choose
 which snapper configurations of which to take snapshots, the descriptions used
 for the snapshots, and the snapper algorithm to use. Changing the file should be
-self-explanatory.
+self-explanatory. The defaults should be sufficient for most users.
 
 By default, the snapshots are set up to use snapper's `number` algorithm. That
 is, snapper will periodically clean up snapshots tagged with `number` after
