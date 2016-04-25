@@ -1,5 +1,10 @@
 # snap-pac
 
+![GitHub release](https://img.shields.io/github/release/wesbarnett/snap-pac.svg)
+![License](https://img.shields.io/github/license/wesbarnett/snap-pac.svg)
+![Issues](https://img.shields.io/github/issues/wesbarnett/snap-pac.svg)
+![GitHub downlaods](https://img.shields.io/github/downloads/wesbarnett/snap-pac/total.svg)
+
 This makes Arch Linux's pacman use
 [snapper](https://wiki.archlinux.org/index.php/Snapper) to automatically take a
 pre and post snapshot before and after pacman transactions using pacman's hooks
