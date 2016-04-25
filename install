@@ -26,6 +26,7 @@ SCRIPTS_DIR=$INSTALL_DIR/usr/share/libalpm/hooks.bin/snap-pac/
 HOOKS_DIR=$INSTALL_DIR/usr/share/libalpm/hooks/
 install -d $HOOKS_DIR
 install -d $SCRIPTS_DIR
+install -d $INSTALL_DIR/etc
 install -Dm 755 snapper-pre $SCRIPTS_DIR
 install -Dm 755 snapper-post $SCRIPTS_DIR
 install -Dm 755 snap-pac-clean $SCRIPTS_DIR
