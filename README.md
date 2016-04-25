@@ -12,7 +12,7 @@ threshold in the snapper configuration file.
 
 Additionally the package provides a hook to regenerate your GRUB configuration
 file after every pacman transaction. This is useful when using
-[grub-btrfs](https://aur.archlinux.org/packages/grub-btrfs-git/). If you don't
+[grub-btrfs](https://aur.archlinux.org/packages/grub-btrfs/). If you don't
 use GRUB, or if you don't want your configuration file generated every
 transaction, then you should remove `99_grub-config.hook` after installation.
 
@@ -28,7 +28,7 @@ Install [the package from the
 AUR](https://aur.archlinux.org/packages/snap-pac/).
 
 Optionally, install
-[grub-btrfs](https://aur.archlinux.org/packages/grub-btrfs-git/) to populate
+[grub-btrfs](https://aur.archlinux.org/packages/grub-btrfs/) to populate
 your GRUB menu with the ability to boot into snapshots.
 
 After installation, the hooks are located at `/usr/share/libalpm/hooks`, and the
