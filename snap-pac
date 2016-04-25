@@ -29,7 +29,7 @@ fi
 declare -r cleanupalgo=${CLEANUP_ALGORITHM:-"number"}
 declare -r description=${POST_DESCRIPTION:-"$(echo $(ps -C pacman -o args=) | sed 'sX/usr/bin/pacmanXpacmanXg')"}
 declare -r configurations=${CONFIGS:-"root"}
-declare -r prefile_prefix="/usr/share/libalpm/hooks.bin/.snap-pac-pre"
+declare -r prefile_prefix="/usr/share/libalpm/hooks.bin/snap-pac/.pre"
 
 function pre
 {
@@ -53,6 +53,6 @@ function post
 
 function clean
 {
-    rm /usr/share/libalpm/hooks.bin/.snap-pac-pre*
+    rm /usr/share/libalpm/hooks.bin/snap-pac/.pre*
     echo "NOTE: No post snapshot will be performed for this transaction, since you are removing the pacman hooks."
 }
