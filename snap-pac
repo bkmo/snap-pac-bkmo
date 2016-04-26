@@ -22,9 +22,14 @@
 
 set -e
 
+if [[ $EUID -ne 0 ]]; then
+    echo "ERROR: Script must be run as root." 
+    exit 1
+fi
+
 if [[ "$1" != "pre" ]] && [[ "$1" != "post" ]]; then
     echo "ERROR: First argument should either be 'pre' or 'post'."
-    exit
+    exit 1
 fi
 
 declare -r pre_or_post=$1
@@ -49,12 +54,12 @@ for x in $configurations; do
 
         if [[ "$pre_or_post" == "pre" ]]; then
 
-            snapper --config $x create --type pre --cleanup-algorithm $cleanupalgo --print-number --description "$pre_description" > $prefile_prefix"_"$x
+            snapper --config $x create --type $pre_or_post --cleanup-algorithm $cleanupalgo --print-number --description "$pre_description" > $prefile_prefix"_"$x
 
         elif [[ "$pre_or_post" == "post" ]]; then
 
             if [ -f $prefile_prefix"_"$x ]; then
-                snapper --config $x create --cleanup-algorithm $cleanupalgo --type post --pre-number $(cat $prefile_prefix"_"$x) --description "$post_description"
+                snapper --config $x create --type $pre_or_post --cleanup-algorithm $cleanupalgo --pre-number $(cat $prefile_prefix"_"$x) --description "$post_description"
                 rm $prefile_prefix"_"$x
             else
                 echo "WARNING: $prefile_prefix"_"$x does not exist, so no post snapshot will be taken. If you are initially installing snap-pac, this is normal."
@@ -65,3 +70,5 @@ for x in $configurations; do
     fi
 
 done
+
+exit
