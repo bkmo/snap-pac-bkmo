@@ -18,7 +18,8 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-# Main script. Is sourced by other scripts and functions are called
+# Main script. Is sourced in hooks and functions are called.
+# e.g.: bash -c ". snap-pac; pre"
 
 if [ -f /etc/snap-pac.conf ]; then
     source /etc/snap-pac.conf
@@ -48,7 +49,6 @@ function post
             echo "WARNING: $prefile_prefix"_"$x does not exist, so no post snapshot will be taken. If you are initially installing snap-pac, this is normal."
         fi
     done
-
 }
 
 function clean
