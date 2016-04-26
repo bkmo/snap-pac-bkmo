@@ -16,7 +16,7 @@ Install [the package from the
 AUR](https://aur.archlinux.org/packages/snap-pac/).
 
 After installation, the hooks will be located in `/usr/share/libalpm/hooks`, and
-the script are located in `/usr/share/libalpm/hooks.bin`.
+the script will be located in `/usr/share/libalpm/hooks.bin`.
 
 ## Configuration
 
