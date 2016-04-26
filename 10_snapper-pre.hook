@@ -28,4 +28,3 @@ Description = snapper pre snapshot
 Depends = snapper
 When = PreTransaction
 Exec = /usr/share/libalpm/hooks.bin/snap-pac pre
-AbortOnFail
