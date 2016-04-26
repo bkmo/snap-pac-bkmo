@@ -1,8 +1,9 @@
 # snap-pac
 
-![GitHub release](https://img.shields.io/github/release/wesbarnett/snap-pac.svg)
-![License](https://img.shields.io/github/license/wesbarnett/snap-pac.svg)
-![Issues](https://img.shields.io/github/issues/wesbarnett/snap-pac.svg)
+[![GitHub release](https://img.shields.io/github/release/wesbarnett/snap-pac.svg)](https://github.com/wesbarnett/snap-pac/releases)
+[![License](https://img.shields.io/github/license/wesbarnett/snap-pac.svg)](https://github.com/wesbarnett/snap-pac/blob/master/LICENSE)
+[![Issues](https://img.shields.io/github/issues/wesbarnett/snap-pac.svg)](https://github.com/wesbarnett/snap-pac/issues)
+[![AUR Votes](https://img.shields.io/aur/votes/snap-pac.svg)](https://aur.archlinux.org/packages/snap-pac/)
 
 This makes Arch Linux's pacman use
 [snapper](https://wiki.archlinux.org/index.php/Snapper) to automatically take a
