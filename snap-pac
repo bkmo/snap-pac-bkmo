@@ -21,33 +21,46 @@
 # Main script. Is sourced in hooks and functions are called.
 # e.g.: bash -c ". snap-pac; pre"
 
-if [ -f /etc/snap-pac.conf ]; then
-    source /etc/snap-pac.conf
-else
-    echo "WARNING: /etc/snap-pac.conf is missing. Using default settings."
-fi
-
-declare -r cleanupalgo=${CLEANUP_ALGORITHM:-"number"}
-declare -r description=${POST_DESCRIPTION:-"$(echo $(ps -C pacman -o args=) | sed 'sX/usr/bin/pacmanXpacmanXg')"}
-declare -r configurations=${CONFIGS:-"root"}
 declare -r prefile_prefix="/usr/share/libalpm/hooks.bin/snap-pac/.pre"
+
+declare -i i=0
+for x in $(ls /etc/snapper/configs); do
+    source /etc/snapper/configs/$x
+    if [[ $x == "root" ]]; then
+        take_snapshot[i]=${PACMAN_PRE_POST:-"yes"}
+    else
+        take_snapshot[i]=${PACMAN_PRE_POST:-"no"}
+    fi
+    cleanupalgo[i]=${PACMAN_CLEANUP_ALGORITHM:-"number"}
+    pre_description[i]=${PACMAN_PRE_DESCRIPTION:-"$(echo $(ps -C pacman -o args=) | sed 'sX/usr/bin/pacmanXpacmanXg')"}
+    post_description[i]=${PACMAN_POST_DESCRIPTION:-"$(echo $(ps -C pacman -o args=) | sed 'sX/usr/bin/pacmanXpacmanXg')"}
+    i=$(($i+1))
+done
 
 function pre
 {
-    for x in $configurations; do
-        snapper --config $x create --type pre --cleanup-algorithm $cleanupalgo --print-number --description "$description" > $prefile_prefix"_"$x
+    declare -i i=0
+    for x in $(ls /etc/snapper/configs); do
+        if [[ ${take_snapshot[i]} == "yes" ]];then
+            snapper --config $x create --type pre --cleanup-algorithm ${cleanupalgo[i]} --print-number --description "${pre_description[i]}" > $prefile_prefix"_"$x
+        fi
+        i=$(($i+1))
     done
 }
 
 function post 
 {
-    for x in $configurations; do
-        if [ -f $prefile_prefix"_"$x ]; then
-            snapper --config $x create --cleanup-algorithm $cleanupalgo --type post --pre-number $(cat $prefile_prefix"_"$x) --description "$description"
-            rm $prefile_prefix"_"$x
-        else
-            echo "WARNING: $prefile_prefix"_"$x does not exist, so no post snapshot will be taken. If you are initially installing snap-pac, this is normal."
+    declare -i i=0
+    for x in $(ls /etc/snapper/configs); do
+        if [[ ${take_snapshot[i]} == "yes" ]];then
+            if [ -f $prefile_prefix"_"$x ]; then
+                snapper --config $x create --cleanup-algorithm ${cleanupalgo[i]} --type post --pre-number $(cat $prefile_prefix"_"$x) --description "${post_description[i]}"
+                rm $prefile_prefix"_"$x
+            else
+                echo "WARNING: $prefile_prefix"_"$x does not exist, so no post snapshot for $x configuration will be taken. If you are initially installing snap-pac, this is normal."
+            fi
         fi
+        i=$(($i+1))
     done
 }
 

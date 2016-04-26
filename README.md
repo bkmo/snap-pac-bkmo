@@ -20,15 +20,23 @@ the scripts are located at `/usr/share/libalpm/hooks.bin/snap-pac`.
 
 ## Configuration
 
-The configuration file is located at `/etc/snap-pac.conf`. There you can choose
-which snapper configurations, descriptions, and cleanup algorithm to use.
-Changing the file should be self-explanatory.  The defaults should be sufficient
-for most users.
+Configuration is done via the snapper configuration files, with extra variables
+specific to these pacman hooks. The defaults should be suitable for most users.
+The following are possible settings you can place in each snapper configuration
+file:
 
-By default, the snapshots are set up to use snapper's `number` algorithm.
-Additionally, by default, snapshots are only taken of the subvolume
-corresponding with the `root` snapper configuration. Descriptions are of the
-pacman command that initiated the snapshots.
+* `PACMAN_PRE_POST` - perform pacman pre/post snapshots for this configuration.
+  Default is `"no"` for all configurations, except for the `root` configuration
+which is "`yes"`.
+* `PACMAN_CLEANUP_ALGORITHM` - snapper algorithm used in cleaning up the pacman pre/post
+  snapshots. Default is `"number"`.
+* `PACMAN_PRE_DESCRIPTION` - snapper description used for the pacman pre snapshot.
+  Default is the pacman command that called the snapshot.
+* `PACMAN_POST_DESCRIPTION` - snapper description used for the pacman post snapshot.
+  Default is the pacman command that called the snapshot.
+
+These settings only need to be added to the snapper configuration files if you
+want to change the default.
 
 ## Usage
 
