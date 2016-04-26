@@ -27,4 +27,4 @@ Target = *
 Description = snapper post snapshot
 Depends = snapper
 When = PostTransaction
-Exec = /usr/share/libalpm/hooks.bin/snap-pac/snap-pac post
+Exec = /usr/share/libalpm/hooks.bin/snap-pac post
