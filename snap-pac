@@ -21,33 +21,52 @@
 # Main script. Is sourced in hooks and functions are called.
 # e.g.: bash -c ". snap-pac; pre"
 
+# Have to store pre snapshot number in a file, since the script is run in a
+# subshell. Exporting a variable doesn't seem to work
 declare -r prefile_prefix="/usr/share/libalpm/hooks.bin/snap-pac/.pre"
 
+# find any variables set in the snapper configuration files as well as set
+# pacman_cmd
 function read_configs
 {
+    # pacman command that called the hook in the first place
     declare -r pacman_cmd="$(echo $(ps -C pacman -o args=) | sed 'sX/usr/bin/pacmanXpacmanXg')"
+
+    declare -r snapper_config_dir="/etc/snapper/configs"
+    configurations="$(ls $snapper_config_dir)"
+
+    declare -r pre_or_post=$1
+
     declare -i i=0
-    for x in $(ls /etc/snapper/configs); do
-        source /etc/snapper/configs/$x
+    for x in $configurations; do
+
+        source $snapper_config_dir/$x
+
         if [[ $x == "root" ]]; then
             take_snapshot[i]=${PACMAN_PRE_POST:-"yes"}
         else
             take_snapshot[i]=${PACMAN_PRE_POST:-"no"}
         fi
+
         cleanupalgo[i]=${PACMAN_CLEANUP_ALGORITHM:-"number"}
-        pre_description[i]=${PACMAN_PRE_DESCRIPTION:-"$pacman_cmd"}
-        post_description[i]=${PACMAN_POST_DESCRIPTION:-"$pacman_cmd"}
+
+        if [[ $pre_or_post == "pre" ]]; then
+            description[i]=${PACMAN_PRE_DESCRIPTION:-"$pacman_cmd"}
+        else
+            description[i]=${PACMAN_POST_DESCRIPTION:-"$pacman_cmd"}
+        fi
+
         i=$(($i+1))
     done
 }
 
 function pre
 {
-    read_configs
+    read_configs pre
     declare -i i=0
-    for x in $(ls /etc/snapper/configs); do
-        if [[ ${take_snapshot[i]} == "yes" ]];then
-            snapper --config $x create --type pre --cleanup-algorithm ${cleanupalgo[i]} --print-number --description "${pre_description[i]}" > $prefile_prefix"_"$x
+    for x in $configurations; do
+        if [[ ${take_snapshot[i]} == "yes" ]]; then
+            snapper --config $x create --type pre --cleanup-algorithm ${cleanupalgo[i]} --print-number --description "${description[i]}" > $prefile_prefix"_"$x
         fi
         i=$(($i+1))
     done
@@ -55,12 +74,12 @@ function pre
 
 function post 
 {
-    read_configs
+    read_configs post
     declare -i i=0
-    for x in $(ls /etc/snapper/configs); do
-        if [[ ${take_snapshot[i]} == "yes" ]];then
+    for x in $configurations; do
+        if [[ ${take_snapshot[i]} == "yes" ]]; then
             if [ -f $prefile_prefix"_"$x ]; then
-                snapper --config $x create --cleanup-algorithm ${cleanupalgo[i]} --type post --pre-number $(cat $prefile_prefix"_"$x) --description "${post_description[i]}"
+                snapper --config $x create --cleanup-algorithm ${cleanupalgo[i]} --type post --pre-number $(cat $prefile_prefix"_"$x) --description "${description[i]}"
                 rm $prefile_prefix"_"$x
             else
                 echo "WARNING: $prefile_prefix"_"$x does not exist, so no post snapshot for $x configuration will be taken. If you are initially installing snap-pac, this is normal."
