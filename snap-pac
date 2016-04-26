@@ -23,22 +23,27 @@
 
 declare -r prefile_prefix="/usr/share/libalpm/hooks.bin/snap-pac/.pre"
 
-declare -i i=0
-for x in $(ls /etc/snapper/configs); do
-    source /etc/snapper/configs/$x
-    if [[ $x == "root" ]]; then
-        take_snapshot[i]=${PACMAN_PRE_POST:-"yes"}
-    else
-        take_snapshot[i]=${PACMAN_PRE_POST:-"no"}
-    fi
-    cleanupalgo[i]=${PACMAN_CLEANUP_ALGORITHM:-"number"}
-    pre_description[i]=${PACMAN_PRE_DESCRIPTION:-"$(echo $(ps -C pacman -o args=) | sed 'sX/usr/bin/pacmanXpacmanXg')"}
-    post_description[i]=${PACMAN_POST_DESCRIPTION:-"$(echo $(ps -C pacman -o args=) | sed 'sX/usr/bin/pacmanXpacmanXg')"}
-    i=$(($i+1))
-done
+function read_configs
+{
+    declare -r pacman_cmd="$(echo $(ps -C pacman -o args=) | sed 'sX/usr/bin/pacmanXpacmanXg')"
+    declare -i i=0
+    for x in $(ls /etc/snapper/configs); do
+        source /etc/snapper/configs/$x
+        if [[ $x == "root" ]]; then
+            take_snapshot[i]=${PACMAN_PRE_POST:-"yes"}
+        else
+            take_snapshot[i]=${PACMAN_PRE_POST:-"no"}
+        fi
+        cleanupalgo[i]=${PACMAN_CLEANUP_ALGORITHM:-"number"}
+        pre_description[i]=${PACMAN_PRE_DESCRIPTION:-"$pacman_cmd"}
+        post_description[i]=${PACMAN_POST_DESCRIPTION:-"$pacman_cmd"}
+        i=$(($i+1))
+    done
+}
 
 function pre
 {
+    read_configs
     declare -i i=0
     for x in $(ls /etc/snapper/configs); do
         if [[ ${take_snapshot[i]} == "yes" ]];then
@@ -50,6 +55,7 @@ function pre
 
 function post 
 {
+    read_configs
     declare -i i=0
     for x in $(ls /etc/snapper/configs); do
         if [[ ${take_snapshot[i]} == "yes" ]];then
