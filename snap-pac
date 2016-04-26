@@ -36,7 +36,7 @@ declare -r pre_or_post=$1
 declare -r prefile_prefix="/usr/share/libalpm/hooks.bin/snap-pac/.pre"
 declare -r pacman_cmd="$(sed 's./usr/bin/pacman.pacman.g' <(ps -C pacman -o args=))"
 declare -r snapper_config_dir="/etc/snapper/configs"
-declare -r configurations="$(ls $snapper_config_dir)"
+declare -r configurations="$(find $snapper_config_dir/* -printf '%f\t')"
 
 for x in $configurations; do
 
