@@ -41,28 +41,34 @@ declare -r configurations="$(ls $snapper_config_dir)"
 for x in $configurations; do
 
     source $snapper_config_dir/$x
+
     if [[ $x == "root" ]]; then
         take_snapshot=${PACMAN_PRE_POST:-"yes"}
     else
         take_snapshot=${PACMAN_PRE_POST:-"no"}
     fi
-    cleanupalgo=${PACMAN_CLEANUP_ALGORITHM:-"number"}
-    pre_description=${PACMAN_PRE_DESCRIPTION:-"$pacman_cmd"}
-    post_description=${PACMAN_POST_DESCRIPTION:-"$pacman_cmd"}
 
     if [[ $take_snapshot == "yes" ]]; then
 
+        cleanupalgo=${PACMAN_CLEANUP_ALGORITHM:-"number"}
+
         if [[ "$pre_or_post" == "pre" ]]; then
 
-            snapper --config $x create --type $pre_or_post --cleanup-algorithm $cleanupalgo --print-number --description "$pre_description" > $prefile_prefix"_"$x
+            description=${PACMAN_PRE_DESCRIPTION:-"$pacman_cmd"}
+            snapper --config $x create --type $pre_or_post --cleanup-algorithm $cleanupalgo --print-number --description "$description" > $prefile_prefix"_"$x
 
         elif [[ "$pre_or_post" == "post" ]]; then
 
             if [ -f $prefile_prefix"_"$x ]; then
-                snapper --config $x create --type $pre_or_post --cleanup-algorithm $cleanupalgo --pre-number $(cat $prefile_prefix"_"$x) --description "$post_description"
+
+                description=${PACMAN_POST_DESCRIPTION:-"$pacman_cmd"}
+                snapper --config $x create --type $pre_or_post --cleanup-algorithm $cleanupalgo --pre-number $(cat $prefile_prefix"_"$x) --description "$description"
                 rm $prefile_prefix"_"$x
+
             else
+
                 echo "WARNING: $prefile_prefix"_"$x does not exist, so no post snapshot will be taken. If you are initially installing snap-pac, this is normal."
+
             fi
 
         fi
