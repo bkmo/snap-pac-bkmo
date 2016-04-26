@@ -27,7 +27,7 @@ file:
 
 * `PACMAN_PRE_POST` - perform pacman pre/post snapshots for this configuration.
   Default is `"no"` for all configurations, except for the `root` configuration
-which is "`yes"`.
+which is `"yes"`.
 * `PACMAN_CLEANUP_ALGORITHM` - snapper algorithm used in cleaning up the pacman pre/post
   snapshots. Default is `"number"`.
 * `PACMAN_PRE_DESCRIPTION` - snapper description used for the pacman pre snapshot.
