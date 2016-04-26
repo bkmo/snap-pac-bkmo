@@ -49,12 +49,12 @@ for x in $configurations; do
 
         if [[ "$pre_or_post" == "pre" ]]; then
 
-            snapper --config $x create --type pre --cleanup-algorithm $cleanupalgo --print-number --description "$post_description" > $prefile_prefix"_"$x
+            snapper --config $x create --type pre --cleanup-algorithm $cleanupalgo --print-number --description "$pre_description" > $prefile_prefix"_"$x
 
         elif [[ "$pre_or_post" == "post" ]]; then
 
             if [ -f $prefile_prefix"_"$x ]; then
-                snapper --config $x create --cleanup-algorithm $cleanupalgo --type post --pre-number $(cat $prefile_prefix"_"$x) --description "$pre_description"
+                snapper --config $x create --cleanup-algorithm $cleanupalgo --type post --pre-number $(cat $prefile_prefix"_"$x) --description "$post_description"
                 rm $prefile_prefix"_"$x
             else
                 echo "WARNING: $prefile_prefix"_"$x does not exist, so no post snapshot will be taken. If you are initially installing snap-pac, this is normal."
