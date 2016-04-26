@@ -24,4 +24,4 @@ Target = snap-pac
 [Action]
 Description = snap-pac cleanup upon removal
 When = PreTransaction
-Exec = /usr/bin/bash -c ". /usr/share/libalpm/hooks.bin/snap-pac/snap-pac; clean"
+Exec = /usr/bin/bash -c "rm /usr/share/libalpm/hooks.bin/snap-pac/.pre*; echo 'No post snapshot will be performed, since you are removing the pacman hooks.'"

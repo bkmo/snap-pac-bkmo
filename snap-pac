@@ -18,91 +18,50 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-# Main script. Is sourced in hooks and functions are called.
-# e.g.: bash -c ". snap-pac; pre"
+# Main script.
 
 set -e
 
-if [[ $EUID -ne 0 ]]; then
-    echo "snap-pac must be sourced as root." 
+if [[ "$1" != "pre" ]] && [[ "$1" != "post" ]]; then
+    echo "ERROR: First argument should either be 'pre' or 'post'."
     exit
 fi
 
-if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-    echo "This script is intended to be sourced from a pacman hook and not run on its own."
-    exit
-fi
-
-# Have to store pre snapshot number in a file, since the script is run in a
-# subshell. Exporting a variable doesn't seem to work
+declare -r pre_or_post=$1
 declare -r prefile_prefix="/usr/share/libalpm/hooks.bin/snap-pac/.pre"
+declare -r pacman_cmd="$(echo $(ps -C pacman -o args=) | sed 'sX/usr/bin/pacmanXpacmanXg')"
+declare -r snapper_config_dir="/etc/snapper/configs"
+declare -r configurations="$(ls $snapper_config_dir)"
 
-# find any variables set in the snapper configuration files as well as set
-# pacman_cmd
-function read_configs
-{
-    declare -r pre_or_post=$1
+for x in $configurations; do
 
-    # pacman command that called the hook in the first place
-    declare -r pacman_cmd="$(echo $(ps -C pacman -o args=) | sed 'sX/usr/bin/pacmanXpacmanXg')"
+    source $snapper_config_dir/$x
+    if [[ $x == "root" ]]; then
+        take_snapshot=${PACMAN_PRE_POST:-"yes"}
+    else
+        take_snapshot=${PACMAN_PRE_POST:-"no"}
+    fi
+    cleanupalgo=${PACMAN_CLEANUP_ALGORITHM:-"number"}
+    pre_description=${PACMAN_PRE_DESCRIPTION:-"$pacman_cmd"}
+    post_description=${PACMAN_POST_DESCRIPTION:-"$pacman_cmd"}
 
-    declare -r snapper_config_dir="/etc/snapper/configs"
-    configurations="$(ls $snapper_config_dir)"
+    if [[ $take_snapshot == "yes" ]]; then
 
-    declare -i i=0
-    for x in $configurations; do
+        if [[ "$pre_or_post" == "pre" ]]; then
 
-        source $snapper_config_dir/$x
+            snapper --config $x create --type pre --cleanup-algorithm $cleanupalgo --print-number --description "$post_description" > $prefile_prefix"_"$x
 
-        if [[ $x == "root" ]]; then
-            take_snapshot[i]=${PACMAN_PRE_POST:-"yes"}
-        else
-            take_snapshot[i]=${PACMAN_PRE_POST:-"no"}
-        fi
+        elif [[ "$pre_or_post" == "post" ]]; then
 
-        cleanupalgo[i]=${PACMAN_CLEANUP_ALGORITHM:-"number"}
-
-        if [[ $pre_or_post == "pre" ]]; then
-            description[i]=${PACMAN_PRE_DESCRIPTION:-"$pacman_cmd"}
-        else
-            description[i]=${PACMAN_POST_DESCRIPTION:-"$pacman_cmd"}
-        fi
-
-        i=$(($i+1))
-    done
-}
-
-function pre
-{
-    read_configs pre
-    declare -i i=0
-    for x in $configurations; do
-        if [[ ${take_snapshot[i]} == "yes" ]]; then
-            snapper --config $x create --type pre --cleanup-algorithm ${cleanupalgo[i]} --print-number --description "${description[i]}" > $prefile_prefix"_"$x
-        fi
-        i=$(($i+1))
-    done
-}
-
-function post 
-{
-    read_configs post
-    declare -i i=0
-    for x in $configurations; do
-        if [[ ${take_snapshot[i]} == "yes" ]]; then
             if [ -f $prefile_prefix"_"$x ]; then
-                snapper --config $x create --cleanup-algorithm ${cleanupalgo[i]} --type post --pre-number $(cat $prefile_prefix"_"$x) --description "${description[i]}"
+                snapper --config $x create --cleanup-algorithm $cleanupalgo --type post --pre-number $(cat $prefile_prefix"_"$x) --description "$pre_description"
                 rm $prefile_prefix"_"$x
             else
-                echo "WARNING: $prefile_prefix"_"$x does not exist, so no post snapshot for $x configuration will be taken. If you are initially installing snap-pac, this is normal."
+                echo "WARNING: $prefile_prefix"_"$x does not exist, so no post snapshot will be taken. If you are initially installing snap-pac, this is normal."
             fi
-        fi
-        i=$(($i+1))
-    done
-}
 
-function clean
-{
-    rm /usr/share/libalpm/hooks.bin/snap-pac/.pre*
-    echo "NOTE: No post snapshot will be performed for this transaction, since you are removing the pacman hooks."
-}
+        fi
+
+    fi
+
+done
