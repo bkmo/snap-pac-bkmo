@@ -21,6 +21,13 @@
 # Main script. Is sourced in hooks and functions are called.
 # e.g.: bash -c ". snap-pac; pre"
 
+set -e
+
+if [[ $EUID -ne 0 ]]; then
+    echo "snap-pac must be run as root." 
+    exit
+fi
+
 # Have to store pre snapshot number in a file, since the script is run in a
 # subshell. Exporting a variable doesn't seem to work
 declare -r prefile_prefix="/usr/share/libalpm/hooks.bin/snap-pac/.pre"
@@ -29,13 +36,13 @@ declare -r prefile_prefix="/usr/share/libalpm/hooks.bin/snap-pac/.pre"
 # pacman_cmd
 function read_configs
 {
+    declare -r pre_or_post=$1
+
     # pacman command that called the hook in the first place
     declare -r pacman_cmd="$(echo $(ps -C pacman -o args=) | sed 'sX/usr/bin/pacmanXpacmanXg')"
 
     declare -r snapper_config_dir="/etc/snapper/configs"
     configurations="$(ls $snapper_config_dir)"
-
-    declare -r pre_or_post=$1
 
     declare -i i=0
     for x in $configurations; do
