@@ -22,7 +22,7 @@
 # PKGBUILD that installs using "./install $pkgdir".
 
 INSTALL_DIR=$1
-SCRIPTS_DIR=$INSTALL_DIR/usr/share/libalpm/hooks.bin/
+SCRIPTS_DIR=$INSTALL_DIR/usr/share/libalpm/scripts/
 HOOKS_DIR=$INSTALL_DIR/usr/share/libalpm/hooks/
 install -d $HOOKS_DIR
 install -d $SCRIPTS_DIR
