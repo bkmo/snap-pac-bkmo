@@ -24,8 +24,6 @@
 INSTALL_DIR=$1
 SCRIPTS_DIR=$INSTALL_DIR/usr/share/libalpm/scripts/
 HOOKS_DIR=$INSTALL_DIR/usr/share/libalpm/hooks/
-install -d $HOOKS_DIR
-install -d $SCRIPTS_DIR
 install -Dm 755 snap-pac $SCRIPTS_DIR
 install -Dm 644 00_snapper-pre.hook $HOOKS_DIR
 install -Dm 644 zz_snapper-post.hook $HOOKS_DIR
