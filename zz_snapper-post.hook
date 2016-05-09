@@ -24,7 +24,7 @@ Type = Package
 Target = *
 
 [Action]
-Description = snapper post snapshot
+Description = Performing snapper post snapshot...
 Depends = snapper
 When = PostTransaction
 Exec = /usr/share/libalpm/scripts/snap-pac post
