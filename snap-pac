@@ -38,7 +38,7 @@ if [[ $1 != "pre" ]] && [[ $1 != "post" ]]; then
 fi
 
 # Get configurations directly from snapper
-if [ -f /etc/conf.d/snapper ]; then
+if [[ -f /etc/conf.d/snapper ]]; then
     source /etc/conf.d/snapper 
 else
     echo "ERROR: /etc/conf.d/snapper does not exist! Aborting..."
@@ -71,7 +71,7 @@ for CONFIG in $SNAPPER_CONFIGS; do
 
         elif [[ "$pre_or_post" == "post" ]]; then
 
-            if [ -f $prefile ]; then
+            if [[ -f $prefile ]]; then
                 snapper --config $CONFIG create --type $pre_or_post --cleanup-algorithm $PACMAN_CLEANUP_ALGORITHM --description "$PACMAN_POST_DESCRIPTION" --pre-number $(< $prefile) 
                 rm $prefile
             else
