@@ -49,7 +49,7 @@ declare -r pre_or_post=$1
 
 for CONFIG in $SNAPPER_CONFIGS; do
 
-    if [[ $x == "root" ]]; then
+    if [[ $CONFIG == "root" ]]; then
         PACMAN_PRE_POST="yes"
     else
         PACMAN_PRE_POST="no"
