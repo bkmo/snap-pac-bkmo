@@ -37,7 +37,6 @@ if [[ $1 != "pre" ]] && [[ $1 != "post" ]]; then
     exit 1
 fi
 
-# Get configurations directly from snapper
 if [[ -f /etc/conf.d/snapper ]]; then
     source /etc/conf.d/snapper 
 else
@@ -46,40 +45,29 @@ else
 fi
 
 declare -r pre_or_post=$1
+declare -r pacman_cmd="$(sed 's./usr/bin/pacman.pacman.g' <(ps -C pacman -o args=))"
 
 for CONFIG in $SNAPPER_CONFIGS; do
 
+    PACMAN_PRE_POST="no"
     if [[ $CONFIG == "root" ]]; then
         PACMAN_PRE_POST="yes"
-    else
-        PACMAN_PRE_POST="no"
     fi
-
-    PACMAN_CLEANUP_ALGORITHM="number"
-    PACMAN_PRE_DESCRIPTION="$(sed 's./usr/bin/pacman.pacman.g' <(ps -C pacman -o args=))"
-    PACMAN_POST_DESCRIPTION="$(sed 's./usr/bin/pacman.pacman.g' <(ps -C pacman -o args=))"
 
     source /etc/snapper/configs/$CONFIG
 
-    if [[ $PACMAN_PRE_POST == "yes" ]]; then
+    [[ $PACMAN_PRE_POST != "yes" ]] && continue
 
-        prefile="/tmp/snap-pac-pre_$CONFIG"
+    prefile="/tmp/snap-pac-pre_$CONFIG"
+    snapper_cmd="snapper --config $CONFIG create --type $pre_or_post --cleanup-algorithm ${PACMAN_CLEANUP_ALGORITHM:-"number"}"
 
-        if [[ "$pre_or_post" == "pre" ]]; then
-
-            snapper --config $CONFIG create --type $pre_or_post --cleanup-algorithm $PACMAN_CLEANUP_ALGORITHM --description "$PACMAN_PRE_DESCRIPTION" --print-number  > $prefile
-
-        elif [[ "$pre_or_post" == "post" ]]; then
-
-            if [[ -f $prefile ]]; then
-                snapper --config $CONFIG create --type $pre_or_post --cleanup-algorithm $PACMAN_CLEANUP_ALGORITHM --description "$PACMAN_POST_DESCRIPTION" --pre-number $(< $prefile) 
-                rm $prefile
-            else
-                echo "WARNING: $prefile does not exist, so no post snapshot will be taken. If you are initially installing snap-pac, this is normal."
-            fi
-
-        fi
-
+    if [[ "$pre_or_post" == "pre" ]]; then
+        $snapper_cmd --description "${PACMAN_PRE_DESCRIPTION:-$pacman_cmd}" --print-number > $prefile
+    elif [[ -f $prefile ]]; then
+        $snapper_cmd --description "${PACMAN_POST_DESCRIPTION:-$pacman_cmd}" --pre-number $(< $prefile) 
+        rm $prefile
+    else
+        echo "WARNING: $prefile does not exist, so no post snapshot will be taken. If you are initially installing snap-pac, this is normal."
     fi
 
 done
