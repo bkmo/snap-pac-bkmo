@@ -57,7 +57,7 @@ for CONFIG in $SNAPPER_CONFIGS; do
 
     PACMAN_CLEANUP_ALGORITHM="number"
     PACMAN_PRE_DESCRIPTION="$(sed 's./usr/bin/pacman.pacman.g' <(ps -C pacman -o args=))"
-    PACMAN_POST_DESCRIPTION="$PACMAN_PRE_DESCRIPTION"
+    PACMAN_POST_DESCRIPTION="$(sed 's./usr/bin/pacman.pacman.g' <(ps -C pacman -o args=))"
 
     source /etc/snapper/configs/$CONFIG
 
