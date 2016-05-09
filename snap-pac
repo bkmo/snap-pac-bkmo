@@ -44,13 +44,13 @@ else
     exit 1
 fi
 
-declare -r pre_or_post=$1
-declare -r pacman_cmd="$(sed 's./usr/bin/pacman.pacman.g' <(ps -C pacman -o args=))"
-
 if [[ -z "$SNAPPER_CONFIGS" ]]; then
     echo "WARNING: No snapper configurations found, so not taking any snapshots!"
     exit 1
 fi
+
+declare -r pre_or_post=$1
+declare -r pacman_cmd="$(sed 's./usr/bin/pacman.pacman.g' <(ps -C pacman -o args=))"
 
 declare -i x=0
 for CONFIG in $SNAPPER_CONFIGS; do
