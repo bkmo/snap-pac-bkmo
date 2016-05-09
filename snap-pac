@@ -40,13 +40,19 @@ fi
 if [[ -f /etc/conf.d/snapper ]]; then
     source /etc/conf.d/snapper 
 else
-    echo "ERROR: /etc/conf.d/snapper does not exist! Aborting..."
+    echo "ERROR: /etc/conf.d/snapper does not exist!"
     exit 1
 fi
 
 declare -r pre_or_post=$1
 declare -r pacman_cmd="$(sed 's./usr/bin/pacman.pacman.g' <(ps -C pacman -o args=))"
 
+if [[ -z "$SNAPPER_CONFIGS" ]]; then
+    echo "WARNING: No snapper configurations found, so not taking any snapshots!"
+    exit 1
+fi
+
+declare -i x=0
 for CONFIG in $SNAPPER_CONFIGS; do
 
     PACMAN_PRE_POST="no"
@@ -63,6 +69,8 @@ for CONFIG in $SNAPPER_CONFIGS; do
     prefile="/tmp/snap-pac-pre_$CONFIG"
     snapper_cmd="snapper --config $CONFIG create --type $pre_or_post --cleanup-algorithm $PACMAN_CLEANUP_ALGORITHM"
 
+    x=$((x+1))
+
     if [[ "$pre_or_post" == "pre" ]]; then
         $snapper_cmd --description "$PACMAN_PRE_DESCRIPTION" --print-number > $prefile
     elif [[ -f $prefile ]]; then
@@ -73,3 +81,10 @@ for CONFIG in $SNAPPER_CONFIGS; do
     fi
 
 done
+
+if [[ $x -eq 0 ]]; then
+    echo "WARNING: No snapper configurations are set up for snapshots to be taken!"
+    exit 1
+fi
+
+exit 0
