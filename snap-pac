@@ -63,7 +63,7 @@ for CONFIG in $SNAPPER_CONFIGS; do
 
     if [[ $PACMAN_PRE_POST == "yes" ]]; then
 
-        prefile=/tmp/snap-pac-pre_$CONFIG
+        prefile="/tmp/snap-pac-pre_$CONFIG"
 
         if [[ "$pre_or_post" == "pre" ]]; then
 
