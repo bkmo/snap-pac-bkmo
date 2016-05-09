@@ -62,7 +62,7 @@ for x in $configurations; do
     if [[ "$pre_or_post" == "pre" ]]; then
 
         description=${PACMAN_PRE_DESCRIPTION:-"$pacman_cmd"}
-        snapper --config $x create --type $pre_or_post --cleanup-algorithm $cleanupalgo --print-number --description "$description" > $prefile_prefix"_"$x
+        snapper --config $x create --type $pre_or_post --cleanup-algorithm $cleanupalgo --description "$description" --print-number  > $prefile_prefix"_"$x
         exit 0
 
     elif [[ "$pre_or_post" == "post" ]]; then
@@ -70,7 +70,7 @@ for x in $configurations; do
         if [ -f $prefile_prefix"_"$x ]; then
 
             description=${PACMAN_POST_DESCRIPTION:-"$pacman_cmd"}
-            snapper --config $x create --type $pre_or_post --cleanup-algorithm $cleanupalgo --pre-number $(< $prefile_prefix"_"$x) --description "$description"
+            snapper --config $x create --type $pre_or_post --cleanup-algorithm $cleanupalgo --description "$description" --pre-number $(< $prefile_prefix"_"$x) 
             rm $prefile_prefix"_"$x
             exit 0
 
