@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # snap-pac
 # https://github.com/wesbarnett/snap-pac
 # Copyright (C) 2016 James W. Barnett
@@ -16,17 +14,17 @@
 
 # You should have received a copy of the GNU General Public License along
 # with this program; if not, write to the Free Software Foundation, Inc.,
-# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-# Installation script. First argument is the root directory. For use with a
-# PKGBUILD that installs using "./install $pkgdir".
+.DEFAULT = install
 
-INSTALL_DIR=$1
-SCRIPTS_DIR=$INSTALL_DIR/usr/share/libalpm/scripts/
-HOOKS_DIR=$INSTALL_DIR/usr/share/libalpm/hooks/
-install -d $HOOKS_DIR
-install -d $SCRIPTS_DIR
-install -Dm 755 snap-pac $SCRIPTS_DIR
-install -Dm 644 00_snapper-pre.hook $HOOKS_DIR
-install -Dm 644 zz_snapper-post.hook $HOOKS_DIR
-install -Dm 644 LICENSE "$INSTALL_DIR/usr/share/licenses/snap-pac/LICENSE"
+SCRIPTS_DIR=$(DESTDIR)/usr/share/libalpm/scripts/
+HOOKS_DIR=$(DESTDIR)/usr/share/libalpm/hooks/
+
+.PHONY: install
+install:
+	install -d $(HOOKS_DIR)
+	install -d $(SCRIPTS_DIR)
+	install -Dm 755 snap-pac $(SCRIPTS_DIR)
+	install -Dm 644 00_snapper-pre.hook $(HOOKS_DIR)
+	install -Dm 644 zz_snapper-post.hook $(HOOKS_DIR)
+	install -Dm 644 LICENSE $(DESTDIR)/usr/share/licenses/snap-pac/LICENSE
