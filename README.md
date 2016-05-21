@@ -124,6 +124,37 @@ And `nano` is now gone, along with all the files it changed:
 	$ pacman -Qi nano
 	error: package 'nano' was not found
 
+## Troubleshooting
+
+### ERROR: /etc/conf.d/snapper does not exist!
+
+*snap-pac* reads in the snapper configurations from `/etc/conf.d/snapper`. It
+can't do that if the file doesn't exist. I'm not sure what you've done to not
+have it exist in the default location.
+
+### WARNING: No snapper configurations found, so not taking any snapshots!
+
+No snapper configurations were found in `/etc/conf.d/snapper`. This means you
+haven't created any configurations yet using `snapper create-config`. See the
+snapper manpage on how to do this.
+
+### WARNING: No snapper configurations are set up for snapshots to be taken!
+
+Although you seem to have created at least one configuration, none of them are
+set up for *snap-pac*'s pacman hooks. By default *snap-pac* will take snapshots
+for the `root` configuration and any other configuration which has
+`PACMAN_PRE_POST` set to `yes` in its configuration file. This message means you
+don't have a snapper configuration named `root` (or `PACMAN_PRE_POST` is set to
+`no` for it) and no other configuration is set up for snapshots. See the
+configuration section above.
+
+### WARNING: *prefile* does not exist, so no post snapshot will be taken. If you are initially installing snap-pac, this is normal.
+
+*snap-pac* saves the pre snapshot's number in a temporary file. Somehow it go
+removed before the post snapshot could be taken. When you initially install
+*snap-pac* the post hook is run, but the pre hook never was, so this message
+will show up then as well.
+
 ## License
 
 snap-pac
