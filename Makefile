@@ -15,16 +15,19 @@
 # You should have received a copy of the GNU General Public License along
 # with this program; if not, write to the Free Software Foundation, Inc.,
 
-.DEFAULT = install
+PKGNAME = snap-pac
+PREFIX ?= /usr/local
 
-SCRIPTS_DIR=$(DESTDIR)/usr/share/libalpm/scripts/
-HOOKS_DIR=$(DESTDIR)/usr/share/libalpm/hooks/
+SHARE_DIR = $(DESTDIR)$(PREFIX)/share
+SCRIPTS_DIR = $(SHARE_DIR)/libalpm/scripts/
+HOOKS_DIR = $(SHARE_DIR)/libalpm/hooks/
 
-.PHONY: install
+.PHONY: check install
+
+check:
+	@shellcheck -x snap-pac
+
 install:
-	install -d $(HOOKS_DIR)
-	install -d $(SCRIPTS_DIR)
-	install -Dm 755 snap-pac $(SCRIPTS_DIR)
-	install -Dm 644 00_snapper-pre.hook $(HOOKS_DIR)
-	install -Dm 644 zz_snapper-post.hook $(HOOKS_DIR)
-	install -Dm 644 LICENSE $(DESTDIR)/usr/share/licenses/snap-pac/LICENSE
+	@install -Dm755 snap-pac -t $(SCRIPTS_DIR)
+	@install -Dm644 *.hook   -t $(HOOKS_DIR)
+	@install -Dm644 LICENSE  -t $(SHARE_DIR)/licenses/$(PKGNAME)

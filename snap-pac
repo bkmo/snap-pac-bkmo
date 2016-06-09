@@ -63,7 +63,7 @@ for CONFIG in $SNAPPER_CONFIGS; do
     PACMAN_PRE_DESCRIPTION="$pacman_cmd"
     PACMAN_POST_DESCRIPTION="$pacman_cmd"
     PACMAN_CLEANUP_ALGORITHM="number"
-    # shellcheck source=/etc/snapper/configs/root
+    # shellcheck source=/dev/null
     source /etc/snapper/configs/"$CONFIG"
 
     [[ $PACMAN_PRE_POST != "yes" ]] && continue
