@@ -32,7 +32,7 @@ The key's fingerprint is:
 
 You can manually verify the signature of the tarball with:
 
-   $ gpg --verify v*pkgver*.tar.gz.sig
+    $ gpg --verify v*pkgver*.tar.gz.sig
 
 ## Configuration
 
