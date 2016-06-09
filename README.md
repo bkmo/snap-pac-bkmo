@@ -20,11 +20,19 @@ the script will be located in `/usr/share/libalpm/hooks.bin`.
 
 In an effort to bring about a higher standard in distributing packages in the
 AUR, starting with release 0.6 (version 0.6-2 in the AUR), I have signed the
-release with my GPG key. You must import my public key to verify the signature
+release with my PGP key. You must import my public key to verify the signature
 if you are using the PKGBUILD in the AUR. This can be done
 via:
 
-    $ gpg --recv-keys --keyserver hkp://pgp.mit.edu 8535CEF3F3C38EE69555BF67E4B5E45AA3B8C5C3
+    $ gpg --recv-keys A3B8C5C3
+
+The key's fingerprint is:
+
+    8535CEF3F3C38EE69555BF67E4B5E45AA3B8C5C3
+
+You can manually verify the signature of the tarball with:
+
+   $ gpg --verify v*pkgver*.tar.gz.sig
 
 ## Configuration
 
