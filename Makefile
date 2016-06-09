@@ -25,7 +25,7 @@ HOOKS_DIR = $(SHARE_DIR)/libalpm/hooks/
 .PHONY: check install
 
 check:
-	@shellcheck -x snap-pac
+	@shellcheck -x scripts/*
 
 install:
 	@install -Dm755 scripts/* -t $(SCRIPTS_DIR)
