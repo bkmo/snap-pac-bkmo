@@ -28,6 +28,6 @@ check:
 	@shellcheck -x snap-pac
 
 install:
-	@install -Dm755 snap-pac -t $(SCRIPTS_DIR)
-	@install -Dm644 *.hook   -t $(HOOKS_DIR)
-	@install -Dm644 LICENSE  -t $(SHARE_DIR)/licenses/$(PKGNAME)
+	@install -Dm755 scripts/* -t $(SCRIPTS_DIR)
+	@install -Dm644 hooks/*   -t $(HOOKS_DIR)
+	@install -Dm644 LICENSE   -t $(SHARE_DIR)/licenses/$(PKGNAME)
