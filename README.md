@@ -19,10 +19,9 @@ After installation, the hooks will be located in `/usr/share/libalpm/hooks`, and
 the script will be located in `/usr/share/libalpm/hooks.bin`.
 
 In an effort to bring about a higher standard in distributing packages in the
-AUR, starting with release 0.6 (version 0.6-2 in the AUR), I have signed the
-release with my PGP key. You must import my public key to verify the signature
-if you are using the PKGBUILD in the AUR. This can be done
-via:
+AUR, starting with release 0.6, I have signed the release with my PGP key. You
+must import my public key to verify the signature if you are using the PKGBUILD
+in the AUR. This can be done via:
 
     $ gpg --recv-keys A3B8C5C3
 
