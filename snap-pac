@@ -50,7 +50,8 @@ if [[ -z "$SNAPPER_CONFIGS" ]]; then
 fi
 
 declare -r pre_or_post=$1
-declare -r pacman_cmd="$(sed 's./usr/bin/pacman.pacman.g' <(ps -C pacman -o args=))"
+declare pacman_cmd
+pacman_cmd="$(sed 's./usr/bin/pacman.pacman.g' <(ps -C pacman -o args=))"
 
 declare -i x=0
 for CONFIG in $SNAPPER_CONFIGS; do
@@ -62,7 +63,8 @@ for CONFIG in $SNAPPER_CONFIGS; do
     PACMAN_PRE_DESCRIPTION="$pacman_cmd"
     PACMAN_POST_DESCRIPTION="$pacman_cmd"
     PACMAN_CLEANUP_ALGORITHM="number"
-    source /etc/snapper/configs/$CONFIG
+    # shellcheck source=/etc/snapper/configs/root
+    source /etc/snapper/configs/"$CONFIG"
 
     [[ $PACMAN_PRE_POST != "yes" ]] && continue
 
@@ -72,10 +74,10 @@ for CONFIG in $SNAPPER_CONFIGS; do
     x=$((x+1))
 
     if [[ "$pre_or_post" == "pre" ]]; then
-        $snapper_cmd --description "$PACMAN_PRE_DESCRIPTION" --print-number > $prefile
+        $snapper_cmd --description "$PACMAN_PRE_DESCRIPTION" --print-number > "$prefile"
     elif [[ -f $prefile ]]; then
-        $snapper_cmd --description "$PACMAN_POST_DESCRIPTION" --pre-number $(< $prefile) 
-        rm $prefile
+        $snapper_cmd --description "$PACMAN_POST_DESCRIPTION" --pre-number "$(< "$prefile")"
+        rm "$prefile"
     else
         echo "WARNING: $prefile does not exist, so no post snapshot will be taken. If you are initially installing snap-pac, this is normal."
     fi
