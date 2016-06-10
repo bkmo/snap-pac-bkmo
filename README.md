@@ -10,6 +10,14 @@ pre and post snapshot before and after pacman transactions using pacman's hooks
 feature, similar to how YaST does with OpenSuse. This provides a simple way to
 undo changes to a system after a pacman transaction.
 
+* [Installation][]
+* [Configuration][]
+* [Usage][]
+* [Example][]
+* [Troubleshooting][]
+* [License][]
+* [See also][]
+
 ## Installation
 
 Install [the package from the
