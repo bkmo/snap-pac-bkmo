@@ -31,7 +31,9 @@ The key's fingerprint is:
 
 You can manually verify the signature of the tarball with:
 
-    $ gpg --verify 0.6.tar.gz.sig
+    $ gpg --verify version.tar.gz.sig
+
+where "version" is the version of the release you are checking.
 
 ## Configuration
 
