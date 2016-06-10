@@ -23,25 +23,15 @@ undo changes to a system after a pacman transaction.
 Install [the package from the
 AUR](https://aur.archlinux.org/packages/snap-pac/).
 
-After installation, the hooks will be located in `/usr/share/libalpm/hooks`, and
-the script will be located in `/usr/share/libalpm/hooks.bin`.
+### PGP Key
 
-In an effort to bring about a higher standard in distributing packages in the
-AUR, starting with release 0.6, I have signed the release with my PGP key. You
-must import my public key to verify the signature if you are using the PKGBUILD
-in the AUR. This can be done via:
+I have signed the release tarball with my PGP key. You must import my public key
+to verify the signature if you are using the PKGBUILD in the AUR. This can be
+done via:
 
     $ gpg --recv-keys A3B8C5C3
 
-The key's fingerprint is:
-
-    8535CEF3F3C38EE69555BF67E4B5E45AA3B8C5C3
-
-You can manually verify the signature of the tarball with:
-
-    $ gpg --verify version.tar.gz.sig
-
-where "version" is the version of the release you are checking.
+The key's fingerprint is `8535CEF3F3C38EE69555BF67E4B5E45AA3B8C5C3`.
 
 ## Configuration
 
@@ -151,6 +141,10 @@ And `nano` is now gone, along with all the files it changed:
 
 ## Troubleshooting
 
+**==> ERROR: One or more PGP signatures could not be verified!**
+
+See [PGP Key](#pgp-key) on how to import my PGP key.
+
 **ERROR: /etc/conf.d/snapper does not exist!**
 
 *snap-pac* reads in the snapper configurations from `/etc/conf.d/snapper`. It
@@ -165,9 +159,9 @@ snapper manpage on how to do this.
 
 **WARNING: No snapper configurations are set up for snapshots to be taken!**
 
-Although you seem to have created at least one configuration, none of them are
-set up for *snap-pac*'s pacman hooks. By default *snap-pac* will take snapshots
-for the `root` configuration and any other configuration which has
+Although you seem to have created at least one snapper configuration, none of
+them are set up for *snap-pac*'s pacman hooks. By default *snap-pac* will take
+snapshots for the `root` configuration and any other configuration which has
 `PACMAN_PRE_POST` set to `yes` in its configuration file. This message means you
 don't have a snapper configuration named `root` (or `PACMAN_PRE_POST` is set to
 `no` for it) and no other configuration is set up for snapshots. See the
@@ -175,7 +169,7 @@ configuration section above.
 
 **WARNING: *prefile* does not exist, so no post snapshot will be taken. If you are initially installing snap-pac, this is normal.**
 
-*snap-pac* saves the pre snapshot's number in a temporary file. Somehow it go
+*snap-pac* saves the pre snapshot's number in a temporary file. Somehow it got
 removed before the post snapshot could be taken. When you initially install
 *snap-pac* the post hook is run, but the pre hook never was, so this message
 will show up then as well.
