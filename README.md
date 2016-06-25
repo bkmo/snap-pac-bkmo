@@ -203,3 +203,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 * `man alpm-hooks`
 * `man btrfs`
 * `man snapper`
+
+Was this software helpful to you? Send me a BTC tip:
+1PZziQoUJfhMKZC8gXQZtS5ebHWMba3Geb
