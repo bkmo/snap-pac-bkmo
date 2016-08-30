@@ -4,13 +4,11 @@
 [![License](https://img.shields.io/aur/license/snap-pac.svg)](https://github.com/wesbarnett/snap-pac/blob/master/LICENSE)
 [![AUR Votes](https://img.shields.io/aur/votes/snap-pac.svg)](https://aur.archlinux.org/packages/snap-pac/)
 
-This makes Arch Linux's pacman use
+This causes Arch Linux's pacman to use
 [snapper](https://wiki.archlinux.org/index.php/Snapper) to automatically take a
 pre and post snapshot before and after pacman transactions using pacman's hooks
 feature, similar to how YaST does with OpenSuse. This provides a simple way to
 undo changes to a system after a pacman transaction.
-
-If you like this project, send me a Bitcoin tip: `1PZziQoUJfhMKZC8gXQZtS5ebHWMba3Geb`
 
 * [Installation](#installation)
 * [Configuration](#configuration)
@@ -19,6 +17,7 @@ If you like this project, send me a Bitcoin tip: `1PZziQoUJfhMKZC8gXQZtS5ebHWMba
 * [Troubleshooting](#troubleshooting)
 * [License](#license)
 * [See also](#see-also)
+* [Did you like this project?](#did-you-like-this-project?)
 
 ## Installation
 
@@ -66,7 +65,8 @@ Because these are pacman hooks, it doesn't matter how you call pacman—whether
 directly, through an AUR helper, or using an alias—snapper will create the
 snapshots when pacman installs, upgrades, or removes a package. The
 pacman command used is logged in the snapper description for the
-snapshots.
+snapshots. Additionally the snapshot numbers are output to the screen and to the
+pacman log for each snapper configuration during the pacman transaction.
 
 ### Undoing a transaction
 
@@ -181,15 +181,20 @@ configuration section above.
 *snap-pac* saves the pre snapshot's number in a temporary file. Somehow it got
 removed before the post snapshot could be taken. When you initially install
 *snap-pac* the post hook is run, but the pre hook never was, so this message
-will show up then as well.
+will show up then as well and is safe to ignore in that circumstance.
 
-**I see an "N/A" next to one of my snapper configurations in the hook's output**
+**"N/A" next to one of the snapper configurations in the hook's output**
 
-snap-pac lists all snapper configurations it finds and tells you which ones it
-took a snapshot of. "N/A" means the configuration is not set up for snap-pac, so
-no snapshot was taken.
+*snap-pac* lists all snapper configurations it finds and tells you which ones it
+took a snapshot of along with the snapshot number. "N/A" means the configuration
+is not set up for snap-pac, so no snapshot was taken for that snapper
+configuration. See [configuration](#configuration).
 
-See [configuration](#configuration).
+**Other problems**
+
+If you have a problem not listed here, check the [open
+issues](https://github.com/wesbarnett/snap-pac/issues) and file new issue if
+your problem  is not listed.
 
 ## License
 
@@ -220,3 +225,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 * `man alpm-hooks`
 * `man btrfs`
 * `man snapper`
+
+## Did you like this project?
+
+If you like this project, send me a Bitcoin tip: `1PZziQoUJfhMKZC8gXQZtS5ebHWMba3Geb`
+
