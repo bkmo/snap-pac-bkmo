@@ -100,12 +100,19 @@ Installing the `nano` package as normal:
 	(1/1) checking for file conflicts                            [######################################] 100%
 	(1/1) checking available disk space                          [######################################] 100%
 	:: Running pre-transaction hooks...
-	(1/1) snapper pre snapshot
+    (1/1) Performing snapper pre snapshots...
+        home N/A
+        root 1033 ✓
 	:: Processing package changes...
 	(1/1) installing nano                                        [######################################] 100%
     :: Running post-transaction hooks...
-    (1/2) snapper post snapshot
-    (2/2) generate GRUB configuration file
+    (1/1) Performing snapper post snapshots...
+        home N/A
+        root 1034 ✓
+
+The snapper snapshot number is given for each snapper configuration that is
+used (tip: this is also logged in pacman's log). "N/A" means that configuration
+is not set up for snap-pac (see above).
 
 And here are the snapshots:
 
@@ -175,6 +182,14 @@ configuration section above.
 removed before the post snapshot could be taken. When you initially install
 *snap-pac* the post hook is run, but the pre hook never was, so this message
 will show up then as well.
+
+**I see an "N/A" next to one of my snapper configurations in the hook's output**
+
+snap-pac lists all snapper configurations it finds and tells you which ones it
+took a snapshot of. "N/A" means the configuration is not set up for snap-pac, so
+no snapshot was taken.
+
+See [configuration](#configuration).
 
 ## License
 

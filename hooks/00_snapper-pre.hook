@@ -24,7 +24,7 @@ Type = Package
 Target = *
 
 [Action]
-Description = Performing snapper pre snapshot...
+Description = Performing snapper pre snapshots...
 Depends = snap-pac
 When = PreTransaction
 Exec = /usr/share/libalpm/scripts/snap-pac pre
