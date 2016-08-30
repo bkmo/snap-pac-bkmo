@@ -17,7 +17,7 @@ undo changes to a system after a pacman transaction.
 * [Troubleshooting](#troubleshooting)
 * [License](#license)
 * [See also](#see-also)
-* [Did you like this project?](#did-you-like-this-project?)
+* [Did you like this project?](#did-you-like-this-project)
 
 ## Installation
 
