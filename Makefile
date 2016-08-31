@@ -16,7 +16,7 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 
 PKGNAME = snap-pac
-PREFIX ?= /usr/local
+PREFIX ?= /usr
 
 SHARE_DIR = $(DESTDIR)$(PREFIX)/share
 SCRIPTS_DIR = $(SHARE_DIR)/libalpm/scripts/
