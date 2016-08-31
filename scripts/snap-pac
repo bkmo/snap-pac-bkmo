@@ -22,6 +22,8 @@
 
 set -e
 
+SNAPPER_CONFIG_FILE=/etc/conf.d/snapper
+
 if [[ $EUID -ne 0 ]]; then
     echo "ERROR: Script must be run as root." 
     exit 1
@@ -37,10 +39,10 @@ if [[ $1 != "pre" ]] && [[ $1 != "post" ]]; then
     exit 1
 fi
 
-if [[ -f /etc/conf.d/snapper ]]; then
-    source /etc/conf.d/snapper 
+if [[ -f "$SNAPPER_CONFIG_FILE" ]]; then
+    source "$SNAPPER_CONFIG_FILE"
 else
-    echo "ERROR: /etc/conf.d/snapper does not exist!"
+    echo "ERROR: $SNAPPER_CONFIG_FILE does not exist!"
     exit 1
 fi
 
@@ -56,6 +58,7 @@ pacman_cmd="$(sed 's./usr/bin/pacman.pacman.g' <(ps -C pacman -o args=))"
 declare -i x=0
 for CONFIG in $SNAPPER_CONFIGS; do
 
+    # Set defaults
     PACMAN_PRE_POST="no"
     if [[ $CONFIG == "root" ]]; then
         PACMAN_PRE_POST="yes"
@@ -64,6 +67,7 @@ for CONFIG in $SNAPPER_CONFIGS; do
     PACMAN_POST_DESCRIPTION="$pacman_cmd"
     PACMAN_CLEANUP_ALGORITHM="number"
 
+    # Source snapper configuration to override defaults
     source /etc/snapper/configs/"$CONFIG"
 
     echo -n "    $CONFIG "
