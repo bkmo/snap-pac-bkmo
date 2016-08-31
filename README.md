@@ -183,6 +183,11 @@ removed before the post snapshot could be taken. When you initially install
 *snap-pac* the post hook is run, but the pre hook never was, so this message
 will show up then as well and is safe to ignore in that circumstance.
 
+**ERROR: Unable to use snapper without dbus. Are you in a chroot environment?**
+
+Snapper requires dbus. If you chroot into another environment, dbus will not be
+available, so snapper can't take snapshots.
+
 **"N/A" next to one of the snapper configurations in the hook's output**
 
 *snap-pac* lists all snapper configurations it finds and tells you which ones it
