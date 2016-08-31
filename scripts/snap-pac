@@ -78,7 +78,7 @@ for CONFIG in $SNAPPER_CONFIGS; do
     # Source snapper configuration to override defaults
     source /etc/snapper/configs/"$CONFIG"
 
-    echo -n "    $CONFIG "
+    echo -e -n "    \033[00;34m$CONFIG\033[00m "
 
     if [[ $PACMAN_PRE_POST == "yes" ]]; then 
 
@@ -98,7 +98,7 @@ for CONFIG in $SNAPPER_CONFIGS; do
             echo "$WARNINGMSG $prefile does not exist, so no post snapshot will be taken. If you are initially installing snap-pac, this is normal."
         fi
 
-        echo "✓"
+        echo -e "\033[00;32m✓\033[00m"
 
     else
 
