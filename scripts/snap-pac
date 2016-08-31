@@ -29,6 +29,11 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
+if [[ ! -d /var/run/dbus ]]; then
+    echo "ERROR: Unable to use snapper without dbus. Are you in a chroot environment?"
+    exit 1
+fi
+
 if [[ $# -ne 1 ]]; then
     echo "ERROR: Only one argument should be passed to this script."
     exit 1
