@@ -19,15 +19,10 @@ PKGNAME = snap-pac
 PREFIX ?= /usr
 
 SHARE_DIR = $(DESTDIR)$(PREFIX)/share
-SCRIPTS_DIR = $(SHARE_DIR)/libalpm/scripts/
-HOOKS_DIR = $(SHARE_DIR)/libalpm/hooks/
 
-.PHONY: check install
-
-check:
-	@shellcheck -x scripts/*
+.PHONY: install
 
 install:
-	@install -Dm755 scripts/* -t $(SCRIPTS_DIR)
-	@install -Dm644 hooks/*   -t $(HOOKS_DIR)
+	@install -Dm755 scripts/* -t $(SHARE_DIR)/libalpm/scripts/
+	@install -Dm644 hooks/*   -t $(SHARE_DIR)/libalpm/hooks/
 	@install -Dm644 LICENSE   -t $(SHARE_DIR)/licenses/$(PKGNAME)
