@@ -24,35 +24,38 @@ set -e
 
 SNAPPER_CONFIG_FILE=/etc/conf.d/snapper
 
+ERRORMSG="\033[00;31mERROR:\033[00m"
+WARNINGMSG="\033[00;33mWARNING:\033[00m"
+
 if [[ $EUID -ne 0 ]]; then
-    echo "ERROR: Script must be run as root." 
+    echo -e "$ERRORMSG Script must be run as root." 
     exit 1
 fi
 
 if [[ ! -d /var/run/dbus ]]; then
-    echo "ERROR: Unable to use snapper without dbus. Are you in a chroot environment?"
+    echo -e "$ERRORMSG Unable to use snapper without dbus. Are you in a chroot environment?"
     exit 1
 fi
 
 if [[ $# -ne 1 ]]; then
-    echo "ERROR: Only one argument should be passed to this script."
+    echo -e "$ERRORMSG Only one argument should be passed to this script."
     exit 1
 fi
 
 if [[ $1 != "pre" ]] && [[ $1 != "post" ]]; then
-    echo "ERROR: First argument should either be 'pre' or 'post'."
+    echo -e "$ERRORMSG First argument should either be 'pre' or 'post'."
     exit 1
 fi
 
 if [[ -f "$SNAPPER_CONFIG_FILE" ]]; then
     source "$SNAPPER_CONFIG_FILE"
 else
-    echo "ERROR: $SNAPPER_CONFIG_FILE does not exist!"
+    echo -e "$ERRORMSG $SNAPPER_CONFIG_FILE does not exist!"
     exit 1
 fi
 
 if [[ -z "$SNAPPER_CONFIGS" ]]; then
-    echo "WARNING: No snapper configurations found, so not taking any snapshots!"
+    echo -e "$WARNINGMSG No snapper configurations found, so not taking any snapshots!"
     exit 1
 fi
 
@@ -92,7 +95,7 @@ for CONFIG in $SNAPPER_CONFIGS; do
             echo -n "$postnum "
             rm "$prefile"
         else
-            echo "WARNING: $prefile does not exist, so no post snapshot will be taken. If you are initially installing snap-pac, this is normal."
+            echo "$WARNINGMSG $prefile does not exist, so no post snapshot will be taken. If you are initially installing snap-pac, this is normal."
         fi
 
         echo "✓"
@@ -106,7 +109,7 @@ for CONFIG in $SNAPPER_CONFIGS; do
 done
 
 if [[ $x -eq 0 ]]; then
-    echo "WARNING: No snapper configurations are set up for snapshots to be taken!"
+    echo -e "$WARNINGMSG No snapper configurations are set up for snapshots to be taken!"
     exit 1
 fi
 
