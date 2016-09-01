@@ -95,7 +95,7 @@ for CONFIG in $SNAPPER_CONFIGS; do
             echo -n "$postnum "
             rm "$prefile"
         else
-            echo "$WARNINGMSG $prefile does not exist, so no post snapshot will be taken. If you are initially installing snap-pac, this is normal."
+            echo -e "$WARNINGMSG $prefile does not exist, so no post snapshot will be taken. If you are initially installing snap-pac, this is normal."
         fi
 
         echo "✓"
