@@ -18,14 +18,13 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-# Main script.
+# Removes file that stores pre number when snap-pac is removed.
 
 set -e
 
 SNAPPER_CONFIG_FILE=/etc/conf.d/snapper
 
 ERRORMSG="\033[00;31mERROR:\033[00m"
-WARNINGMSG="\033[00;33mWARNING:\033[00m"
 
 if [[ $EUID -ne 0 ]]; then
     echo -e "$ERRORMSG Script must be run as root." 
