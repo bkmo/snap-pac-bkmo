@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # snap-pac
 # https://github.com/wesbarnett/snap-pac
 # Copyright (C) 2016 James W. Barnett
@@ -16,13 +18,33 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-[Trigger]
-Operation = Remove
-Type = Package
-Target = snap-pac
+# Main script.
 
-[Action]
-Description = NOTE: You are removing snap-pac. No post transaction snapshots will be taken.
-Depends = snap-pac
-When = PreTransaction
-Exec = /usr/bin/true
+set -e
+
+SNAPPER_CONFIG_FILE=/etc/conf.d/snapper
+
+ERRORMSG="\033[00;31mERROR:\033[00m"
+WARNINGMSG="\033[00;33mWARNING:\033[00m"
+
+if [[ $EUID -ne 0 ]]; then
+    echo -e "$ERRORMSG Script must be run as root." 
+    exit 1
+fi
+
+if [[ -f "$SNAPPER_CONFIG_FILE" ]]; then
+    source "$SNAPPER_CONFIG_FILE"
+else
+    exit 1
+fi
+
+for CONFIG in $SNAPPER_CONFIGS; do
+
+    prefile="/tmp/snap-pac-pre_$CONFIG"
+    if [[ -f "$prefile" ]]; then
+        rm "$prefile"
+    fi
+
+done
+
+exit 0
