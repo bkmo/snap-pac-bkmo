@@ -37,9 +37,11 @@ The key's fingerprint is `8535CEF3F3C38EE69555BF67E4B5E45AA3B8C5C3`.
 ## Configuration
 
 Configuration is done via the snapper configuration files, with extra variables
-specific to these pacman hooks. The defaults should be suitable for most users.
+specific to these pacman hooks. The defaults should be suitable for most users,
+so you shouldn't need to change anything.
+
 The following are possible settings you can place in each snapper configuration
-file:
+file (*e.g.*, `/etc/snapper/configs/root`, etc.):
 
 * `PACMAN_PRE_POST` - perform pacman pre/post snapshots for this configuration.
   Default is `"no"` for all configurations, except for the `root` configuration
@@ -54,14 +56,10 @@ which is `"yes"`.
 The following setting can be changed in the snapper configuration file
 `/etc/conf.d/snapper`:
 
-* `PACMAN_ABORT_ON_FAIL` - If for some reason there is an error taking the pre
-  snapshot, abort the pacman transaction if this is set to `"yes"`. Default is
-`"no"`, meaning if there is an error taking the pre snapshot then continue with
-the pacman transaction as normal. Any other value than `"no"` is treated the
-same as `"yes"`.
-
-These settings only need to be added to the snapper configuration files if you
-want to change the default.
+* `PACMAN_ABORT_ON_FAIL` - By default this is set to `"no"`. When set to `"yes"`
+  this causes pacman to abort a transaction if the snap-pac pre hook fails. This
+prevents an upgrade/installation/removal from occurring if a pre snapshot cannot be
+performed.
 
 ## Usage
 
