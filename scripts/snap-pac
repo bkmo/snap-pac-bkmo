@@ -33,7 +33,7 @@ if [[ -f "$SNAPPER_CONFIG_FILE" ]]; then
     source "$SNAPPER_CONFIG_FILE"
 else
     echo -e "$ERRORMSG $SNAPPER_CONFIG_FILE does not exist!"
-    exit 0
+    exit 1
 fi
 
 if [[ $EUID -ne 0 ]]; then

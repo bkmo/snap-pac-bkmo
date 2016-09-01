@@ -51,6 +51,15 @@ which is `"yes"`.
 * `PACMAN_POST_DESCRIPTION` - snapper description used for the pacman post snapshot.
   Default is the pacman command that called the snapshot.
 
+The following setting can be changed in the snapper configuration file
+`/etc/conf.d/snapper`:
+
+* `PACMAN_ABORT_ON_FAIL` - If for some reason there is an error taking the pre
+  snapshot, abort the pacman transaction if this is set to `"yes"`. Default is
+`"no"`, meaning if there is an error taking the pre snapshot then continue with
+the pacman transaction as normal. Any other value than `"no"` is treated the
+same as `"yes"`.
+
 These settings only need to be added to the snapper configuration files if you
 want to change the default.
 
