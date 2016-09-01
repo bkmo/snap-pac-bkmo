@@ -24,8 +24,8 @@ set -e
 
 SNAPPER_CONFIG_FILE=/etc/conf.d/snapper
 
-ERRORMSG="\033[00;31mERROR:\033[00m"
-WARNINGMSG="\033[00;33mWARNING:\033[00m"
+ERRORMSG="    \033[00;31mERROR:\033[00m"
+WARNINGMSG="    \033[00;33mWARNING:\033[00m"
 
 PACMAN_ABORT_ON_FAIL="no"
 
@@ -73,7 +73,7 @@ if [[ $1 != "pre" ]] && [[ $1 != "post" ]]; then
 fi
 
 if [[ -z "$SNAPPER_CONFIGS" ]]; then
-    echo -e "$WARNINGMSG No snapper configurations found, so not taking any snapshots!"
+    echo -e "$ERRORMSG No snapper configurations found, so not taking any snapshots!"
     if [[ $PACMAN_ABORT_ON_FAIL == "yes" ]]; then
         exit 1
     else
@@ -131,7 +131,7 @@ for CONFIG in $SNAPPER_CONFIGS; do
 done
 
 if [[ $x -eq 0 ]]; then
-    echo -e "$WARNINGMSG No snapper configurations are set up for snapshots to be taken!"
+    echo -e "$ERRORMSG No snapper configurations are set up for snapshots to be taken!"
     if [[ $PACMAN_ABORT_ON_FAIL == "yes" ]]; then
         exit 1
     else
