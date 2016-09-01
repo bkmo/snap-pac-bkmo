@@ -22,6 +22,7 @@ Operation = Install
 Operation = Remove
 Type = Package
 Target = *
+AbortOnFail
 
 [Action]
 Description = Performing snapper pre snapshots...

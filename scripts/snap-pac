@@ -27,36 +27,58 @@ SNAPPER_CONFIG_FILE=/etc/conf.d/snapper
 ERRORMSG="\033[00;31mERROR:\033[00m"
 WARNINGMSG="\033[00;33mWARNING:\033[00m"
 
-if [[ $EUID -ne 0 ]]; then
-    echo -e "$ERRORMSG Script must be run as root." 
-    exit 1
-fi
-
-if [[ ! -d /var/run/dbus ]]; then
-    echo -e "$ERRORMSG Unable to use snapper without dbus. Are you in a chroot environment?"
-    exit 1
-fi
-
-if [[ $# -ne 1 ]]; then
-    echo -e "$ERRORMSG Only one argument should be passed to this script."
-    exit 1
-fi
-
-if [[ $1 != "pre" ]] && [[ $1 != "post" ]]; then
-    echo -e "$ERRORMSG First argument should either be 'pre' or 'post'."
-    exit 1
-fi
+PACMAN_ABORT_ON_FAIL="no"
 
 if [[ -f "$SNAPPER_CONFIG_FILE" ]]; then
     source "$SNAPPER_CONFIG_FILE"
 else
     echo -e "$ERRORMSG $SNAPPER_CONFIG_FILE does not exist!"
-    exit 1
+    exit 0
+fi
+
+if [[ $EUID -ne 0 ]]; then
+    echo -e "$ERRORMSG Script must be run as root." 
+    if [[ $PACMAN_ABORT_ON_FAIL == "no" ]]; then
+        exit 0
+    else
+        exit 1
+    fi
+fi
+
+if [[ ! -d /var/run/dbus ]]; then
+    echo -e "$ERRORMSG Unable to use snapper without dbus. Are you in a chroot environment?"
+    if [[ $PACMAN_ABORT_ON_FAIL == "no" ]]; then
+        exit 0
+    else
+        exit 1
+    fi
+fi
+
+if [[ $# -ne 1 ]]; then
+    echo -e "$ERRORMSG Only one argument should be passed to this script."
+    if [[ $PACMAN_ABORT_ON_FAIL == "no" ]]; then
+        exit 0
+    else
+        exit 1
+    fi
+fi
+
+if [[ $1 != "pre" ]] && [[ $1 != "post" ]]; then
+    echo -e "$ERRORMSG First argument should either be 'pre' or 'post'."
+    if [[ $PACMAN_ABORT_ON_FAIL == "no" ]]; then
+        exit 0
+    else
+        exit 1
+    fi
 fi
 
 if [[ -z "$SNAPPER_CONFIGS" ]]; then
     echo -e "$WARNINGMSG No snapper configurations found, so not taking any snapshots!"
-    exit 1
+    if [[ $PACMAN_ABORT_ON_FAIL == "no" ]]; then
+        exit 0
+    else
+        exit 1
+    fi
 fi
 
 declare -r pre_or_post=$1
@@ -110,7 +132,11 @@ done
 
 if [[ $x -eq 0 ]]; then
     echo -e "$WARNINGMSG No snapper configurations are set up for snapshots to be taken!"
-    exit 1
+    if [[ $PACMAN_ABORT_ON_FAIL == "no" ]]; then
+        exit 0
+    else
+        exit 1
+    fi
 fi
 
 exit 0
