@@ -30,7 +30,7 @@ I have signed the release tarball with my PGP key. You must import my public key
 to verify the signature if you are using the PKGBUILD in the AUR. This can be
 done via:
 
-    $ gpg --recv-keys 0xE4B5E45AA3B8C5C3
+    $ gpg --keyserver hkp://pgp.mit.edu --recv-keys 0xE4B5E45AA3B8C5C3
 
 The key's fingerprint is `8535CEF3F3C38EE69555BF67E4B5E45AA3B8C5C3`.
 
