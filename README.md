@@ -16,6 +16,7 @@ undo changes to a system after a pacman transaction.
 * [Example](#example)
 * [Troubleshooting](#troubleshooting)
 * [License](#license)
+* [FAQ](#faq)
 * [See also](#see-also)
 * [Did you like this project?](#did-you-like-this-project)
 
@@ -212,7 +213,9 @@ your problem  is not listed.
 
 **Does snap-pac backup non-btrfs `/boot` partitions?**
 
-Nope. See #7 for an example on how to set this up.
+Nope. See
+[here](https://github.com/wesbarnett/snap-pac/issues/7#issuecomment-245593818)
+for an example on how to set this up.
 
 ## License
 
