@@ -208,6 +208,12 @@ If you have a problem not listed here, check the [open
 issues](https://github.com/wesbarnett/snap-pac/issues) and file new issue if
 your problem  is not listed.
 
+## FAQ
+
+**Does snap-pac backup non-btrfs `/boot` partitions?**
+
+Nope. See #7 for an example on how to set this up.
+
 ## License
 
 snap-pac
