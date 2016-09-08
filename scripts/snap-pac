@@ -29,6 +29,13 @@ WARNINGMSG="    \033[00;33mWARNING:\033[00m"
 
 PACMAN_ABORT_ON_FAIL="no"
 
+# Virtual console fonts don't have the unicode checkmark
+if [[ "$TERM" == "linux" ]]; then
+    checkmark="done"
+else
+    checkmark="✓"
+fi
+
 if [[ -f "$SNAPPER_CONFIG_FILE" ]]; then
     source "$SNAPPER_CONFIG_FILE"
 else
@@ -112,11 +119,11 @@ for CONFIG in $SNAPPER_CONFIGS; do
         if [[ "$pre_or_post" == "pre" ]]; then
             $snapper_cmd --description "$PACMAN_PRE_DESCRIPTION" --print-number > "$prefile"
             echo -n "$(< "$prefile") "
-            echo "✓"
+            echo "$checkmark"
         elif [[ -f $prefile ]]; then
             postnum=$($snapper_cmd --description "$PACMAN_POST_DESCRIPTION" --print-number --pre-number "$(< "$prefile")")
             echo -n "$postnum "
-            echo "✓"
+            echo "$checkmark"
             rm "$prefile"
         else
             echo -e "$WARNINGMSG $prefile does not exist, so no post snapshot will be taken. If you are initially installing snap-pac, this is normal."
