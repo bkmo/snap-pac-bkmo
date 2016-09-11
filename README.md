@@ -203,6 +203,11 @@ took a snapshot of along with the snapshot number. "N/A" means the configuration
 is not set up for snap-pac, so no snapshot was taken for that snapper
 configuration. See [configuration](#configuration).
 
+**After restoring snapshot from snap-pac, pacman database is locked**
+
+The pre/post snaphots are taken while pacman is running, so this is expected.
+Follow the instructions pacman gives you (*.e.g.*, removing the lock file).
+
 **Other problems**
 
 If you have a problem not listed here, check the [open
