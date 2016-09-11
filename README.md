@@ -206,7 +206,7 @@ configuration. See [configuration](#configuration).
 **After restoring snapshot from snap-pac, pacman database is locked**
 
 The pre/post snaphots are taken while pacman is running, so this is expected.
-Follow the instructions pacman gives you (*.e.g.*, removing the lock file).
+Follow the instructions pacman gives you (*e.g.*, removing the lock file).
 
 **Other problems**
 
