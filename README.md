@@ -18,7 +18,6 @@ undo changes to a system after a pacman transaction.
 * [License](#license)
 * [FAQ](#faq)
 * [See also](#see-also)
-* [Did you like this project?](#did-you-like-this-project)
 
 ## Installation
 
@@ -251,8 +250,3 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 * `man alpm-hooks`
 * `man btrfs`
 * `man snapper`
-
-## Did you like this project?
-
-If you like this project, send me a Bitcoin tip: `1PZziQoUJfhMKZC8gXQZtS5ebHWMba3Geb`
-
