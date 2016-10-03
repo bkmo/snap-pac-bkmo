@@ -32,8 +32,11 @@ PACMAN_ABORT_ON_FAIL="no"
 # Virtual console fonts don't have the unicode checkmark
 if [[ "$TERM" == "linux" ]]; then
     checkmark="done"
-else
+# Ensure user is using UTF locale
+elif [[ $(awk '/UTF-8/' <(echo $LANG)) ]]; then
     checkmark="✓"
+else
+    checkmark="done"
 fi
 
 if [[ -f "$SNAPPER_CONFIG_FILE" ]]; then
