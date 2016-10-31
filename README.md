@@ -1,8 +1,7 @@
 # snap-pac
 
-[![AUR Version](https://img.shields.io/aur/version/snap-pac.svg)](https://aur.archlinux.org/packages/snap-pac/)
-[![License](https://img.shields.io/aur/license/snap-pac.svg)](https://github.com/wesbarnett/snap-pac/blob/master/LICENSE)
-[![AUR Votes](https://img.shields.io/aur/votes/snap-pac.svg)](https://aur.archlinux.org/packages/snap-pac/)
+[![Arch Version](https://img.shields.io/badge/Arch-0.8.2-brightgreen.svg)](https://git.archlinux.org/svntogit/community.git/tree/trunk/PKGBUILD?h=packages/snap-pac)
+[![License](https://img.shields.io/github/license/wesbarnett/snap-pac.svg)](https://github.com/wesbarnett/snap-pac/blob/master/LICENSE)
 
 This causes Arch Linux's pacman to use
 [snapper](https://wiki.archlinux.org/index.php/Snapper) to automatically take a
@@ -21,14 +20,12 @@ undo changes to a system after a pacman transaction.
 
 ## Installation
 
-Install [the package from the
-AUR](https://aur.archlinux.org/packages/snap-pac/).
+    # pacman -S snap-pac
 
 ### PGP Key
 
-I have signed the release tarball with my PGP key. You must import my public key
-to verify the signature if you are using the PKGBUILD in the AUR. This can be
-done via:
+I have signed the release tarball with my PGP key. You may need to import my
+public key before installation:
 
     $ gpg --keyserver hkp://pgp.mit.edu --recv-keys 0xE4B5E45AA3B8C5C3
 
