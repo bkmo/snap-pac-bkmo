@@ -230,7 +230,7 @@ for an example on how to set this up.
 
 snap-pac
 
-Copyright (C) 2016 James W. Barnett
+Copyright (C) 2016, 2017 James W. Barnett
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
