@@ -108,6 +108,7 @@ declare pacman_cmd
 pacman_cmd="$(sed 's./usr/bin/pacman.pacman.g' <(ps -C pacman -o args=))"
 
 if [[ -z "$pacman_cmd" ]]; then
+    printf "%b Didn't find pacman running.\n" "$WARNINGMSG"
     pacman_cmd="pacman"
 fi
 
@@ -150,7 +151,7 @@ for CONFIG in $SNAPPER_CONFIGS; do
                 rm "$prefile"
             else
                 printf "N/A\n"
-                printf "    %b %s does not exist, so no post snapshot for %s will be taken. If you are initially installing snap-pac, this is normal.\n" "$WARNINGMSG" "$prefile" "$CONFIG"
+                printf "%b %s does not exist, so no post snapshot for %s will be taken. If you are initially installing snap-pac, this is normal.\n" "$WARNINGMSG" "$prefile" "$CONFIG"
             fi
         fi
 
