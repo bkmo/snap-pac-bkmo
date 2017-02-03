@@ -103,6 +103,10 @@ declare -r pre_or_post=$1
 declare pacman_cmd
 pacman_cmd="$(sed 's./usr/bin/pacman.pacman.g' <(ps -C pacman -o args=))"
 
+if [[ -z "$pacman_cmd" ]]; then
+    pacman_cmd="pacman"
+fi
+
 declare -i x=0
 for CONFIG in $SNAPPER_CONFIGS; do
 
