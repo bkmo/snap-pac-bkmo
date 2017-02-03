@@ -1,0 +1,230 @@
+'\" t
+.TH SNAP-PAC 7 2017-02-03 SNAP-PAC
+.SH NAME
+snap-pac \- Pacman hooks that use snapper to create pre/post btrfs snapshots
+like openSUSE's YaST 
+
+.SH DESCRIPTION
+
+This is a set of \fIpacman\fR hooks and script that causes \fIsnapper\fR to automatically
+take a pre and post snapshot before and after pacman transactions, similar to
+how YaST does with OpenSuse. This provides a simple way to undo changes to a
+system after a pacman transaction.
+
+Because these are pacman hooks, it doesn't matter how you call pacman—whether
+directly, through an AUR helper, or using an alias—snapper will create the
+snapshots when pacman installs, upgrades, or removes a package. The pacman
+command used is logged in the snapper description for the snapshots.
+Additionally the snapshot numbers are output to the screen and to the pacman log
+for each snapper configuration during the pacman transaction.
+
+To undo changes from a pacman transaction, use \fIsnapper undochange\fR. See 
+\fBsnapper\fR (8) and the following example.
+
+If you have severe breakage—like snapper is gone for some reason and you can't
+get it back—you'll have to resort to more extreme methods, such as taking a
+snapshot of the pre snapshot and making it the default subvolume or mounting it
+as \fI/\fR. Most likely you'll need to use a live USB to get into a chroot
+environment to do any of these things. Snapper has a snapper rollback feature,
+but your setup has to be properly configured to use it. The exact procedure
+depends on your specific setup. Be careful.
+
+.SH CONFIGURATION
+Configuration is done via the snapper configuration files, with extra variables
+specific to these pacman hooks. The defaults should be suitable for most users,
+so you shouldn't need to change anything.
+
+The following are possible settings you can place in each snapper configuration
+file (e.g., \fI/etc/snapper/configs/root\fR, etc.):
+
+.BR PACMAN_PRE_POST
+.RS 
+Perform pacman pre/post snapshots for this configuration.
+Default is \fIno\fR for all configurations, except for the root configuration which
+is \fIyes\fR.
+.RE
+
+.BR PACMAN_CLEANUP_ALGORITHM
+.RS 
+Snapper algorithm used in cleaning up the pacman pre/post snapshots. Default
+is \fInumber\fR.
+.RE
+
+.BR PACMAN_PRE_DESCRIPTION
+.RS
+snapper description used for the pacman pre snapshot. Default is the pacman
+command that called the snapshot.  
+.RE
+
+.BR PACMAN_POST_DESCRIPTION
+.RS 
+snapper description used for the pacman post snapshot. Default is the pacman
+command that called the snapshot.
+.RE
+
+The following setting can be changed in the snapper configuration file
+\fI/etc/conf.d/snapper\fR:
+
+.BR PACMAN_ABORT_ON_FAIL
+.RS 
+By default this is set to \fIno\fR. When set to \fIyes\fR this causes pacman to
+abort a transaction if the snap-pac pre hook fails. This prevents an
+upgrade/installation/removal from occurring if a pre snapshot cannot be
+performed.
+.RE
+
+.SH EXAMPLE
+
+Installing the nano package as normal:
+
+.EX
+
+    # pacman -S nano
+    resolving dependencies...
+    looking for conflicting packages...
+
+    Packages (1) nano-2.5.3-1
+
+    Total Installed Size:  2.14 MiB
+
+    :: Proceed with installation? [Y/n] Y
+    (1/1) checking keys in keyring                               [######################################] 100%
+    (1/1) checking package integrity                             [######################################] 100%
+    (1/1) loading package files                                  [######################################] 100%
+    (1/1) checking for file conflicts                            [######################################] 100%
+    (1/1) checking available disk space                          [######################################] 100%
+    :: Running pre-transaction hooks...
+    (1/1) Performing snapper pre snapshots...
+        home N/A
+        root 1033 ✓
+    :: Processing package changes...
+    (1/1) installing nano                                        [######################################] 100%
+    :: Running post-transaction hooks...
+    (1/1) Performing snapper post snapshots...
+        home N/A
+        root 1034 ✓
+
+.EE
+
+The snapper snapshot number is given for each snapper configuration that is used (tip: this is also logged in pacman's log). "N/A" means that configuration is not set up for snap-pac (see above).
+
+And here are the snapshots:
+
+.EX
+
+    # snapper -c root list -t pre-post | tail -n 1
+    1033  | 1034   | Fri 22 Apr 2016 01:54:13 PM CDT | Fri 22 Apr 2016 01:54:14 PM CDT | pacman -S nano      | 
+
+.EE
+
+What changed?
+
+.EX
+
+    # snapper -c root status 1033..1034
+    +..... /etc/nanorc
+    c..... /etc/snapper/.snap-pac-pre
+    +..... /usr/bin/nano
+    +..... /usr/bin/rnano
+    +..... /usr/share/doc/nano
+    +..... /usr/share/doc/nano/faq.html
+    +..... /usr/share/doc/nano/fr
+    +..... /usr/share/doc/nano/fr/nano.1.html
+    +..... /usr/share/doc/nano/fr/nanorc.5.html
+    +..... /usr/share/doc/nano/fr/rnano.1.html
+
+.EE
+
+I truncated the above output, but it continues. See the manpage for snapper to see what each symbol means. You can also do snapper diff in the same way—I'll spare you that one.
+
+To undo the upgrade:
+
+.EX
+
+    # snapper -c root undochange 1033..1034
+    create:0 modify:3 delete:100
+
+.EE
+
+And nano is now gone, along with all the files it changed:
+
+.EX
+
+    $ pacman -Qi nano
+    error: package 'nano' was not found
+
+.EE
+
+.SH TROUBLESHOOTING
+
+.SS ERROR: \fI/etc/conf.d/snapper\fR does not exist!
+snap-pac reads in the snapper configurations from \fI/etc/conf.d/snapper\fR. It can't
+do that if the file doesn't exist. I'm not sure what you've done to not have it
+exist in the default location.
+
+.SS WARNING: No snapper configurations found, so not taking any snapshots!
+No snapper configurations were found in \fI/etc/conf.d/snapper\fR. This means you
+haven't created any configurations yet using snapper create-config. See the
+snapper manpage on how to do this.
+
+.SS WARNING: No snapper configurations are set up for snapshots to be taken!
+Although you seem to have created at least one snapper configuration, none of
+them are set up for snap-pac's pacman hooks. By default snap-pac will take
+snapshots for the root configuration and any other configuration which has
+PACMAN_PRE_POST set to yes in its configuration file. This message means you
+don't have a snapper configuration named root (or PACMAN_PRE_POST is set to no
+for it) and no other configuration is set up for snapshots. See configuration.
+
+.SS WARNING: prefile does not exist, so no post snapshot will be taken. If you are initially installing snap-pac, this is normal.
+snap-pac saves the pre snapshot's number in a temporary file. Somehow it got
+removed before the post snapshot could be taken. When you initially install
+snap-pac the post hook is run, but the pre hook never was, so this message will
+show up then as well and is safe to ignore in that circumstance.
+
+.SS WARNING: Didn't find pacman running.
+The script gets the description from the pacman command that was run. If you get
+this warning it looks like you may have run the script directly instead of
+letting it run through pacman's hooks.
+
+.SS ERROR: Unable to use snapper without dbus. Are you in a chroot environment?
+Snapper requires dbus. If you chroot into another environment, dbus will not be
+available, so snapper can't take snapshots. Although snapper can be set up to
+not need dbus, this is a simple way to check if one is in a chroot and avoid
+attempting snapshots in it.
+
+.SS After restoring snapshot from snap-pac, pacman database is locked
+The pre/post snaphots are taken while pacman is running, so this is expected.
+Follow the instructions pacman gives you (e.g., removing the lock file).
+
+.SS snap-pac is only taking snapshots of the root configuration
+That's the default behavior. See \fBCONFIGURATION\fR.
+
+.SH FAQ
+.SS Does snap-pac backup non-btrfs /boot partitions?
+Nope. But you can add hook that does it for you. It would be something like the
+following:
+
+.EX
+
+    [Trigger]
+    Operation = Upgrade
+    Operation = Install
+    Operation = Remove
+    Type = Package
+    Target = linux
+
+    [Action]
+    Description = Backing up /boot...
+    When = PreTransaction
+    Exec = /usr/bin/rsync -avzq --delete /boot /.bootbackup
+
+.EE
+
+.SH SEE ALSO
+.BR alpm-hooks (5),
+.BR snapper (8),
+.BR pacman (8)
+
+.SH AUTHORS
+.MT https://github.com/wesbarnett
+Wes Barnett
