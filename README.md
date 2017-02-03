@@ -9,6 +9,10 @@ pre and post snapshot before and after pacman transactions, similar to how YaST
 does with OpenSuse. This provides a simple way to undo changes to a system after
 a pacman transaction.
 
+## Installation
+
+Install the `snap-pac` package using pacman.
+
 ## PGP Key
 
 I have signed the release tarball with my PGP key. You may need to import my
