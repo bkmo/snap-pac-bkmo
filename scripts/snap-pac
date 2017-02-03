@@ -20,7 +20,10 @@
 
 # Main script.
 
-set -e
+function error_exit 
+{
+    exit 1
+}
 
 function kill_exit 
 {
@@ -28,6 +31,7 @@ function kill_exit
     exit 1
 }
 
+trap error_exit ERR
 trap kill_exit SIGTERM SIGINT
 
 SNAPPER_CONFIG_FILE=/etc/conf.d/snapper
