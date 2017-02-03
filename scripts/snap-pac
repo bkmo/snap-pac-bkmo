@@ -142,7 +142,7 @@ for CONFIG in $SNAPPER_CONFIGS; do
                 PACMAN_PRE_DESCRIPTION="$(echo $PACMAN_PRE_DESCRIPTION | cut -c 1-$DESC_LIMIT)..."
             fi
             $snapper_cmd --description "$PACMAN_PRE_DESCRIPTION" --print-number > "$prefile"
-            printf "    %s %s %s\n" "$CONFIG" "$(< "$prefile")" "$checkmark"
+            printf "%s %s\n" "$(< "$prefile")" "$checkmark"
         elif [[ "$pre_or_post" == "rem" ]]; then
             printf "N/A\n"
             if [[ -f $prefile ]]; then
