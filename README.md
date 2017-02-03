@@ -177,8 +177,8 @@ them are set up for *snap-pac*'s pacman hooks. By default *snap-pac* will take
 snapshots for the `root` configuration and any other configuration which has
 `PACMAN_PRE_POST` set to `yes` in its configuration file. This message means you
 don't have a snapper configuration named `root` (or `PACMAN_PRE_POST` is set to
-`no` for it) and no other configuration is set up for snapshots. See the
-configuration section above.
+`no` for it) and no other configuration is set up for snapshots. See
+[configuration](#configuration).
 
 **WARNING: *prefile* does not exist, so no post snapshot will be taken. If you are initially installing snap-pac, this is normal.**
 
@@ -200,17 +200,14 @@ available, so snapper can't take snapshots. Although snapper can be set up to
 not need dbus, this is a simple way to check if one is in a chroot and avoid
 attempting snapshots in it.
 
-**"N/A" next to one of the snapper configurations in the hook's output**
-
-*snap-pac* lists all snapper configurations it finds and tells you which ones it
-took a snapshot of along with the snapshot number. "N/A" means the configuration
-is not set up for snap-pac, so no snapshot was taken for that snapper
-configuration. See [configuration](#configuration).
-
 **After restoring snapshot from snap-pac, pacman database is locked**
 
 The pre/post snaphots are taken while pacman is running, so this is expected.
 Follow the instructions pacman gives you (*e.g.*, removing the lock file).
+
+**snap-pac is only taking snapshots of the root configuration**
+
+That's the default behavior. See [configuration](#configuration).
 
 **Other problems**
 
