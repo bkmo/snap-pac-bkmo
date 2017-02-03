@@ -1,0 +1,23 @@
+SYNOPSIS
+
+This is a set of pacman hooks and script that causes to automatically take a pre
+and post snapshot before and after pacman transactions, similar to how YaST does
+with OpenSuse. This provides a simple way to undo changes to a system after a
+pacman transaction.
+
+INSTALLATION
+
+Install the "snap-pac" package using pacman. Alternatively clone the repository
+and run "make install". I have signed the release tarball and commits with my
+PGP key. The key's fingerprint is "8535CEF3F3C38EE69555BF67E4B5E45AA3B8C5C3".
+
+DOCUMENTATION
+
+See "man 7 snap-pac" after installation.
+
+TROUBLESHOOTING
+
+After reviewing the man page, check the issues page and file a new issue if your
+problem is not covered:
+
+https://github.com/wesbarnett/snap-pac/issues
