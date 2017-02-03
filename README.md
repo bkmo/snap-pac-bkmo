@@ -3,11 +3,11 @@
 [![Arch Version](https://img.shields.io/badge/Arch-0.8.2-brightgreen.svg)](https://git.archlinux.org/svntogit/community.git/tree/trunk/PKGBUILD?h=packages/snap-pac)
 [![License](https://img.shields.io/github/license/wesbarnett/snap-pac.svg)](https://github.com/wesbarnett/snap-pac/blob/master/LICENSE)
 
-This causes Arch Linux's pacman to use
+This is a set of pacman hooks and script that causes
 [snapper](https://wiki.archlinux.org/index.php/Snapper) to automatically take a
-pre and post snapshot before and after pacman transactions using pacman's hooks
-feature, similar to how YaST does with OpenSuse. This provides a simple way to
-undo changes to a system after a pacman transaction.
+pre and post snapshot before and after pacman transactions, similar to how YaST
+does with OpenSuse. This provides a simple way to undo changes to a system after
+a pacman transaction.
 
 * [Installation](#installation)
 * [Configuration](#configuration)
@@ -190,7 +190,9 @@ will show up then as well and is safe to ignore in that circumstance.
 **ERROR: Unable to use snapper without dbus. Are you in a chroot environment?**
 
 Snapper requires dbus. If you chroot into another environment, dbus will not be
-available, so snapper can't take snapshots.
+available, so snapper can't take snapshots. Although snapper can be set up to
+not need dbus, this is a simple way to check if one is in a chroot and avoid
+attempting snapshots in it.
 
 **"N/A" next to one of the snapper configurations in the hook's output**
 
