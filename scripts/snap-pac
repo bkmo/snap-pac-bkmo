@@ -42,12 +42,12 @@ fi
 if [[ -f "$SNAPPER_CONFIG_FILE" ]]; then
     source "$SNAPPER_CONFIG_FILE"
 else
-    echo -e "$ERRORMSG $SNAPPER_CONFIG_FILE does not exist!"
+    printf "%b %s does not exist!\n" "$ERRORMSG" "$SNAPPER_CONFIG_FILE"
     exit 1
 fi
 
 if [[ $EUID -ne 0 ]]; then
-    echo -e "$ERRORMSG Script must be run as root." 
+    printf "%b Script must be run as root.\n" "$ERRORMSG"
     if [[ $PACMAN_ABORT_ON_FAIL == "yes" ]]; then
         exit 1
     else
@@ -56,7 +56,7 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 if [[ ! -d /var/run/dbus ]]; then
-    echo -e "$ERRORMSG Unable to use snapper without dbus. Are you in a chroot environment?"
+    printf "%b Unable to use snapper without dbus. Are you in a chroot environment?\n" "$ERRORMSG"
     if [[ $PACMAN_ABORT_ON_FAIL == "yes" ]]; then
         exit 1
     else
@@ -65,7 +65,7 @@ if [[ ! -d /var/run/dbus ]]; then
 fi
 
 if [[ $# -ne 1 ]]; then
-    echo -e "$ERRORMSG Only one argument should be passed to this script."
+    printf "%b Only one argument should be passed to this script.\n" "$ERRORMSG"
     if [[ $PACMAN_ABORT_ON_FAIL == "yes" ]]; then
         exit 1
     else
@@ -74,7 +74,7 @@ if [[ $# -ne 1 ]]; then
 fi
 
 if [[ $1 != "pre" ]] && [[ $1 != "post" ]]; then
-    echo -e "$ERRORMSG First argument should either be 'pre' or 'post'."
+    printf "%b First argument should either be 'pre' or 'post'.\n" "$ERRORMSG"
     if [[ $PACMAN_ABORT_ON_FAIL == "yes" ]]; then
         exit 1
     else
@@ -83,7 +83,7 @@ if [[ $1 != "pre" ]] && [[ $1 != "post" ]]; then
 fi
 
 if [[ -z "$SNAPPER_CONFIGS" ]]; then
-    echo -e "$ERRORMSG No snapper configurations found, so not taking any snapshots!"
+    printf "%b No snapper configurations found, so not taking any snapshots!\n" "$ERRORMSG" 
     if [[ $PACMAN_ABORT_ON_FAIL == "yes" ]]; then
         exit 1
     else
@@ -110,7 +110,7 @@ for CONFIG in $SNAPPER_CONFIGS; do
     # Source snapper configuration to override defaults
     source /etc/snapper/configs/"$CONFIG"
 
-    echo -n "    $CONFIG "
+    printf "    %s  " "$CONFIG"
 
     if [[ $PACMAN_PRE_POST == "yes" ]]; then 
 
@@ -121,27 +121,25 @@ for CONFIG in $SNAPPER_CONFIGS; do
 
         if [[ "$pre_or_post" == "pre" ]]; then
             $snapper_cmd --description "$PACMAN_PRE_DESCRIPTION" --print-number > "$prefile"
-            echo -n "$(< "$prefile") "
-            echo "$checkmark"
+            printf "%s %s\n" "$(< "$prefile")" "$checkmark"
         elif [[ -f $prefile ]]; then
             postnum=$($snapper_cmd --description "$PACMAN_POST_DESCRIPTION" --print-number --pre-number "$(< "$prefile")")
-            echo -n "$postnum "
-            echo "$checkmark"
+            printf "%s %s\n" "$postnum" "$checkmark"
             rm "$prefile"
         else
-            echo -e "$WARNINGMSG $prefile does not exist, so no post snapshot will be taken. If you are initially installing snap-pac, this is normal."
+            printf "%b %s does not exist, so no post snapshot will be taken. If you are initially installing snap-pac, this is normal.\n" "$WARNINGMSG" "$prefile"
         fi
 
     else
 
-        echo "N/A"
+        printf "N/A\n"
         
     fi
 
 done
 
 if [[ $x -eq 0 ]]; then
-    echo -e "$ERRORMSG No snapper configurations are set up for snapshots to be taken!"
+    printf "%b No snapper configurations are set up for snapshots to be taken!\n" "$ERRORMSG"
     if [[ $PACMAN_ABORT_ON_FAIL == "yes" ]]; then
         exit 1
     else
