@@ -187,6 +187,12 @@ removed before the post snapshot could be taken. When you initially install
 *snap-pac* the post hook is run, but the pre hook never was, so this message
 will show up then as well and is safe to ignore in that circumstance.
 
+**WARNING: Didn't find pacman running.**
+
+The script gets the description from the pacman command that was run. If you get
+this warning it looks like you may have run the script directly instead of
+letting it run through pacman's hooks.
+
 **ERROR: Unable to use snapper without dbus. Are you in a chroot environment?**
 
 Snapper requires dbus. If you chroot into another environment, dbus will not be
