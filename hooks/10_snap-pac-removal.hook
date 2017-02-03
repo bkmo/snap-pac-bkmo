@@ -25,4 +25,4 @@ Target = snap-pac
 Description = NOTE: You are removing snap-pac. No post transaction snapshots will be taken.
 Depends = snap-pac
 When = PreTransaction
-Exec = /usr/share/libalpm/scripts/snap-pac-remove
+Exec = /usr/share/libalpm/scripts/snap-pac rem

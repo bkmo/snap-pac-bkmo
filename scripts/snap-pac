@@ -85,8 +85,8 @@ if [[ $# -ne 1 ]]; then
     fi
 fi
 
-if [[ $1 != "pre" ]] && [[ $1 != "post" ]]; then
-    printf "%b First argument should either be 'pre' or 'post'.\n" "$ERRORMSG"
+if [[ $1 != "pre" ]] && [[ $1 != "post" ]] && [[ $1 != "rem" ]]; then
+    printf "%b First argument should either be 'pre', 'post', or 'rem'.\n" "$ERRORMSG"
     if [[ $PACMAN_ABORT_ON_FAIL == "yes" ]]; then
         exit 1
     else
@@ -138,6 +138,9 @@ for CONFIG in $SNAPPER_CONFIGS; do
         if [[ "$pre_or_post" == "pre" ]]; then
             $snapper_cmd --description "$PACMAN_PRE_DESCRIPTION" --print-number > "$prefile"
             printf "%s %s\n" "$(< "$prefile")" "$checkmark"
+        elif [[ "$pre_or_post" == "rem" && -f "$prefile" ]]; then
+            printf "N/A\n"
+            rm "$prefile"
         elif [[ -f $prefile ]]; then
             postnum=$($snapper_cmd --description "$PACMAN_POST_DESCRIPTION" --print-number --pre-number "$(< "$prefile")")
             printf "%s %s\n" "$postnum" "$checkmark"
