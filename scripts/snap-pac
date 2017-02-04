@@ -136,28 +136,42 @@ for CONFIG in $SNAPPER_CONFIGS; do
         x=$((x+1))
 
         if [[ "$pre_or_post" == "pre" ]]; then
+
             printf "    %s  " "$CONFIG"
+
             if [[ "${#PACMAN_PRE_DESCRIPTION}" -gt $DESC_LIMIT ]]; then
                 PACMAN_PRE_DESCRIPTION="$(echo $PACMAN_PRE_DESCRIPTION | cut -c 1-$DESC_LIMIT)..."
             fi
+
             $snapper_cmd --description "$PACMAN_PRE_DESCRIPTION" --print-number > "$prefile"
             printf "%s %s\n" "$(< "$prefile")" "$checkmark"
-        elif [[ "$pre_or_post" == "rem" ]]; then
-            if [[ -f $prefile ]]; then
-                rm "$prefile"
-            fi
+
         elif [[ "$pre_or_post" == "post" ]]; then
+
             if [[ -f $prefile ]]; then
+
                 printf "    %s  " "$CONFIG"
+
                 if [[ "${#PACMAN_POST_DESCRIPTION}" -gt $DESC_LIMIT ]]; then
                     PACMAN_POST_DESCRIPTION="$(echo $PACMAN_POST_DESCRIPTION | cut -c 1-$DESC_LIMIT)..."
                 fi
+
                 postnum=$($snapper_cmd --description "$PACMAN_POST_DESCRIPTION" --print-number --pre-number "$(< "$prefile")")
                 printf "%s %s\n" "$postnum" "$checkmark"
                 rm "$prefile"
+
             else
+
                 printf "%b %s does not exist, so no post snapshot for %s will be taken. If you are initially installing snap-pac, this is normal.\n" "$WARNINGMSG" "$prefile" "$CONFIG"
+
             fi
+
+        elif [[ "$pre_or_post" == "rem" ]]; then
+
+            if [[ -f $prefile ]]; then
+                rm "$prefile"
+            fi
+
         fi
 
     fi
