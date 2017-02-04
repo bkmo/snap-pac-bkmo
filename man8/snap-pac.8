@@ -31,46 +31,51 @@ depends on your specific setup. Be careful.
 
 .SH CONFIGURATION
 Configuration is done via the snapper configuration files, with extra variables
-specific to these pacman hooks. The defaults should be suitable for most users,
-so you shouldn't need to change anything.
+specific to these pacman hooks (see \fBsnapper-configs\fR(5)). The defaults
+of the following should be suitable for most users.
 
 The following are possible settings you can place in each snapper configuration
 file (e.g., \fI/etc/snapper/configs/root\fR, etc.). Follow the pattern of other
 variables in the configuration file (VAR=setting).
 
 \fBPACMAN_PRE_POST=\fR\fB\fIyes\fR\fR\fB or \fR\fB\fIno\fR\fR
-.RS 
-Perform pacman pre/post snapshots for this configuration.  Default is \fIno\fR
-for all configurations, except for the root configuration which is \fIyes\fR.
+.RS 4
+Perform pacman pre/post snapshots for this configuration.
+
+Default is "no", except for the root configuration which is "yes".
 .RE
 
 .BR PACMAN_CLEANUP_ALGORITHM
-.RS 
-Snapper algorithm used in cleaning up the pacman pre/post snapshots. Default
-is \fInumber\fR. See \fBsnapper\fR(8) for list of valid options.
+.RS 4
+Snapper algorithm used in cleaning up the pacman pre/post snapshots. See \fBsnapper\fR(8) for list of valid options.
+
+Default is "number". 
 .RE
 
 \fBPACMAN_PRE_DESCRIPTION=\fR\fB\fIstring\fR\fR
-.RS
-snapper description used for the pacman pre snapshot. Default is the pacman
-command that called the snapshot.  
+.RS 4
+snapper description used for the pacman pre snapshot.
+
+Default is the pacman command that called the snapshot.  
 .RE
 
 \fBPACMAN_POST_DESCRIPTION=\fR\fB\fIstring\fR\fR
-.RS 
-snapper description used for the pacman post snapshot. Default is the pacman
-command that called the snapshot.
+.RS 4
+snapper description used for the pacman post snapshot.
+
+Default is the pacman command that called the snapshot.
 .RE
 
 The following setting can be changed in the snapper configuration file
 \fI/etc/conf.d/snapper\fR:
 
 \fBPACMAN_ABORT_ON_FAIL=\fR\fB\fIyes\fR\fR\fB or \fR\fB\fIno\fR\fR
-.RS 
-By default this is set to \fIno\fR. When set to
-\fIyes\fR this causes pacman to abort a transaction if the snap-pac pre hook
-fails. This prevents an upgrade/installation/removal from occurring if a pre
-snapshot cannot be performed.
+.RS 4
+When set to "yes" this causes pacman to abort a transaction if the snap-pac pre
+hook fails.  This prevents an upgrade/installation/removal from occurring if a
+pre snapshot cannot be performed.
+
+Default is "no".
 .RE
 
 .SH EXAMPLE
@@ -221,11 +226,15 @@ following:
 
 .EE
 
+.SH HOMEPAGE
+https://github.com/wesbarnett
+
+.SH AUTHORS
+Wes Barnett <wes@wbarnett.us>
+
 .SH SEE ALSO
 .BR alpm-hooks (5),
 .BR snapper (8),
+.BR snapper-configs (5),
 .BR pacman (8)
 
-.SH AUTHORS
-.MT https://github.com/wesbarnett
-Wes Barnett
