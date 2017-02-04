@@ -19,7 +19,7 @@ Additionally the snapshot numbers are output to the screen and to the pacman log
 for each snapper configuration during the pacman transaction.
 
 To undo changes from a pacman transaction, use \fIsnapper undochange\fR. See 
-\fBsnapper\fR (8) and the following example.
+\fBsnapper\fR(8) and the following example.
 
 If you have severe breakage—like snapper is gone for some reason and you can't
 get it back—you'll have to resort to more extreme methods, such as taking a
@@ -38,26 +38,25 @@ The following are possible settings you can place in each snapper configuration
 file (e.g., \fI/etc/snapper/configs/root\fR, etc.). Follow the pattern of other
 variables in the configuration file (VAR=setting).
 
-.BR PACMAN_PRE_POST
+\fBPACMAN_PRE_POST=\fR\fB\fIyes\fR\fR\fB or \fR\fB\fIno\fR\fR
 .RS 
-Set to \fIyes\fR or \fIno\R. Perform pacman pre/post snapshots for this
-configuration.  Default is \fIno\fR for all configurations, except for the root
-configuration which is \fIyes\fR.
+Perform pacman pre/post snapshots for this configuration.  Default is \fIno\fR
+for all configurations, except for the root configuration which is \fIyes\fR.
 .RE
 
 .BR PACMAN_CLEANUP_ALGORITHM
 .RS 
 Snapper algorithm used in cleaning up the pacman pre/post snapshots. Default
-is \fInumber\fR.
+is \fInumber\fR. See \fBsnapper\fR(8) for list of valid options.
 .RE
 
-.BR PACMAN_PRE_DESCRIPTION
+\fBPACMAN_PRE_DESCRIPTION=\fR\fB\fIstring\fR\fR
 .RS
 snapper description used for the pacman pre snapshot. Default is the pacman
 command that called the snapshot.  
 .RE
 
-.BR PACMAN_POST_DESCRIPTION
+\fBPACMAN_POST_DESCRIPTION=\fR\fB\fIstring\fR\fR
 .RS 
 snapper description used for the pacman post snapshot. Default is the pacman
 command that called the snapshot.
@@ -66,9 +65,9 @@ command that called the snapshot.
 The following setting can be changed in the snapper configuration file
 \fI/etc/conf.d/snapper\fR:
 
-.BR PACMAN_ABORT_ON_FAIL
+\fBPACMAN_ABORT_ON_FAIL=\fR\fB\fIyes\fR\fR\fB or \fR\fB\fIno\fR\fR
 .RS 
-Set to \fIyes\fR or \fIno\fR. By default this is set to \fIno\fR. When set to
+By default this is set to \fIno\fR. When set to
 \fIyes\fR this causes pacman to abort a transaction if the snap-pac pre hook
 fails. This prevents an upgrade/installation/removal from occurring if a pre
 snapshot cannot be performed.
