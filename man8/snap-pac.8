@@ -6,10 +6,10 @@ like openSUSE's YaST
 
 .SH DESCRIPTION
 
-This is a set of \fIpacman\fR hooks and script that causes \fIsnapper\fR to automatically
-take a pre and post snapshot before and after pacman transactions, similar to
-how YaST does with OpenSuse. This provides a simple way to undo changes to a
-system after a pacman transaction.
+This is a set of \fIpacman\fR hooks and script that causes \fIsnapper\fR to
+automatically take a pre and post snapshot before and after pacman transactions,
+similar to how YaST does with OpenSuse. This provides a simple way to undo
+changes to a system after a pacman transaction.
 
 Because these are pacman hooks, it doesn't matter how you call pacman—whether
 directly, through an AUR helper, or using an alias—snapper will create the
@@ -35,13 +35,14 @@ specific to these pacman hooks. The defaults should be suitable for most users,
 so you shouldn't need to change anything.
 
 The following are possible settings you can place in each snapper configuration
-file (e.g., \fI/etc/snapper/configs/root\fR, etc.):
+file (e.g., \fI/etc/snapper/configs/root\fR, etc.). Follow the pattern of other
+variables in the configuration file (VAR=setting).
 
 .BR PACMAN_PRE_POST
 .RS 
-Perform pacman pre/post snapshots for this configuration.
-Default is \fIno\fR for all configurations, except for the root configuration which
-is \fIyes\fR.
+Set to \fIyes\fR or \fIno\R. Perform pacman pre/post snapshots for this
+configuration.  Default is \fIno\fR for all configurations, except for the root
+configuration which is \fIyes\fR.
 .RE
 
 .BR PACMAN_CLEANUP_ALGORITHM
@@ -67,10 +68,10 @@ The following setting can be changed in the snapper configuration file
 
 .BR PACMAN_ABORT_ON_FAIL
 .RS 
-By default this is set to \fIno\fR. When set to \fIyes\fR this causes pacman to
-abort a transaction if the snap-pac pre hook fails. This prevents an
-upgrade/installation/removal from occurring if a pre snapshot cannot be
-performed.
+Set to \fIyes\fR or \fIno\fR. By default this is set to \fIno\fR. When set to
+\fIyes\fR this causes pacman to abort a transaction if the snap-pac pre hook
+fails. This prevents an upgrade/installation/removal from occurring if a pre
+snapshot cannot be performed.
 .RE
 
 .SH EXAMPLE
@@ -95,18 +96,17 @@ Installing the nano package as normal:
     (1/1) checking available disk space                          [######################################] 100%
     :: Running pre-transaction hooks...
     (1/1) Performing snapper pre snapshots...
-        home N/A
         root 1033 ✓
     :: Processing package changes...
     (1/1) installing nano                                        [######################################] 100%
     :: Running post-transaction hooks...
     (1/1) Performing snapper post snapshots...
-        home N/A
         root 1034 ✓
 
 .EE
 
-The snapper snapshot number is given for each snapper configuration that is used (tip: this is also logged in pacman's log). "N/A" means that configuration is not set up for snap-pac (see above).
+The snapper snapshot number is given for each snapper configuration that is
+used.  Tip: this is also logged in pacman's log).
 
 And here are the snapshots:
 
@@ -135,7 +135,9 @@ What changed?
 
 .EE
 
-I truncated the above output, but it continues. See the manpage for snapper to see what each symbol means. You can also do snapper diff in the same way—I'll spare you that one.
+I truncated the above output, but it continues. See the manpage for snapper to
+see what each symbol means. You can also do snapper diff in the same way—I'll
+spare you that one.
 
 To undo the upgrade:
 
