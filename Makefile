@@ -26,5 +26,5 @@ install:
 	@install -Dm755 scripts/* -t $(SHARE_DIR)/libalpm/scripts/
 	@install -Dm644 hooks/*   -t $(SHARE_DIR)/libalpm/hooks/
 	@install -Dm644 LICENSE   -t $(SHARE_DIR)/licenses/$(PKGNAME)
-	@install -Dm644 man7/*	  -t $(SHARE_DIR)/man/man7
+	@install -Dm644 man8/*	  -t $(SHARE_DIR)/man/man8
 	@install -Dm644 README.md -t $(SHARE_DIR)/doc/$(PKGNAME)
