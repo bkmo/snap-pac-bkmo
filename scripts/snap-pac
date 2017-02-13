@@ -46,7 +46,7 @@ PACMAN_ABORT_ON_FAIL="no"
 if [[ "$TERM" == "linux" ]]; then
     checkmark="done"
 # Ensure user is using UTF locale
-elif [[ $(awk '/UTF-8/' <(echo $LANG)) ]]; then
+elif [[ $(awk '/UTF-8|utf8/' <(echo $LANG)) ]]; then
     checkmark="✓"
 else
     checkmark="done"
