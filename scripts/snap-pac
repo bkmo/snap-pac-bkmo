@@ -55,7 +55,6 @@ source "$SNAPPER_CONFIG_FILE"
 [[ ! -d /var/run/dbus ]] && die "No dbus available. Are you in a chroot environment?"
 [[ $# -ne 1 ]] && die "Only one argument should be passed to this script."
 [[ $1 != "pre" ]] && [[ $1 != "post" ]] && die "First argument should either be 'pre' or 'post'."
-[[ -z "$SNAPPER_CONFIGS" ]] && die "No snapper configurations found, so not taking any snapshots."
 
 declare -r pre_or_post=$1
 declare pacman_cmd="$(sed 's./usr/bin/pacman.pacman.g' <(ps -C pacman -o args=))"
