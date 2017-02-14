@@ -58,7 +58,6 @@ trap kill_exit SIGTERM SIGINT
 
 source "$SNAPPER_CONFIG_FILE"
 
-[[ $EUID -ne 0 ]] && die "Script must be run as root."
 [[ ! -d /var/run/dbus ]] && die "No dbus available. Are you in a chroot environment?"
 [[ $# -ne 1 ]] && die "Only one argument should be passed to this script."
 [[ $1 != "pre" ]] && [[ $1 != "post" ]] && die "First argument should either be 'pre' or 'post'."
