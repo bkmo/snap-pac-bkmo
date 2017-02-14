@@ -30,8 +30,8 @@ error() { out "==> \033[00;31mERROR:\033[00m" "$@"; } >&2
 warning() { out "==> \033[00;33mWARNING:\033[00m" "$@"; } >&2
 die() { 
     error "$@"
-    [[ $PACMAN_ABORT_ON_FAIL == "yes" ]] && exit 1
-    exit 0
+    [[ $PACMAN_ABORT_ON_FAIL == "no" ]] && exit 0
+    exit 1
 }
 error_exit() { die "Encountered unknown error."; }
 kill_exit() { die "\nExited due to user intervention."; }
