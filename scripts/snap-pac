@@ -22,6 +22,7 @@
 
 declare -r SNAPPER_CONFIG_FILE=/etc/conf.d/snapper
 declare -r DESC_LIMIT=48
+declare -r name="snap-pac"
 declare PACMAN_ABORT_ON_FAIL="no"
 
 out() { printf "$1 $2\n" "${@:3}"; }
@@ -81,21 +82,19 @@ for CONFIG in $SNAPPER_CONFIGS; do
 
     [[ $PACMAN_PRE_POST == "no" ]] && continue
 
-    prefile="/tmp/snap-pac-pre_$CONFIG"
+    prefile="/tmp/$name-pre_$CONFIG"
     snapper_cmd="snapper --config $CONFIG create --type $pre_or_post --cleanup-algorithm $PACMAN_CLEANUP_ALGORITHM --print-number"
 
     x=$((x+1))
 
     printf "    %s  " "$CONFIG"
     case "$pre_or_post" in
-        pre) 
-            printf "$($snapper_cmd --description "$(truncate_description $PACMAN_PRE_DESCRIPTION)" | tee "$prefile")\n"
-        ;;
+        pre)  printf "$($snapper_cmd --description "$(truncate_description $PACMAN_PRE_DESCRIPTION)" | tee "$prefile")\n" ;;
         post)
             if [[ -f $prefile ]]; then
                 printf "$($snapper_cmd --description "$(truncate_description $PACMAN_POST_DESCRIPTION)" --pre-number "$(< "$prefile")")\n"
             else
-                warning "%s does not exist, so no post snapshot for %s will be taken. If you are initially installing snap-pac, this is normal." "$prefile" "$CONFIG"
+                warning "%s does not exist, so no post snapshot for %s will be taken. If you are initially installing $name, this is normal." "$prefile" "$CONFIG"
             fi
             rm -f "$prefile"
         ;;
