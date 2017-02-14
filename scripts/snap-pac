@@ -93,10 +93,10 @@ for CONFIG in $SNAPPER_CONFIGS; do
         post)
             if [[ -f $prefile ]]; then
                 printf "$($snapper_cmd --description "$(truncate_description $PACMAN_POST_DESCRIPTION)" --pre-number "$(< "$prefile")")\n"
+                rm -f "$prefile"
             else
                 warning "%s does not exist, so no post snapshot for %s will be taken. If you are initially installing $name, this is normal." "$prefile" "$CONFIG"
             fi
-            rm -f "$prefile"
         ;;
     esac
 
