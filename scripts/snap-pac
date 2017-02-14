@@ -35,6 +35,15 @@ die() {
 error_exit() { die "Encountered unknown error."; }
 kill_exit() { die "\nExited due to user intervention."; }
 
+truncate_description() {
+    desc="$@"
+    if [[ "${#desc}" -gt $DESC_LIMIT ]]; then 
+        echo "$(echo $desc | cut -c 1-$DESC_LIMIT)..."
+    else
+        echo $desc
+    fi
+}
+
 trap error_exit ERR
 trap kill_exit SIGTERM SIGINT
 
@@ -75,22 +84,20 @@ for CONFIG in $SNAPPER_CONFIGS; do
     [[ $PACMAN_PRE_POST == "no" ]] && continue
 
     prefile="/tmp/snap-pac-pre_$CONFIG"
-    snapper_cmd="snapper --config $CONFIG create --type $pre_or_post --cleanup-algorithm $PACMAN_CLEANUP_ALGORITHM"
+    snapper_cmd="snapper --config $CONFIG create --type $pre_or_post --cleanup-algorithm $PACMAN_CLEANUP_ALGORITHM --print-number"
 
     x=$((x+1))
 
     case "$pre_or_post" in
         pre) 
             printf "    %s  " "$CONFIG"
-            [[ "${#PACMAN_PRE_DESCRIPTION}" -gt $DESC_LIMIT ]] && PACMAN_PRE_DESCRIPTION="$(echo $PACMAN_PRE_DESCRIPTION | cut -c 1-$DESC_LIMIT)..."
-            $snapper_cmd --description "$PACMAN_PRE_DESCRIPTION" --print-number > "$prefile"
+            $snapper_cmd --description "$(truncate_description $PACMAN_PRE_DESCRIPTION)" > "$prefile"
             printf "%s %s\n" "$(< "$prefile")" "$checkmark"
         ;;
         post)
             if [[ -f $prefile ]]; then
                 printf "    %s  " "$CONFIG"
-                [[ "${#PACMAN_POST_DESCRIPTION}" -gt $DESC_LIMIT ]] && PACMAN_POST_DESCRIPTION="$(echo $PACMAN_POST_DESCRIPTION | cut -c 1-$DESC_LIMIT)..."
-                postnum=$($snapper_cmd --description "$PACMAN_POST_DESCRIPTION" --print-number --pre-number "$(< "$prefile")")
+                postnum=$($snapper_cmd --description "$(truncate_description $PACMAN_POST_DESCRIPTION)" --pre-number "$(< "$prefile")")
                 printf "%s %s\n" "$postnum" "$checkmark"
                 rm "$prefile"
             else
