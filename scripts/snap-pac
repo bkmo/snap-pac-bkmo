@@ -61,7 +61,7 @@ declare -r pre_or_post=$1
 declare pacman_cmd="$(sed 's./usr/bin/pacman.pacman.g' <(ps -C pacman -o args=))"
 
 if [[ -z "$pacman_cmd" ]]; then
-    warning "Didn't find pacman running."
+    warning "Did not find pacman running."
     pacman_cmd="pacman"
 fi
 
@@ -87,7 +87,7 @@ for CONFIG in $SNAPPER_CONFIGS; do
 
     x=$((x+1))
 
-    printf "    %s  " "$CONFIG"
+    printf "==> %s " "$CONFIG"
     case "$pre_or_post" in
         pre)  printf "$($snapper_cmd "$(truncate_description $PACMAN_PRE_DESCRIPTION)" | tee "$prefile")\n" ;;
         post)
