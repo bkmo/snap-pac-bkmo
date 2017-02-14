@@ -56,10 +56,6 @@ source "$SNAPPER_CONFIG_FILE"
 [[ $1 != "pre" ]] && [[ $1 != "post" ]] && [[ $1 != "rem" ]] && die "First argument should either be 'pre', 'post', or 'rem'."
 [[ -z "$SNAPPER_CONFIGS" ]] && die "No snapper configurations found, so not taking any snapshots!"
 
-# Only use checkmark if UTF8 is available and we are not in TTY
-declare checkmark="done"
-[[ $(awk '/UTF-8|utf8/' <(echo $LANG)) && "$TERM" != "linux" ]] && checkmark="✓"
-
 declare -r pre_or_post=$1
 declare pacman_cmd="$(sed 's./usr/bin/pacman.pacman.g' <(ps -C pacman -o args=))"
 
@@ -90,21 +86,18 @@ for CONFIG in $SNAPPER_CONFIGS; do
 
     x=$((x+1))
 
+    printf "    %s  " "$CONFIG"
     case "$pre_or_post" in
         pre) 
-            printf "    %s  " "$CONFIG"
-            $snapper_cmd --description "$(truncate_description $PACMAN_PRE_DESCRIPTION)" > "$prefile"
-            printf "%s %s\n" "$(< "$prefile")" "$checkmark"
+            printf "$($snapper_cmd --description "$(truncate_description $PACMAN_PRE_DESCRIPTION)" | tee "$prefile")\n"
         ;;
         post)
             if [[ -f $prefile ]]; then
-                printf "    %s  " "$CONFIG"
-                postnum=$($snapper_cmd --description "$(truncate_description $PACMAN_POST_DESCRIPTION)" --pre-number "$(< "$prefile")")
-                printf "%s %s\n" "$postnum" "$checkmark"
-                rm "$prefile"
+                printf "$($snapper_cmd --description "$(truncate_description $PACMAN_POST_DESCRIPTION)" --pre-number "$(< "$prefile")")\n"
             else
                 warning "%s does not exist, so no post snapshot for %s will be taken. If you are initially installing snap-pac, this is normal." "$prefile" "$CONFIG"
             fi
+            rm -f "$prefile"
         ;;
     esac
 
