@@ -33,7 +33,7 @@ die() {
     [[ $PACMAN_ABORT_ON_FAIL == "no" ]] && exit 0
     exit 1
 }
-error_exit() { die "Encountered unknown error."; }
+error_exit() { die "Aborted due to error."; }
 kill_exit() { die "\nExited due to user intervention."; }
 
 truncate_description() {
@@ -48,7 +48,6 @@ truncate_description() {
 trap error_exit ERR
 trap kill_exit SIGTERM SIGINT
 
-[[ ! -f "$SNAPPER_CONFIG_FILE" ]] && die "%s does not exist." "$SNAPPER_CONFIG_FILE"
 source "$SNAPPER_CONFIG_FILE"
 
 [[ $EUID -ne 0 ]] && die "Script must be run as root."
