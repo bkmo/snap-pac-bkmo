@@ -71,6 +71,8 @@ fi
 declare -i x=0
 for CONFIG in $SNAPPER_CONFIGS; do
 
+    [[ "$pre_or_post" == "rem" ]] && rm -f "$prefile" && continue
+
     # Set defaults
     PACMAN_PRE_POST="no"
     [[ $CONFIG == "root" ]] && PACMAN_PRE_POST="yes"
@@ -104,13 +106,8 @@ for CONFIG in $SNAPPER_CONFIGS; do
                 warning "%s does not exist, so no post snapshot for %s will be taken. If you are initially installing snap-pac, this is normal." "$prefile" "$CONFIG"
             fi
         ;;
-        rem)
-            rm -f "$prefile" 
-        ;;
     esac
 
 done
 
 [[ $x -eq 0 ]] && die "No snapper configurations are set up for snapshots to be taken!"
-
-exit 0
