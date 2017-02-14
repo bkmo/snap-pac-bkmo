@@ -54,7 +54,7 @@ source "$SNAPPER_CONFIG_FILE"
 [[ $EUID -ne 0 ]] && die "Script must be run as root."
 [[ ! -d /var/run/dbus ]] && die "No dbus available. Are you in a chroot environment?"
 [[ $# -ne 1 ]] && die "Only one argument should be passed to this script."
-[[ $1 != "pre" ]] && [[ $1 != "post" ]] && [[ $1 != "rem" ]] && die "First argument should either be 'pre', 'post', or 'rem'."
+[[ $1 != "pre" ]] && [[ $1 != "post" ]] && die "First argument should either be 'pre' or 'post'."
 [[ -z "$SNAPPER_CONFIGS" ]] && die "No snapper configurations found, so not taking any snapshots."
 
 declare -r pre_or_post=$1
@@ -68,9 +68,6 @@ fi
 declare -i x=0
 for CONFIG in $SNAPPER_CONFIGS; do
 
-    prefile="/tmp/$name-pre_$CONFIG"
-    [[ "$pre_or_post" == "rem" ]] && rm -f "$prefile" && continue
-
     # Set defaults
     PACMAN_PRE_POST="no"
     [[ $CONFIG == "root" ]] && PACMAN_PRE_POST="yes"
@@ -83,6 +80,7 @@ for CONFIG in $SNAPPER_CONFIGS; do
 
     [[ $PACMAN_PRE_POST == "no" ]] && continue
 
+    prefile="/tmp/$name-pre_$CONFIG"
     snapper_cmd="snapper --config $CONFIG create --type $pre_or_post --cleanup-algorithm $PACMAN_CLEANUP_ALGORITHM --print-number --description"
 
     x=$((x+1))
