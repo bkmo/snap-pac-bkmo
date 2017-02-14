@@ -97,3 +97,5 @@ for CONFIG in $SNAPPER_CONFIGS; do
 done
 
 [[ $x -eq 0 ]] && die "No snapper configurations are set up for snapshots to be taken."
+
+exit 0
