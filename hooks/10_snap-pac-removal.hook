@@ -22,7 +22,7 @@ Type = Package
 Target = snap-pac
 
 [Action]
-Description = NOTE: You are removing snap-pac. No post transaction snapshots will be taken.
+Description = NOTE: You are have removed snap-pac. No post transaction snapshots will be taken.
 Depends = snap-pac
 When = PreTransaction
-Exec = /usr/bin/rm -f /tmp/snap-pac-pre_*
+Exec = /usr/bin/bash -c "rm -f /tmp/snap-pac-pre_*"
