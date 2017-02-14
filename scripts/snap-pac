@@ -24,6 +24,9 @@ declare -r SNAPPER_CONFIG_FILE=/etc/conf.d/snapper
 declare -r DESC_LIMIT=48
 declare -r name="snap-pac"
 declare PACMAN_ABORT_ON_FAIL="no"
+declare -r pacman_cmd="$(sed 's./usr/bin/pacman.pacman.g' <(ps -C pacman -o args=))"
+declare -i x=0
+declare -r pre_or_post=$1
 
 out() { printf "$1 $2\n" "${@:3}"; }
 error() { out "==> \033[00;31mERROR:\033[00m" "$@"; } >&2
@@ -56,21 +59,11 @@ set_defaults() {
 trap error_exit ERR
 trap kill_exit SIGTERM SIGINT
 
+[[ -z "$pacman_cmd" ]] && die "snap-pac should only be called via provided pacman hooks."
+[[ ! -d /var/run/dbus ]] && die "No dbus available. Are you in a chroot environment?"
+
 source "$SNAPPER_CONFIG_FILE"
 
-[[ ! -d /var/run/dbus ]] && die "No dbus available. Are you in a chroot environment?"
-[[ $# -ne 1 ]] && die "Only one argument should be passed to this script."
-[[ $1 != "pre" ]] && [[ $1 != "post" ]] && die "First argument should either be 'pre' or 'post'."
-
-declare -r pre_or_post=$1
-declare pacman_cmd="$(sed 's./usr/bin/pacman.pacman.g' <(ps -C pacman -o args=))"
-
-if [[ -z "$pacman_cmd" ]]; then
-    warning "Did not find pacman running."
-    pacman_cmd="pacman"
-fi
-
-declare -i x=0
 for CONFIG in $SNAPPER_CONFIGS; do
 
     set_defaults
