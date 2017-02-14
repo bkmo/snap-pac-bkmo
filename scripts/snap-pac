@@ -45,6 +45,14 @@ truncate_description() {
     fi
 }
 
+set_defaults() {
+    PACMAN_PRE_POST="no"
+    [[ $CONFIG == "root" ]] && PACMAN_PRE_POST="yes"
+    PACMAN_PRE_DESCRIPTION="$pacman_cmd"
+    PACMAN_POST_DESCRIPTION="$pacman_cmd"
+    PACMAN_CLEANUP_ALGORITHM="number"
+}
+
 trap error_exit ERR
 trap kill_exit SIGTERM SIGINT
 
@@ -66,14 +74,7 @@ fi
 declare -i x=0
 for CONFIG in $SNAPPER_CONFIGS; do
 
-    # Set defaults
-    PACMAN_PRE_POST="no"
-    [[ $CONFIG == "root" ]] && PACMAN_PRE_POST="yes"
-    PACMAN_PRE_DESCRIPTION="$pacman_cmd"
-    PACMAN_POST_DESCRIPTION="$pacman_cmd"
-    PACMAN_CLEANUP_ALGORITHM="number"
-
-    # Source snapper configuration to override defaults
+    set_defaults
     source /etc/snapper/configs/"$CONFIG"
 
     [[ $PACMAN_PRE_POST == "no" ]] && continue
