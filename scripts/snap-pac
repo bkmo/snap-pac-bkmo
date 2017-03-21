@@ -3,22 +3,20 @@
 # snap-pac
 # https://github.com/wesbarnett/snap-pac
 # Copyright (C) 2016, 2017 James W. Barnett
-
+#
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
 # (at your option) any later version.
-
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-
+#
 # You should have received a copy of the GNU General Public License along
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-
-# Main script.
 
 declare -r SNAPPER_CONFIG_FILE=/etc/conf.d/snapper
 declare -r DESC_LIMIT=48
@@ -58,7 +56,6 @@ set_defaults() {
 trap error_exit ERR
 trap kill_exit SIGTERM SIGINT
 
-[[ "$pre_or_post" != "pre" ]] && [[ "$pre_or_post" != "post" ]] && die "First argument must be 'pre' or 'post'."
 [[ ! -d /var/run/dbus ]] && die "No dbus available. Are you in a chroot environment?"
 
 source "$SNAPPER_CONFIG_FILE"
@@ -73,8 +70,6 @@ for CONFIG in $SNAPPER_CONFIGS; do
     prefile="/tmp/$name-pre_$CONFIG"
     snapper_cmd="snapper --config $CONFIG create --type $pre_or_post --cleanup-algorithm $PACMAN_CLEANUP_ALGORITHM --print-number --description"
 
-    x=$((x+1))
-
     if [[ "$pre_or_post" == "pre" ]]; then
         printf "==> %s: $($snapper_cmd "$(truncate_description $PACMAN_PRE_DESCRIPTION)" | tee "$prefile")\n" "$CONFIG"
     elif [[ -f $prefile && "$pre_or_post" == "post" ]]; then
@@ -83,7 +78,5 @@ for CONFIG in $SNAPPER_CONFIGS; do
     fi
 
 done
-
-[[ $x -eq 0 ]] && die "No snapper configurations are set up for snapshots to be taken."
 
 exit 0

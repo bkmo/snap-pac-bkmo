@@ -100,12 +100,12 @@ Installing the nano package as normal:
     (1/1) checking available disk space                          [######################################] 100%
     :: Running pre-transaction hooks...
     (1/1) Performing snapper pre snapshots for the following configurations...
-        root: 1033
+    => root: 1033
     :: Processing package changes...
     (1/1) installing nano                                        [######################################] 100%
     :: Running post-transaction hooks...
     (1/1) Performing snapper post snapshots for the following configurations...
-        root: 1034
+    => root: 1034
 
 .EE
 
@@ -163,17 +163,16 @@ And nano is now gone, along with all the files it changed:
 
 .SH TROUBLESHOOTING
 
-.SS ERROR: \fI/etc/conf.d/snapper\fR does not exist!
-snap-pac reads in the snapper configurations from \fI/etc/conf.d/snapper\fR. It can't
-do that if the file doesn't exist. I'm not sure what you've done to not have it
-exist in the default location.
+.SS error: No dbus available. Are you in a chroot environment?
+Snapper requires dbus. If you chroot into another environment, dbus will not be
+available, so snapper can't take snapshots. Although snapper can be set up to
+not need dbus, this is a simple way to check if one is in a chroot and avoid
+attempting snapshots in it.
 
-.SS WARNING: No snapper configurations found, so not taking any snapshots!
-No snapper configurations were found in \fI/etc/conf.d/snapper\fR. This means you
-haven't created any configurations yet using snapper create-config. See the
-snapper manpage on how to do this.
+.SS snap-pac is only taking snapshots of the root configuration
+That's the default behavior. See \fBCONFIGURATION\fR.
 
-.SS WARNING: No snapper configurations are set up for snapshots to be taken!
+.SS No snapshots are being taken when I run pacman
 Although you seem to have created at least one snapper configuration, none of
 them are set up for snap-pac's pacman hooks. By default snap-pac will take
 snapshots for the root configuration and any other configuration which has
@@ -181,29 +180,9 @@ PACMAN_PRE_POST set to yes in its configuration file. This message means you
 don't have a snapper configuration named root (or PACMAN_PRE_POST is set to no
 for it) and no other configuration is set up for snapshots. See configuration.
 
-.SS WARNING: prefile does not exist, so no post snapshot will be taken. If you are initially installing snap-pac, this is normal.
-snap-pac saves the pre snapshot's number in a temporary file. Somehow it got
-removed before the post snapshot could be taken. When you initially install
-snap-pac the post hook is run, but the pre hook never was, so this message will
-show up then as well and is safe to ignore in that circumstance.
-
-.SS WARNING: Didn't find pacman running.
-The script gets the description from the pacman command that was run. If you get
-this warning it looks like you may have run the script directly instead of
-letting it run through pacman's hooks.
-
-.SS ERROR: Unable to use snapper without dbus. Are you in a chroot environment?
-Snapper requires dbus. If you chroot into another environment, dbus will not be
-available, so snapper can't take snapshots. Although snapper can be set up to
-not need dbus, this is a simple way to check if one is in a chroot and avoid
-attempting snapshots in it.
-
 .SS After restoring snapshot from snap-pac, pacman database is locked
 The pre/post snaphots are taken while pacman is running, so this is expected.
 Follow the instructions pacman gives you (e.g., removing the lock file).
-
-.SS snap-pac is only taking snapshots of the root configuration
-That's the default behavior. See \fBCONFIGURATION\fR.
 
 .SH FAQ
 .SS Does snap-pac backup non-btrfs /boot partitions?
