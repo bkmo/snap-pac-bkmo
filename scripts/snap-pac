@@ -29,8 +29,7 @@ declare -i x=0
 declare -r pre_or_post=$1
 
 out() { printf "$1 $2\n" "${@:3}"; }
-error() { out "==> \033[00;31mERROR:\033[00m" "$@"; } >&2
-warning() { out "==> \033[00;33mWARNING:\033[00m" "$@"; } >&2
+error() { out "==> \033[00;31merror:\033[00m" "$@"; } >&2
 die() { 
     error "$@"
     [[ $PACMAN_ABORT_ON_FAIL == "no" ]] && exit 0
