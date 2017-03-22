@@ -173,12 +173,10 @@ attempting snapshots in it.
 That's the default behavior. See \fBCONFIGURATION\fR.
 
 .SS No snapshots are being taken when I run pacman
-Although you seem to have created at least one snapper configuration, none of
-them are set up for snap-pac's pacman hooks. By default snap-pac will take
-snapshots for the root configuration and any other configuration which has
-PACMAN_PRE_POST set to yes in its configuration file. This message means you
-don't have a snapper configuration named root (or PACMAN_PRE_POST is set to no
-for it) and no other configuration is set up for snapshots. See configuration.
+No snapper configurations are set up for snap-pac's pacman hooks. By default
+snap-pac will take snapshots for the root configuration and any other
+configuration which has PACMAN_PRE_POST set to yes in its configuration file.
+See CONFIGURATION.
 
 .SS After restoring snapshot from snap-pac, pacman database is locked
 The pre/post snaphots are taken while pacman is running, so this is expected.
