@@ -56,8 +56,6 @@ set_defaults() {
 trap error_exit ERR
 trap kill_exit SIGTERM SIGINT
 
-[[ ! -d /var/run/dbus ]] && die "No dbus available. Are you in a chroot environment?"
-
 source "$SNAPPER_CONFIG_FILE"
 
 for CONFIG in $SNAPPER_CONFIGS; do
@@ -71,9 +69,11 @@ for CONFIG in $SNAPPER_CONFIGS; do
     snapper_cmd="snapper --config $CONFIG create --type $pre_or_post --cleanup-algorithm $PACMAN_CLEANUP_ALGORITHM --print-number --description"
 
     if [[ "$pre_or_post" == "pre" ]]; then
-        printf "==> %s: $($snapper_cmd "$(truncate_description $PACMAN_PRE_DESCRIPTION)" | tee "$prefile")\n" "$CONFIG"
+        x=$($snapper_cmd "$(truncate_description $PACMAN_PRE_DESCRIPTION)")
+        printf "==> %s: $(echo $x | tee "$prefile")\n" "$CONFIG"
     elif [[ -f $prefile && "$pre_or_post" == "post" ]]; then
-        printf "==> %s: $($snapper_cmd "$(truncate_description $PACMAN_POST_DESCRIPTION)" --pre-number "$(< "$prefile")")\n" "$CONFIG"
+        x=$($snapper_cmd "$(truncate_description $PACMAN_POST_DESCRIPTION)" --pre-number "$(< "$prefile")")
+        printf "==> %s: %s\n" "$CONFIG" "$x"
         rm -f "$prefile"
     fi
 
