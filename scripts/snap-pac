@@ -86,6 +86,7 @@ for CONFIG in $SNAPPER_CONFIGS; do
         printf "==> %s: $(echo $x | tee "$prefile")\n" "$CONFIG"
         if [[ "$PACMAN_KEEP_OLD_KERNELS" == "yes" && "$kernel_updated" == "yes" ]]; then
             printf "==> Linking old kernels and modules...\n"
+            [[ -d /boot/old ]] || mkdir -p /boot/old
             find /usr/lib/modules -xtype l -delete
             find /boot/old -xtype l -delete
             ln -s /.snapshots/$x/snapshot/boot/vmlinuz-linux/boot/old/vmlinuz-linux-$(uname -r)
@@ -93,7 +94,6 @@ for CONFIG in $SNAPPER_CONFIGS; do
         fi
     elif [[ -f $prefile && "$pre_or_post" == "post" ]]; then
         if [[ "$PACMAN_KEEP_OLD_KERNELS" == "yes" && "$kernel_updated" == "yes" ]]; then
-            [[ -d /boot/old ]] && mkdir -p /boot/old
             printf "==> Linking old kernels and modules...\n"
             kver=$(pacman -Q linux | awk '{print $2}')-ARCH
             mv /boot/vmlinuz-linux /boot/vmlinuz-linux-$kver
