@@ -19,6 +19,7 @@ PKGNAME = snap-pac
 PREFIX ?= /usr
 
 SHARE_DIR = $(DESTDIR)$(PREFIX)/share
+ETC_DIR = $(DESTDIR)$(PREFIX)/etc
 
 .PHONY: install
 
@@ -28,3 +29,4 @@ install:
 	@install -Dm644 LICENSE   -t $(SHARE_DIR)/licenses/$(PKGNAME)
 	@install -Dm644 man8/*	  -t $(SHARE_DIR)/man/man8
 	@install -Dm644 README    -t $(SHARE_DIR)/doc/$(PKGNAME)
+	@install -Dm644 grub.d/*  -t $(ETC_DIR)/grub.d/
