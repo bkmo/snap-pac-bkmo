@@ -84,7 +84,7 @@ for CONFIG in $SNAPPER_CONFIGS; do
         printf "Kernel updated: %s\n" $kernel_updated
         printf "PACMAN_KEEP_OLD_KERNELS: %s\n" $PACMAN_KEEP_OLD_KERNELS
         printf "CONFIG: %s\n" $CONFIG
-        if [[ "$CONFIG" == "root" -a "$PACMAN_KEEP_OLD_KERNELS" == "yes" -a "$kernel_updated" == "yes" ]]; then
+        if [[ "$CONFIG" == "root" && "$PACMAN_KEEP_OLD_KERNELS" == "yes" && "$kernel_updated" == "yes" ]]; then
             printf "==> Linking old kernels and modules...\n"
             find /usr/lib/modules -xtype l -delete
             find /boot/old -xtype l -delete
@@ -96,7 +96,7 @@ for CONFIG in $SNAPPER_CONFIGS; do
         printf "Kernel updated: %s\n" $kernel_updated
         printf "PACMAN_KEEP_OLD_KERNELS: %s\n" $PACMAN_KEEP_OLD_KERNELS
         printf "CONFIG: %s\n" $CONFIG
-        if [[ "$CONFIG" == "root" -a "$PACMAN_KEEP_OLD_KERNELS" == "yes" -a "$kernel_updated" == "yes" ]]; then
+        if [[ "$CONFIG" == "root" && "$PACMAN_KEEP_OLD_KERNELS" == "yes" && "$kernel_updated" == "yes" ]]; then
             [[ -d /boot/old ]] && mkdir -p /boot/old
             printf "==> Linking old kernels and modules...\n"
             kver=$(pacman -Q linux | awk '{print $2}')-ARCH
