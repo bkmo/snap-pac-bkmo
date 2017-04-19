@@ -89,8 +89,8 @@ for CONFIG in $SNAPPER_CONFIGS; do
             [[ -d /boot/old ]] || mkdir -p /boot/old
             find /usr/lib/modules -xtype l -delete
             find /boot/old -xtype l -delete
-            ln -s /.snapshots/$x/snapshot/boot/vmlinuz-linux/boot/old/vmlinuz-linux-$(uname -r)
-            ln -s /.snapshots/$x/snapshot/usr/lib/modules/$(uname -r) /usr/lib/modules/
+            ln -sv /.snapshots/$x/snapshot/boot/vmlinuz-linux/boot/old/vmlinuz-linux-$(uname -r)
+            ln -sv /.snapshots/$x/snapshot/usr/lib/modules/$(uname -r) /usr/lib/modules/
         fi
     elif [[ -f $prefile && "$pre_or_post" == "post" ]]; then
         if [[ "$PACMAN_KEEP_OLD_KERNELS" == "yes" && "$kernel_updated" == "yes" ]]; then
