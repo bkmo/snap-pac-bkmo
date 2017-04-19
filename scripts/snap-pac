@@ -65,7 +65,6 @@ trap error_exit ERR
 trap kill_exit SIGTERM SIGINT
 
 source "$SNAPPER_CONFIG_FILE"
-#FIXME
 
 for CONFIG in $SNAPPER_CONFIGS; do
 
@@ -78,7 +77,12 @@ for CONFIG in $SNAPPER_CONFIGS; do
     snapper_cmd="snapper --config $CONFIG create --type $pre_or_post --cleanup-algorithm $PACMAN_CLEANUP_ALGORITHM --print-number --description"
 
     if [[ "$pre_or_post" == "pre" ]]; then
-        x=$($snapper_cmd "$(truncate_description $PACMAN_PRE_DESCRIPTION)")
+        
+        if [[ "$PACMAN_KEEP_OLD_KERNELS" == "yes" && "$kernel_updated" == "yes" ]]; then
+            x=$($snapper_cmd "$(truncate_description $PACMAN_PRE_DESCRIPTION)" --userdata important=yes)
+        else
+            x=$($snapper_cmd "$(truncate_description $PACMAN_PRE_DESCRIPTION)")
+        fi
         printf "==> %s: $(echo $x | tee "$prefile")\n" "$CONFIG"
         if [[ "$PACMAN_KEEP_OLD_KERNELS" == "yes" && "$kernel_updated" == "yes" ]]; then
             printf "==> Linking old kernels and modules...\n"
