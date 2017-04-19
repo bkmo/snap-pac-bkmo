@@ -26,17 +26,3 @@ After reviewing the man page, check the issues page and file a new issue if your
 problem is not covered:
 
 https://github.com/wesbarnett/snap-pac/issues
-
-DEVELOPMENT
-
-Check out any active branches to see what's been added. Most notable is the
-"kernel" branch. In that version snap-pac not only does pre/post snapshots but
-also detects if the "linux" package has been updated. If so, it symlinks your
-old kernel's modules to "/usr/lib/modules" from the pre snapshot so that they
-are available. Additionally it symlinks your old kernel and initramfs to a
-subfolder in boot where they can be detected by GRUB. So you have the option to
-boot into an older kernel if needed. Note that all of these locations need to be
-in the "root" snapper configuration's subvolume. Checkout the "kernel" branch
-and add PACMAN_KEEP_OLD_KERNELS="yes" to your snapper root configuration to
-enable this feature. It probably won't make it into a main release, but I may
-package it separately.
