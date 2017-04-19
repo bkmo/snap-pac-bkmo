@@ -24,8 +24,6 @@ while read -r f; do
         kernel_updated="yes"
     fi
 done
-#FIXME
-printf "Kernel updated: %s\n" $kernel_updated
 
 declare -r SNAPPER_CONFIG_FILE=/etc/conf.d/snapper
 declare -r DESC_LIMIT=48
@@ -68,7 +66,6 @@ trap kill_exit SIGTERM SIGINT
 
 source "$SNAPPER_CONFIG_FILE"
 #FIXME
-printf "PACMAN_KEEP_OLD_KERNELS: %s\n" $PACMAN_KEEP_OLD_KERNELS
 
 for CONFIG in $SNAPPER_CONFIGS; do
 
@@ -83,7 +80,11 @@ for CONFIG in $SNAPPER_CONFIGS; do
     if [[ "$pre_or_post" == "pre" ]]; then
         x=$($snapper_cmd "$(truncate_description $PACMAN_PRE_DESCRIPTION)")
         printf "==> %s: $(echo $x | tee "$prefile")\n" "$CONFIG"
-        if [[ $CONFIG == "root" && $PACMAN_KEEP_OLD_KERNELS == "yes" && $kernel_updated == "yes" ]]; then
+#FIXME
+        printf "Kernel updated: %s\n" $kernel_updated
+        printf "PACMAN_KEEP_OLD_KERNELS: %s\n" $PACMAN_KEEP_OLD_KERNELS
+        printf "CONFIG: %s\n" $CONFIG
+        if [[ "$CONFIG" == "root" -a "$PACMAN_KEEP_OLD_KERNELS" == "yes" -a "$kernel_updated" == "yes" ]]; then
             printf "==> Linking old kernels and modules...\n"
             find /usr/lib/modules -xtype l -delete
             find /boot/old -xtype l -delete
@@ -91,7 +92,11 @@ for CONFIG in $SNAPPER_CONFIGS; do
             ln -s /.snapshots/$x/snapshot/usr/lib/modules/$(uname -r) /usr/lib/modules/
         fi
     elif [[ -f $prefile && "$pre_or_post" == "post" ]]; then
-        if [[ $CONFIG == "root" && $PACMAN_KEEP_OLD_KERNELS == "yes" && $kernel_updated == "yes" ]]; then
+#FIXME
+        printf "Kernel updated: %s\n" $kernel_updated
+        printf "PACMAN_KEEP_OLD_KERNELS: %s\n" $PACMAN_KEEP_OLD_KERNELS
+        printf "CONFIG: %s\n" $CONFIG
+        if [[ "$CONFIG" == "root" -a "$PACMAN_KEEP_OLD_KERNELS" == "yes" -a "$kernel_updated" == "yes" ]]; then
             [[ -d /boot/old ]] && mkdir -p /boot/old
             printf "==> Linking old kernels and modules...\n"
             kver=$(pacman -Q linux | awk '{print $2}')-ARCH
