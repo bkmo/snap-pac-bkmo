@@ -18,6 +18,13 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
+kernel_updated="no"
+while read -r f; do
+    if [[ "$f" == "linux" ]]; then
+        kernel_updated="yes"
+    fi
+done
+
 declare -r SNAPPER_CONFIG_FILE=/etc/conf.d/snapper
 declare -r DESC_LIMIT=48
 declare -r name="snap-pac"
@@ -72,14 +79,14 @@ for CONFIG in $SNAPPER_CONFIGS; do
     if [[ "$pre_or_post" == "pre" ]]; then
         x=$($snapper_cmd "$(truncate_description $PACMAN_PRE_DESCRIPTION)")
         printf "==> %s: $(echo $x | tee "$prefile")\n" "$CONFIG"
-        if [[ $CONFIG == "root" && $PACMAN_KEEP_OLD_KERNELS == "yes" ]]; then
+        if [[ $CONFIG == "root" && $PACMAN_KEEP_OLD_KERNELS == "yes" && $kernel_updated == "yes" ]]; then
             [[ -d /boot/old ]] && mkdir -p /boot/old
             find /usr/lib/modules -xtype l -delete
             find /boot/old -xtype l -delete
             ln -s /.snapshots/$x/snapshot/boot/vmlinuz-linux/boot/old/vmlinuz-linux-$(uname -r)
         fi
     elif [[ -f $prefile && "$pre_or_post" == "post" ]]; then
-        if [[ $CONFIG == "root" $PACMAN_KEEP_OLD_KERNELS == "yes" ]]; then
+        if [[ $CONFIG == "root" && $PACMAN_KEEP_OLD_KERNELS == "yes" && $kernel_updated == "yes" ]]; then
             x=$(<$prefile)
             ln -s /.snapshots/$x/snapshot/usr/lib/modules/$(uname -r) /usr/lib/modules/
             kver=$(pacman -Q linux | awk '{print $2}')-ARCH

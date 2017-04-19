@@ -28,4 +28,5 @@ Description = Performing snapper pre snapshots for the following configurations.
 Depends = snap-pac
 When = PreTransaction
 Exec = /usr/share/libalpm/scripts/snap-pac pre
+NeedsTargets
 AbortOnFail
