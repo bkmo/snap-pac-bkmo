@@ -24,6 +24,7 @@ while read -r f; do
         kernel_updated="yes"
     fi
 done
+#FIXME
 printf "Kernel updated: %s\n" $kernel_updated
 
 declare -r SNAPPER_CONFIG_FILE=/etc/conf.d/snapper
@@ -66,6 +67,8 @@ trap error_exit ERR
 trap kill_exit SIGTERM SIGINT
 
 source "$SNAPPER_CONFIG_FILE"
+#FIXME
+printf "PACMAN_KEEP_OLD_KERNELS: %s\n" $PACMAN_KEEP_OLD_KERNELS
 
 for CONFIG in $SNAPPER_CONFIGS; do
 
