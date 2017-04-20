@@ -23,7 +23,6 @@ declare -r DESC_LIMIT=48
 declare -r name="snap-pac"
 declare PACMAN_ABORT_ON_FAIL="no"
 declare -r pacman_cmd="$(ps -q $(ps -p "$$" -o ppid=) -o args=)"
-declare -i x=0
 declare -r pre_or_post=$1
 
 out() { printf "$1 $2\n" "${@:3}"; }
