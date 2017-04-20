@@ -19,7 +19,6 @@ PKGNAME = snap-pac
 PREFIX ?= /usr
 
 SHARE_DIR = $(DESTDIR)$(PREFIX)/share
-ETC_DIR = $(DESTDIR)/etc
 
 .PHONY: install
 
