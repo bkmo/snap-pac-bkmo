@@ -50,14 +50,13 @@ set_defaults() {
     PACMAN_PRE_DESCRIPTION="$pacman_cmd"
     PACMAN_POST_DESCRIPTION="$pacman_cmd"
     PACMAN_CLEANUP_ALGORITHM="number"
-    PACMAN_LINK_MOCULES="no"
+    PACMAN_LINK_MODULES="no"
 }
 
 
 package_updated() {
     check="$1"
     for x in ${packages[@]}; do
-        echo $x
         if [[ "$x" == "$check" ]]; then
             echo "yes"
             return
