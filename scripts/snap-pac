@@ -18,19 +18,11 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-kernel_updated="no"
-while read -r f; do
-    if [[ "$f" == "linux" ]]; then
-        kernel_updated="yes"
-    fi
-done
-
 declare -r SNAPPER_CONFIG_FILE=/etc/conf.d/snapper
 declare -r DESC_LIMIT=48
 declare -r name="snap-pac"
 declare PACMAN_ABORT_ON_FAIL="no"
 declare -r pacman_cmd="$(ps -q $(ps -p "$$" -o ppid=) -o args=)"
-declare -i x=0
 declare -r pre_or_post=$1
 
 out() { printf "$1 $2\n" "${@:3}"; }
@@ -61,8 +53,24 @@ set_defaults() {
     PACMAN_LINK_MOCULES="no"
 }
 
+
+package_updated() {
+    check="$1"
+    for x in ${packages[@]}; do
+        echo $x
+        if [[ "$x" == "$check" ]]; then
+            echo "yes"
+            return
+        fi
+    done
+    echo "no"
+}
+
 trap error_exit ERR
 trap kill_exit SIGTERM SIGINT
+
+mapfile -t packages
+kernel_updated=$(package_updated "linux")
 
 source "$SNAPPER_CONFIG_FILE"
 
@@ -86,7 +94,7 @@ for CONFIG in $SNAPPER_CONFIGS; do
         printf "==> %s: $(echo $x | tee "$prefile")\n" "$CONFIG"
     elif [[ -f $prefile && "$pre_or_post" == "post" ]]; then
         if [[ "$PACMAN_LINK_MODULES" == "yes" && "$kernel_updated" == "yes" ]]; then
-            printf "==> Linking old kernels and modules...\n"
+            printf "==> Linking old kernel modules...\n"
             ln -sv /.snapshots/$(<$prefile)/snapshot/usr/lib/modules/$(uname -r) /usr/lib/modules/
         fi
         x=$($snapper_cmd "$(truncate_description $PACMAN_POST_DESCRIPTION)" --pre-number "$(< "$prefile")")
