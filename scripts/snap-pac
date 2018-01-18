@@ -26,7 +26,23 @@ declare -r SNAPPER_CONFIG_FILE=/etc/conf.d/snapper
 declare -r pacman_cmd="$(ps -q $(ps -p "$$" -o ppid=) -o args=)"
 declare -r pre_or_post=$1
 
-[[ -f $SNAPPAC_CONFIG_FILE ]] && [[ -r $SNAPPAC_CONFIG_FILE ]] && source $SNAPPAC_CONFIG_FILE
+read_config() {
+    CONFIG_FILE="$1"
+    if [[ -f "$CONFIG_FILE" ]] && [[ -r "$CONFIG_FILE" ]]; then
+        while IFS='= ' read lhs rhs; do
+            if [[ ! $lhs =~ ^\ *# && -n $lhs ]]; then
+                rhs="${rhs%%\#*}"
+                rhs="${rhs%%*( )}"
+                rhs="${rhs%\"*}"
+                rhs="${rhs#\"*}"
+                declare -g $lhs="$rhs"
+            fi
+        done < "$CONFIG_FILE"
+    fi
+}
+
+
+read_config "$SNAPPAC_CONFIG_FILE"
 
 declare -r DESC_LIMIT=${DESC_LIMIT:-48}
 declare -r ABORT_ON_FAIL=${ABORT_ON_FAIL:-"no"}
@@ -62,30 +78,27 @@ truncate_description() {
 trap 'traperror ${LINENO} $? "$BASH_COMMAND" $BASH_LINENO "${FUNCNAME[@]}"' ERR
 trap trapkill SIGTERM SIGINT
 
-source "$SNAPPER_CONFIG_FILE"
+SNAPPER_CONFIGS=$(awk -F'=' '/SNAPPER_CONFIGS/ {gsub(/"/, "", $2); print $2}' "$SNAPPER_CONFIG_FILE")
 
 for CONFIG in $SNAPPER_CONFIGS; do
-
-    CONFIG_FILE="/etc/snap-pac/$CONFIG.conf"
 
     unset SNAPSHOT
     unset PRE_DESCRIPTION
     unset POST_DESCRIPTION
     unset CLEANUP_ALGORITHM
 
-    [[ -f "$CONFIG_FILE" ]] && [[ -r "$CONFIG_FILE" ]] && source "$CONFIG_FILE"
+    read_config "/etc/snap-pac/$CONFIG.conf"
 
     if [[ $CONFIG == "root" ]]; then 
-        SNAPSHOT=${SNAPSHOT=:-"yes"}
+        SNAPSHOT=${SNAPSHOT:-"yes"}
     else
         SNAPSHOT=${SNAPSHOT:-"no"}
     fi
-
-    [[ $SNAPSHOT == "no" ]] && continue
-
     PRE_DESCRIPTION=${PRE_DESCRIPTION:-"$pacman_cmd"}
     POST_DESCRIPTION=${POST_DESCRIPTION:-"$pacman_cmd"}
     CLEANUP_ALGORITHM=${CLEANUP_ALGORITHM:-"number"}
+
+    [[ $SNAPSHOT == "no" ]] && continue
 
     prefile="/tmp/$name-pre_$CONFIG"
     snapper_cmd="snapper --config $CONFIG create --type $pre_or_post --cleanup-algorithm $CLEANUP_ALGORITHM --print-number --description"
