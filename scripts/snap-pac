@@ -2,7 +2,7 @@
 
 # snap-pac
 # https://github.com/wesbarnett/snap-pac
-# Copyright (C) 2016, 2017 James W. Barnett
+# Copyright (C) 2016, 2017, 2018 James W. Barnett
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,22 +18,37 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-declare -r SNAPPER_CONFIG_FILE=/etc/conf.d/snapper
-declare -r DESC_LIMIT=48
+set -o errtrace
+
 declare -r name="snap-pac"
-declare PACMAN_ABORT_ON_FAIL="no"
+declare -r SNAPPAC_CONFIG_FILE=/etc/snap-pac.conf
+declare -r SNAPPER_CONFIG_FILE=/etc/conf.d/snapper
 declare -r pacman_cmd="$(ps -q $(ps -p "$$" -o ppid=) -o args=)"
 declare -r pre_or_post=$1
+
+[[ -f $SNAPPAC_CONFIG_FILE ]] && [[ -r $SNAPPAC_CONFIG_FILE ]] && source $SNAPPAC_CONFIG_FILE
+
+declare -r DESC_LIMIT=${DESC_LIMIT:-48}
+declare -r ABORT_ON_FAIL=${ABORT_ON_FAIL:-"no"}
 
 out() { printf "$1 $2\n" "${@:3}"; }
 error() { out "==> \033[00;31merror:\033[00m" "$@"; } >&2
 die() { 
-    error "$@"
-    [[ $PACMAN_ABORT_ON_FAIL == "no" ]] && exit 0
+    [[ $ABORT_ON_FAIL == "no" ]] && exit 0
     exit 1
 }
-error_exit() { die "Aborted due to error."; }
-kill_exit() { die "\nExited due to user intervention."; }
+trapkill() { 
+    error "Exited due to user intervention."
+    die
+}
+traperror() {
+    error "Exited due to error on line $1"
+    out "exit status:" "$2"
+    out "command:" "$3"
+    out "bash line:" "$4"
+    out "function name:" "$5"
+    die
+}
 
 truncate_description() {
     desc="$@"
@@ -44,29 +59,8 @@ truncate_description() {
     fi
 }
 
-set_defaults() {
-    PACMAN_PRE_POST="no"
-    [[ $CONFIG == "root" ]] && PACMAN_PRE_POST="yes"
-    PACMAN_PRE_DESCRIPTION="$pacman_cmd"
-    PACMAN_POST_DESCRIPTION="$pacman_cmd"
-    PACMAN_CLEANUP_ALGORITHM="number"
-    PACMAN_LINK_MODULES="no"
-}
-
-
-package_updated() {
-    check="$1"
-    for x in ${packages[@]}; do
-        if [[ "$x" == "$check" ]]; then
-            echo "yes"
-            return
-        fi
-    done
-    echo "no"
-}
-
-trap error_exit ERR
-trap kill_exit SIGTERM SIGINT
+trap 'traperror ${LINENO} $? "$BASH_COMMAND" $BASH_LINENO "${FUNCNAME[@]}"' ERR
+trap trapkill SIGTERM SIGINT
 
 mapfile -t packages
 kernel_updated=$(package_updated "linux")
@@ -75,30 +69,34 @@ source "$SNAPPER_CONFIG_FILE"
 
 for CONFIG in $SNAPPER_CONFIGS; do
 
-    set_defaults
-    source /etc/snapper/configs/"$CONFIG"
+    CONFIG_FILE="/etc/snap-pac/$CONFIG.conf"
+    [[ -f "$CONFIG_FILE" ]] && [[ -r "$CONFIG_FILE" ]] && source "$CONFIG_FILE"
 
-    [[ $PACMAN_PRE_POST == "no" ]] && continue
+    if [[ $CONFIG == "root" ]]; then 
+        PRE_POST=${PRE_POST="yes"}
+    else
+        PRE_POST=${PRE_POST="no"}
+    fi
+
+    [[ $PRE_POST == "no" ]] && continue
+
+    PRE_DESCRIPTION=${PRE_DESCRIPTION:-"$pacman_cmd"}
+    POST_DESCRIPTION=${POST_DESCRIPTION:-"$pacman_cmd"}
+    CLEANUP_ALGORITHM=${CLEANUP_ALGORITHM:-"number"}
 
     prefile="/tmp/$name-pre_$CONFIG"
-    snapper_cmd="snapper --config $CONFIG create --type $pre_or_post --cleanup-algorithm $PACMAN_CLEANUP_ALGORITHM --print-number --description"
+    snapper_cmd="snapper --config $CONFIG create --type $pre_or_post --cleanup-algorithm $CLEANUP_ALGORITHM --print-number --description"
 
     if [[ "$pre_or_post" == "pre" ]]; then
-        
-        if [[ "$PACMAN_LINK_MODULES" == "yes" && "$kernel_updated" == "yes" ]]; then
-            x=$($snapper_cmd "$(truncate_description $PACMAN_PRE_DESCRIPTION)" --userdata important=yes)
-        else
-            x=$($snapper_cmd "$(truncate_description $PACMAN_PRE_DESCRIPTION)")
-        fi
+        x=$($snapper_cmd "$(truncate_description $PRE_DESCRIPTION)")
         printf "==> %s: $(echo $x | tee "$prefile")\n" "$CONFIG"
     elif [[ -f $prefile && "$pre_or_post" == "post" ]]; then
         if [[ "$PACMAN_LINK_MODULES" == "yes" && "$kernel_updated" == "yes" ]]; then
-            printf "==> Deleting broken kernel modules symlinks...\n"
-            find /usr/lib/modules -xtype l -delete -print
             printf "==> Symlinking old kernel modules...\n"
+            find /usr/lib/modules -xtype l -delete -print
             ln -sv /.snapshots/$(<$prefile)/snapshot/usr/lib/modules/$(uname -r) /usr/lib/modules/
         fi
-        x=$($snapper_cmd "$(truncate_description $PACMAN_POST_DESCRIPTION)" --pre-number "$(< "$prefile")")
+        x=$($snapper_cmd "$(truncate_description $POST_DESCRIPTION)" --pre-number "$(< "$prefile")")
         printf "==> %s: %s\n" "$CONFIG" "$x"
         rm -f "$prefile"
     fi
