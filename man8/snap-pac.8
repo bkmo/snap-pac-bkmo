@@ -30,52 +30,65 @@ but your setup has to be properly configured to use it. The exact procedure
 depends on your specific setup. Be careful.
 
 .SH CONFIGURATION
-Configuration is done via the snapper configuration files, with extra variables
-specific to these pacman hooks (see \fBsnapper-configs\fR(5)). The defaults
-of the following should be suitable for most users.
+Configuration is done via configuration files. The defaults of the
+following should be suitable for most users. Follow the pattern
+of bash shell variables (VAR=setting) in each configuration file below.
 
-The following are possible settings you can place in each snapper configuration
-file (e.g., \fI/etc/snapper/configs/root\fR, etc.). Follow the pattern of other
-variables in the configuration file (VAR=setting).
+The following setting can be changed in the main snap-pac configuration file
+\fI/etc/snap-pac.conf\fR:
 
-\fBPACMAN_PRE_POST=\fR\fB\fIyes\fR\fR\fB or \fR\fB\fIno\fR\fR
-.RS 4
-Perform pacman pre/post snapshots for this configuration.
-
-Default is "no", except for the root configuration which is "yes".
-.RE
-
-.BR PACMAN_CLEANUP_ALGORITHM
-.RS 4
-Snapper algorithm used in cleaning up the pacman pre/post snapshots. See \fBsnapper\fR(8) for list of valid options.
-
-Default is "number". 
-.RE
-
-\fBPACMAN_PRE_DESCRIPTION=\fR\fB\fIstring\fR\fR
-.RS 4
-snapper description used for the pacman pre snapshot.
-
-Default is the parent program (usually pacman) that called the snapshot script.  
-.RE
-
-\fBPACMAN_POST_DESCRIPTION=\fR\fB\fIstring\fR\fR
-.RS 4
-snapper description used for the pacman post snapshot.
-
-Default is the parent program (usually pacman) that called the snapshot script.  
-.RE
-
-The following setting can be changed in the snapper configuration file
-\fI/etc/conf.d/snapper\fR:
-
-\fBPACMAN_ABORT_ON_FAIL=\fR\fB\fIyes\fR\fR\fB or \fR\fB\fIno\fR\fR
+\fBABORT_ON_FAIL=\fR\fB\fIyes\fR\fR\fB or \fR\fB\fIno\fR\fR
 .RS 4
 When set to "yes" this causes pacman to abort a transaction if the snap-pac pre
 hook fails.  This prevents an upgrade/installation/removal from occurring if a
 pre snapshot cannot be performed.
 
 Default is "no".
+.RE
+
+\fBDESC_LENGTH=\fR\fB\fIinteger\fR\fR
+.RS 4
+Number of characters to limit length of descriptions used for snapper.
+
+Default is "48".
+.RE
+
+The following are possible settings used on each specific snapper
+configuration you have. To use them, first create the folder
+\fI/etc/snap-pac\fR if it does not already exist. Then create a file
+for the snapper configuration file you want these settings to apply
+to. For example, for the snapper configuration named \fIroot\fR,
+create the file \fI/etc/snap-pac/root.conf\fR. \fIsnap-pac\fR requires
+and expects  configuration files to end in \fI.conf\fR.
+
+\fBPRE_POST=\fR\fB\fIyes\fR\fR\fB or \fR\fB\fIno\fR\fR
+.RS 4
+Perform pacman pre/post snapshots for this configuration. In other
+words, if you want snapper to run before and after a pacman
+transaction, set this to "yes".
+
+Default is "no", except for the root configuration which is "yes".
+.RE
+
+.BR CLEANUP_ALGORITHM
+.RS 4
+Snapper algorithm used in cleaning up the pacman pre/post snapshots. See \fBsnapper\fR(8) for list of valid options.
+
+Default is "number". 
+.RE
+
+\fBPRE_DESCRIPTION=\fR\fB\fIstring\fR\fR
+.RS 4
+snapper description used for the pacman pre snapshot.
+
+Default is the parent program (usually pacman) that called the snapshot script.  
+.RE
+
+\fBPOST_DESCRIPTION=\fR\fB\fIstring\fR\fR
+.RS 4
+snapper description used for the pacman post snapshot.
+
+Default is the parent program (usually pacman) that called the snapshot script.  
 .RE
 
 .SH EXAMPLE
