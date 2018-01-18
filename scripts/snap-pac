@@ -67,12 +67,18 @@ source "$SNAPPER_CONFIG_FILE"
 for CONFIG in $SNAPPER_CONFIGS; do
 
     CONFIG_FILE="/etc/snap-pac/$CONFIG.conf"
+
+    unset PRE_POST
+    unset PRE_DESCRIPTION
+    unset POST_DESCRIPTION
+    unset CLEANUP_ALGORITHM
+
     [[ -f "$CONFIG_FILE" ]] && [[ -r "$CONFIG_FILE" ]] && source "$CONFIG_FILE"
 
     if [[ $CONFIG == "root" ]]; then 
-        PRE_POST=${PRE_POST="yes"}
+        PRE_POST=${PRE_POST=:-"yes"}
     else
-        PRE_POST=${PRE_POST="no"}
+        PRE_POST=${PRE_POST:-"no"}
     fi
 
     [[ $PRE_POST == "no" ]] && continue
