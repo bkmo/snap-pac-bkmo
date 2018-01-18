@@ -61,7 +61,7 @@ to. For example, for the snapper configuration named \fIroot\fR,
 create the file \fI/etc/snap-pac/root.conf\fR. \fIsnap-pac\fR requires
 and expects  configuration files to end in \fI.conf\fR.
 
-\fBPRE_POST=\fR\fB\fIyes\fR\fR\fB or \fR\fB\fIno\fR\fR
+\fBSNAPSHOT=\fR\fB\fIyes\fR\fR\fB or \fR\fB\fIno\fR\fR
 .RS 4
 Perform pacman pre/post snapshots for this configuration. In other
 words, if you want snapper to run before and after a pacman
@@ -182,7 +182,7 @@ That's the default behavior. See \fBCONFIGURATION\fR.
 .SS No snapshots are being taken when I run pacman
 No snapper configurations are set up for snap-pac's pacman hooks. By default
 snap-pac will take snapshots for the root configuration and any other
-configuration which has PACMAN_PRE_POST set to yes in its configuration file.
+configuration which has SNAPSHOT set to yes in its configuration file.
 See CONFIGURATION.
 
 .SS After restoring snapshot from snap-pac, pacman database is locked

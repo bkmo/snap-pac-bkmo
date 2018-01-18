@@ -68,7 +68,7 @@ for CONFIG in $SNAPPER_CONFIGS; do
 
     CONFIG_FILE="/etc/snap-pac/$CONFIG.conf"
 
-    unset PRE_POST
+    unset SNAPSHOT
     unset PRE_DESCRIPTION
     unset POST_DESCRIPTION
     unset CLEANUP_ALGORITHM
@@ -76,12 +76,12 @@ for CONFIG in $SNAPPER_CONFIGS; do
     [[ -f "$CONFIG_FILE" ]] && [[ -r "$CONFIG_FILE" ]] && source "$CONFIG_FILE"
 
     if [[ $CONFIG == "root" ]]; then 
-        PRE_POST=${PRE_POST=:-"yes"}
+        SNAPSHOT=${SNAPSHOT=:-"yes"}
     else
-        PRE_POST=${PRE_POST:-"no"}
+        SNAPSHOT=${SNAPSHOT:-"no"}
     fi
 
-    [[ $PRE_POST == "no" ]] && continue
+    [[ $SNAPSHOT == "no" ]] && continue
 
     PRE_DESCRIPTION=${PRE_DESCRIPTION:-"$pacman_cmd"}
     POST_DESCRIPTION=${POST_DESCRIPTION:-"$pacman_cmd"}
