@@ -30,6 +30,7 @@ declare -r pre_or_post=$1
 
 declare -r DESC_LIMIT=${DESC_LIMIT:-48}
 declare -r ABORT_ON_FAIL=${ABORT_ON_FAIL:-"no"}
+declare -r LINK_MODULES=${LINK_MODULES:-"no"}
 
 out() { printf "$1 $2\n" "${@:3}"; }
 error() { out "==> \033[00;31merror:\033[00m" "$@"; } >&2
@@ -91,7 +92,7 @@ for CONFIG in $SNAPPER_CONFIGS; do
         x=$($snapper_cmd "$(truncate_description $PRE_DESCRIPTION)")
         printf "==> %s: $(echo $x | tee "$prefile")\n" "$CONFIG"
     elif [[ -f $prefile && "$pre_or_post" == "post" ]]; then
-        if [[ "$PACMAN_LINK_MODULES" == "yes" && "$kernel_updated" == "yes" ]]; then
+        if [[ "$LINK_MODULES" == "yes" && "$kernel_updated" == "yes" ]]; then
             printf "==> Symlinking old kernel modules...\n"
             find /usr/lib/modules -xtype l -delete -print
             ln -sv /.snapshots/$(<$prefile)/snapshot/usr/lib/modules/$(uname -r) /usr/lib/modules/
