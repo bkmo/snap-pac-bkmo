@@ -28,8 +28,8 @@ declare -r pre_or_post=$1
 
 [[ -f $SNAPPAC_CONFIG_FILE ]] && [[ -r $SNAPPAC_CONFIG_FILE ]] && source $SNAPPAC_CONFIG_FILE
 
-DESC_LIMIT=${DESC_LIMIT:-48}
-ABORT_ON_FAIL=${ABORT_ON_FAIL:-"no"}
+declare -r DESC_LIMIT=${DESC_LIMIT:-48}
+declare -r ABORT_ON_FAIL=${ABORT_ON_FAIL:-"no"}
 
 out() { printf "$1 $2\n" "${@:3}"; }
 error() { out "==> \033[00;31merror:\033[00m" "$@"; } >&2
