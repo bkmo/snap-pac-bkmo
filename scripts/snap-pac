@@ -20,8 +20,10 @@
 
 set -o errtrace
 
+[[ -f /etc/snap-pac ]] && [[ -r /etc/snap-pac ]] && source /etc/snap-pac
+
 declare -r SNAPPER_CONFIG_FILE=/etc/conf.d/snapper
-declare -r DESC_LIMIT=48
+declare -r DESC_LIMIT=${DESC_LIMIT:-48}
 declare -r name="snap-pac"
 declare PACMAN_ABORT_ON_FAIL="no"
 declare -r pacman_cmd="$(ps -q $(ps -p "$$" -o ppid=) -o args=)"
