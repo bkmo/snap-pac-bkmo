@@ -31,10 +31,11 @@ depends on your specific setup. Be careful.
 
 .SH CONFIGURATION
 Configuration is done via configuration files. The defaults of the
-following should be suitable for most users. Follow the pattern
-of bash shell variables (VAR=setting) in each configuration file below.
+following should be suitable for most users, so you may not need to do
+any configuration at all. Follow the pattern of bash shell variables
+(VAR=setting) in each configuration file below.
 
-The following setting can be changed in the main snap-pac configuration file
+The following settings can be changed in the main snap-pac configuration file
 \fI/etc/snap-pac.conf\fR:
 
 \fBABORT_ON_FAIL=\fR\fB\fIyes\fR\fR\fB or \fR\fB\fIno\fR\fR
@@ -53,13 +54,13 @@ Number of characters to limit length of descriptions used for snapper.
 Default is "48".
 .RE
 
-The following are possible settings used on each specific snapper
+The following are settings used on each specific snapper
 configuration you have. To use them, first create the folder
 \fI/etc/snap-pac\fR if it does not already exist. Then create a file
 for the snapper configuration file you want these settings to apply
 to. For example, for the snapper configuration named \fIroot\fR,
 create the file \fI/etc/snap-pac/root.conf\fR. \fIsnap-pac\fR requires
-and expects  configuration files to end in \fI.conf\fR.
+and expects configuration files to end in \fI.conf\fR.
 
 \fBSNAPSHOT=\fR\fB\fIyes\fR\fR\fB or \fR\fB\fIno\fR\fR
 .RS 4
@@ -72,7 +73,7 @@ Default is "no", except for the root configuration which is "yes".
 
 .BR CLEANUP_ALGORITHM
 .RS 4
-Snapper algorithm used in cleaning up the pacman pre/post snapshots. See \fBsnapper\fR(8) for list of valid options.
+snapper algorithm used in cleaning up the pacman pre/post snapshots. See \fBsnapper\fR(8) for list of valid options.
 
 Default is "number". 
 .RE
