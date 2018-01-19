@@ -73,6 +73,18 @@ truncate_description() {
     fi
 }
 
+package_updated() {
+    check="$1"
+    for x in ${packages[@]}; do
+        echo $x
+        if [[ "$x" == "$check" ]]; then
+            echo "yes"
+            return
+        fi
+    done
+    echo "no"
+}
+
 trap 'traperror ${LINENO} $? "$BASH_COMMAND" $BASH_LINENO "${FUNCNAME[@]}"' ERR
 trap trapkill SIGTERM SIGINT
 
@@ -84,6 +96,11 @@ read_config "$SNAPPAC_CONFIG_FILE"
 
 readonly DESC_LIMIT=${DESC_LIMIT:-48}
 readonly ABORT_ON_FAIL=${ABORT_ON_FAIL:-"no"}
+readonly LINK_MODULES=${LINK_MODULES:-"no"}
+readonly KERNEL_PACKAGE=${KERNEL_PACKAGE=-"linux"}
+
+mapfile -t packages
+kernel_updated=$(package_updated "$KERNEL_PACKAGE")
 
 for CONFIG in $SNAPPER_CONFIGS; do
 
@@ -112,6 +129,11 @@ for CONFIG in $SNAPPER_CONFIGS; do
         x=$($snapper_cmd "$(truncate_description $PRE_DESCRIPTION)")
         printf "==> %s: $(echo $x | tee "$prefile")\n" "$CONFIG"
     elif [[ -f $prefile && "$pre_or_post" == "post" ]]; then
+        if [[ "$LINK_MODULES" == "yes" && "$kernel_updated" == "yes" && "$CONFIG" == "root" ]]; then
+            printf "==> Symlinking old kernel modules...\n"
+            find /usr/lib/modules -xtype l -delete -print
+            ln -sv /.snapshots/$(<$prefile)/snapshot/usr/lib/modules/$(uname -r) /usr/lib/modules/
+        fi
         x=$($snapper_cmd "$(truncate_description $POST_DESCRIPTION)" --pre-number "$(< "$prefile")")
         printf "==> %s: %s\n" "$CONFIG" "$x"
         rm -f "$prefile"
