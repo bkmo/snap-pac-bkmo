@@ -20,11 +20,20 @@
 
 set -o errtrace
 
-declare -r name="snap-pac"
-declare -r SNAPPAC_CONFIG_FILE=/etc/snap-pac.conf
-declare -r SNAPPER_CONFIG_FILE=/etc/conf.d/snapper
-declare -r pacman_cmd="$(ps -q $(ps -p "$$" -o ppid=) -o args=)"
-declare -r pre_or_post=$1
+readonly argv0="snap-pac"
+readonly SNAPPAC_CONFIG_FILE=/etc/snap-pac.conf
+readonly SNAPPER_CONFIG_FILE=/etc/conf.d/snapper
+readonly pacman_cmd="$(ps -q $(ps -p "$$" -o ppid=) -o args=)"
+readonly pre_or_post=$1
+
+out() { printf "$1 $2\n" "${@:3}"; }
+
+error() { out "==> \033[00;31merror:\033[00m" "$@"; } >&2
+
+die() { 
+    [[ $ABORT_ON_FAIL == "no" ]] && exit 0
+    exit 1
+}
 
 read_config() {
     CONFIG_FILE="$1"
@@ -42,27 +51,17 @@ read_config() {
 }
 
 
-read_config "$SNAPPAC_CONFIG_FILE"
-
-declare -r DESC_LIMIT=${DESC_LIMIT:-48}
-declare -r ABORT_ON_FAIL=${ABORT_ON_FAIL:-"no"}
-
-out() { printf "$1 $2\n" "${@:3}"; }
-error() { out "==> \033[00;31merror:\033[00m" "$@"; } >&2
-die() { 
-    [[ $ABORT_ON_FAIL == "no" ]] && exit 0
-    exit 1
-}
 trapkill() { 
     error "Exited due to user intervention."
     die
 }
+
 traperror() {
     error "Exited due to error on line $1"
     out "exit status:" "$2"
     out "command:" "$3"
     out "bash line:" "$4"
-    out "function name:" "$5"
+    out "function argv0:" "$5"
     die
 }
 
@@ -78,7 +77,14 @@ truncate_description() {
 trap 'traperror ${LINENO} $? "$BASH_COMMAND" $BASH_LINENO "${FUNCNAME[@]}"' ERR
 trap trapkill SIGTERM SIGINT
 
+readonly -f read_config out error die trapkill traperror truncate_description
+
 SNAPPER_CONFIGS=$(awk -F'=' '/SNAPPER_CONFIGS/ {gsub(/"/, "", $2); print $2}' "$SNAPPER_CONFIG_FILE")
+
+read_config "$SNAPPAC_CONFIG_FILE"
+
+readonly DESC_LIMIT=${DESC_LIMIT:-48}
+readonly ABORT_ON_FAIL=${ABORT_ON_FAIL:-"no"}
 
 for CONFIG in $SNAPPER_CONFIGS; do
 
@@ -100,7 +106,7 @@ for CONFIG in $SNAPPER_CONFIGS; do
 
     [[ $SNAPSHOT == "no" ]] && continue
 
-    prefile="/tmp/$name-pre_$CONFIG"
+    prefile="/tmp/$argv0-pre_$CONFIG"
     snapper_cmd="snapper --config $CONFIG create --type $pre_or_post --cleanup-algorithm $CLEANUP_ALGORITHM --print-number --description"
 
     if [[ "$pre_or_post" == "pre" ]]; then
