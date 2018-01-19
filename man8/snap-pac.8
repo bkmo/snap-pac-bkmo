@@ -55,13 +55,21 @@ Default is "48".
 
 \fBLINK_MODULES=\fR\fB\fIyes\fR\fR\fB or \fR\fB\fIno\fR\fR
 .RS 4
-When set to "yes" this, if the \fIlinux\fR package is updated, then a
+When set to "yes" this, if the \fIlinux\fR package (or another package
+specified by KERNEL_PACKAGE; see below) is updated, then a
 symlink will be created in the kernel modules directory for the
-currently running kernel to same directory in the pre snapshot. This
-is so that the kernel modules will still be available for use before a
-reboot is required. 
+currently running kernel to same directory in the pre snapshot of the
+"root" configuration. This is so that the kernel modules will still be
+available for use before a reboot is required. 
 
 Default is "no".
+
+\fBKERNEL_PACKAGE=\fR\fB\fIstring\fR\fR
+
+Used to trigger module linking if LINK_MODULES is set to "yes".
+
+Default is "linux".
+
 .RE
 
 The following are possible settings used on each specific snapper
