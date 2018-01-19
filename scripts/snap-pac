@@ -60,6 +60,18 @@ truncate_description() {
     fi
 }
 
+package_updated() {
+    check="$1"
+    for x in ${packages[@]}; do
+        echo $x
+        if [[ "$x" == "$check" ]]; then
+            echo "yes"
+            return
+        fi
+    done
+    echo "no"
+}
+
 trap 'traperror ${LINENO} $? "$BASH_COMMAND" $BASH_LINENO "${FUNCNAME[@]}"' ERR
 trap trapkill SIGTERM SIGINT
 
