@@ -50,7 +50,6 @@ read_config() {
     fi
 }
 
-
 trapkill() { 
     error "Exited due to user intervention."
     die
