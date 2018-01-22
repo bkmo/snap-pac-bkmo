@@ -76,7 +76,6 @@ truncate_description() {
 package_updated() {
     check="$1"
     for x in ${packages[@]}; do
-        echo $x
         if [[ "$x" == "$check" ]]; then
             echo "yes"
             return
@@ -97,7 +96,7 @@ read_config "$SNAPPAC_CONFIG_FILE"
 readonly DESC_LIMIT=${DESC_LIMIT:-48}
 readonly ABORT_ON_FAIL=${ABORT_ON_FAIL:-"no"}
 readonly LINK_MODULES=${LINK_MODULES:-"no"}
-readonly KERNEL_PACKAGE=${KERNEL_PACKAGE=-"linux"}
+readonly KERNEL_PACKAGE=${KERNEL_PACKAGE:-"linux"}
 
 mapfile -t packages
 kernel_updated=$(package_updated "$KERNEL_PACKAGE")
