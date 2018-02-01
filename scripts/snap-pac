@@ -116,7 +116,7 @@ for CONFIG in $SNAPPER_CONFIGS; do
         SNAPSHOT=${SNAPSHOT:-"no"}
     fi
     PRE_DESCRIPTION=${PRE_DESCRIPTION:-"$pacman_cmd"}
-    POST_DESCRIPTION=${POST_DESCRIPTION:-"$pacman_cmd"}
+    POST_DESCRIPTION=${POST_DESCRIPTION:-"${packages[*]}"}
     CLEANUP_ALGORITHM=${CLEANUP_ALGORITHM:-"number"}
 
     [[ $SNAPSHOT == "no" ]] && continue
