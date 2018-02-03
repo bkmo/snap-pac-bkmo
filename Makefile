@@ -1,6 +1,6 @@
 # snap-pac
 # https://github.com/wesbarnett/snap-pac
-# Copyright (C) 2016 James W. Barnett
+# Copyright (C) 2016-2018 James W. Barnett
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,7 +24,9 @@ SHARE_DIR = $(DESTDIR)$(PREFIX)/share
 
 install:
 	@install -Dm755 scripts/* -t $(SHARE_DIR)/libalpm/scripts/
-	@install -Dm644 hooks/*   -t $(SHARE_DIR)/libalpm/hooks/
-	@install -Dm644 LICENSE   -t $(SHARE_DIR)/licenses/$(PKGNAME)
-	@install -Dm644 man8/*	  -t $(SHARE_DIR)/man/man8
-	@install -Dm644 README    -t $(SHARE_DIR)/doc/$(PKGNAME)
+	@install -Dm644 hooks/* -t $(SHARE_DIR)/libalpm/hooks/
+	@install -Dm644 LICENSE -t $(SHARE_DIR)/licenses/$(PKGNAME)/
+	@install -Dm644 man8/* -t $(SHARE_DIR)/man/man8/
+	@install -Dm644 README -t $(SHARE_DIR)/doc/$(PKGNAME)/
+	@install -Dm644 extra/snap-pac.conf.example -t $(DESTDIR)/etc/
+	@install -Dm644 extra/root.conf.example -t $(DESTDIR)/etc/snap-pac/
