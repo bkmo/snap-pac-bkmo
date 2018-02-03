@@ -1,0 +1,7 @@
+# snap-pac example configuration file for a snapper config named "root"
+# See snap-pac(8) for details
+
+SNAPSHOT="yes"
+CLEANUP_ALGORITHM="number"
+#PRE_DESCRIPTION="pacman pre snapshot"
+#POST_DESCRIPTION="pacman post snapshot"
