@@ -93,7 +93,7 @@ SNAPPER_CONFIGS=$(awk -F'=' '/SNAPPER_CONFIGS/ {gsub(/"/, "", $2); print $2}' "$
 
 read_config "$SNAPPAC_CONFIG_FILE"
 
-readonly DESC_LIMIT=${DESC_LIMIT:-256}
+readonly DESC_LIMIT=${DESC_LIMIT:-72}
 readonly ABORT_ON_FAIL=${ABORT_ON_FAIL:-"no"}
 readonly LINK_MODULES=${LINK_MODULES:-"no"}
 readonly KERNEL_PACKAGE=${KERNEL_PACKAGE:-"linux"}
