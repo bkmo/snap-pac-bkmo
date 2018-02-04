@@ -20,6 +20,8 @@
 
 set -o errtrace
 
+[[ ! -z "$SNAP_PAC_IGNORE" ]] && { echo "snap-pac: skipping..."; exit; }
+
 readonly argv0="snap-pac"
 readonly SNAPPAC_CONFIG_FILE=/etc/snap-pac.conf
 readonly SNAPPER_CONFIG_FILE=/etc/conf.d/snapper
