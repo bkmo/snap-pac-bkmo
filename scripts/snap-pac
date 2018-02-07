@@ -20,7 +20,7 @@
 
 set -o errtrace
 
-[[ -n "$SNAP_PAC_SKIP" ]] && { echo "snap-pac: skipping..."; exit 0; }
+[[ -v SNAP_PAC_SKIP ]] && { printf "==> skipping due to SNAP_PAC_SKIP being set"; exit 0; }
 
 readonly argv0="snap-pac"
 readonly SNAPPAC_CONFIG_FILE=/etc/snap-pac.conf
