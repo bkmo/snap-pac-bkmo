@@ -64,7 +64,11 @@ specified by KERNEL_PACKAGE; see below) is updated, then a
 symlink will be created in the kernel modules directory for the
 currently running kernel to same directory in the pre snapshot of the
 "root" configuration. This is so that the kernel modules will still be
-available for use before a reboot is required. 
+available for use before a reboot is required. snap-pac will also
+delete broken symlinks in the kernel modules directory if this is set
+to "yes". (snapper
+removes configurations according to the specified cleanup algorithm,
+so eventually symlinks to old kernel modules directories will break).
 
 Default is "no".
 .RE
