@@ -110,7 +110,12 @@ for CONFIG in $SNAPPER_CONFIGS; do
     [[ $SNAPSHOT == "no" ]] && continue
 
     prefile="/tmp/$argv0-pre_$CONFIG"
-    snapper_cmd="snapper --config $CONFIG create --type $pre_or_post --cleanup-algorithm $CLEANUP_ALGORITHM --print-number --description"
+    if [ "$(stat -c %d:%i /)" != "$(stat -c %d:%i /proc/1/root/.)" ]; then
+        printf "Disabling dbus in snapper call since chroot detected.\n"
+        snapper_cmd="snapper --no-dbus --config $CONFIG create --type $pre_or_post --cleanup-algorithm $CLEANUP_ALGORITHM --print-number --description"
+    else
+        snapper_cmd="snapper --config $CONFIG create --type $pre_or_post --cleanup-algorithm $CLEANUP_ALGORITHM --print-number --description"
+    fi
 
     if [[ "$pre_or_post" == "pre" ]]; then
         x=$($snapper_cmd "$(truncate_description $PRE_DESCRIPTION)")
