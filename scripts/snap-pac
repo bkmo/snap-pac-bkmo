@@ -25,7 +25,7 @@ set -o errtrace
 readonly argv0="snap-pac"
 readonly SNAPPAC_CONFIG_FILE=/etc/snap-pac.conf
 readonly SNAPPER_CONFIG_FILE=/etc/conf.d/snapper
-if [ -z $PPID ] || [ -z $(ps -q $PPID -o args=) ]; then
+if [[ -z $PPID ]] || [[ -z $(ps -q $PPID -o args=) ]]; then
     printf "Parent process ID is empty.\n"
     readonly pacman_cmd=""
 else
