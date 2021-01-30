@@ -30,4 +30,4 @@ After reviewing the man page, [check the issues page] and file a new issue if yo
 problem is not covered.
 
 [download the latest release]: https://github.com/wesbarnett/snap-pac/releases
-[check the issues pages]: https://github.com/wesbarnett/snap-pac/issues
+[check the issues page]: https://github.com/wesbarnett/snap-pac/issues
