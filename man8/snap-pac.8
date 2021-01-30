@@ -1,5 +1,5 @@
 '\" t
-.TH SNAP-PAC 8 2017-02-04 SNAP-PAC
+.TH SNAP-PAC 8 2021-01-29 SNAP-PAC
 .SH NAME
 snap-pac \- Pacman hooks that use snapper to create pre/post btrfs snapshots
 like openSUSE's YaST 
@@ -16,10 +16,11 @@ directly, through an AUR helper, or using an alias—snapper will create the
 snapshots when pacman installs, upgrades, or removes a package. The pacman
 command used is logged in the snapper description for the snapshots.
 Additionally the snapshot numbers are output to the screen and to the pacman log
-for each snapper configuration during the pacman transaction.
+for each snapper configuration during the pacman transaction, so that the user can
+easily find which changes he or she may want to revert.
 
 To undo changes from a pacman transaction, use \fIsnapper undochange\fR. See 
-\fBsnapper\fR(8) and the following example.
+\fBsnapper\fR(8) and \fBEXAMPLES\fR.
 
 If you have severe breakage—like snapper is gone for some reason and you can't
 get it back—you'll have to resort to more extreme methods, such as taking a
@@ -76,21 +77,22 @@ Default is "no", except for the root configuration which is "yes".
 
 .BR CLEANUP_ALGORITHM
 .RS 4
-snapper algorithm used in cleaning up the pacman pre/post snapshots. See \fBsnapper\fR(8) for list of valid options.
+\fBsnapper\fR algorithm used in cleaning up the pacman pre/post snapshots. See
+\fBsnapper\fR(8) for a list of valid options.
 
 Default is "number". 
 .RE
 
 \fBPRE_DESCRIPTION=\fR\fB\fIstring\fR\fR
 .RS 4
-snapper description used for the pacman pre snapshot.
+\fBsnapper\fR description used for the pacman pre snapshot.
 
-Default is the parent program (usually pacman) that called the snapshot script.  
+Default is the parent program, usually \fBpacman\fR, that called the snapshot script.  
 .RE
 
 \fBPOST_DESCRIPTION=\fR\fB\fIstring\fR\fR
 .RS 4
-snapper description used for the pacman post snapshot.
+\fBsnapper\fR description used for the pacman post snapshot.
 
 Default is the list of packages that were installed/upgraded/removed
 during the transaction.
@@ -109,9 +111,10 @@ example:
 .EE
 
 
-.SH EXAMPLE
+.SH EXAMPLES
 
-Installing the nano package as normal:
+Here is an example of how the snapshots are created and how to rollback and pacman
+transaction. Here the \fBnano\fR package is installed:
 
 .EX
 
@@ -141,9 +144,9 @@ Installing the nano package as normal:
 .EE
 
 The snapper snapshot number is given for each snapper configuration that is
-used.  Tip: this is also logged in pacman's log).
+used. This is also logged in pacman's log.
 
-And here are the snapshots:
+Here are the snapshots created before and after the pacman transaction:
 
 .EX
 
@@ -152,7 +155,7 @@ And here are the snapshots:
 
 .EE
 
-What changed?
+Here is what changed during the transaction:
 
 .EX
 
@@ -170,11 +173,10 @@ What changed?
 
 .EE
 
-I truncated the above output, but it continues. See the manpage for snapper to
-see what each symbol means. You can also do snapper diff in the same way—I'll
-spare you that one.
+The above output is truncated, but it continues. See the \fBsnapper\fR(8) to
+for what each symbol means. You can also do \fBsnapper diff\fR in the same way.
 
-To undo the upgrade:
+Then, to undo the \fBpacman\fR transaction:
 
 .EX
 
@@ -183,7 +185,7 @@ To undo the upgrade:
 
 .EE
 
-And nano is now gone, along with all the files it changed:
+Now nano is no longer installed, along with all the files it changed:
 
 .EX
 
@@ -194,22 +196,26 @@ And nano is now gone, along with all the files it changed:
 
 .SH TROUBLESHOOTING
 
-.SS snap-pac is only taking snapshots of the root configuration
+.SS snap-pac is only taking snapshots of the root configuration.
 That's the default behavior. See \fBCONFIGURATION\fR.
 
-.SS No snapshots are being taken when I run pacman
+.SS No snapshots are being taken when I run pacman.
 No snapper configurations are set up for snap-pac's pacman hooks. By default
 snap-pac will take snapshots for the root configuration and any other
 configuration which has SNAPSHOT set to yes in its configuration file.
-See CONFIGURATION.
+See \fBCONFIGURATION\fR.
 
-.SS After restoring snapshot from snap-pac, pacman database is locked
+.SS After restoring snapshot from snap-pac, the pacman database is locked.
 The pre/post snaphots are taken while pacman is running, so this is expected.
-Follow the instructions pacman gives you (e.g., removing the lock file).
+Follow the instructions pacman gives you (e.g., removing the lock file). You can add the
+database lock file to a snapper filter so that snapper won't consider it when performing
+\fBsnapper diff\fR, \fBsnapper status\fR, \fBsnapper undochange\fR, etc. See the
+\fBFilters\fR section in \fBsnapper\fR(8) for more information.
+
 
 .SH FAQ
 .SS Does snap-pac backup non-btrfs /boot partitions?
-Nope. But you can add a hook that does it for you. It would be
+No, but you can add a hook that does it for you. It would be
 something like the following:
 
 .EX
@@ -228,7 +234,7 @@ something like the following:
 
 .EE
 
-.SS How do I link old kernel modules?
+.SS How do I link old kernel modules automatically when the kernel is upgraded?
 This behavior is no longer a part of this package. Use a pacman hook like the following:
 
     [Trigger]
