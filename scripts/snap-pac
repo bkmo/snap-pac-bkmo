@@ -1,136 +1,131 @@
-#!/bin/bash
+#!/usr/bin/env python
 
-# snap-pac
-# https://github.com/wesbarnett/snap-pac
-# Copyright (C) 2016, 2017, 2018 James W. Barnett
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License along
-# with this program; if not, write to the Free Software Foundation, Inc.,
-# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+"""
+Copyright (C) 2021 Wes Barnett
 
-set -o errtrace
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
 
-[[ -v SNAP_PAC_SKIP ]] && { printf "==> skipping due to SNAP_PAC_SKIP being set"; exit 0; }
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-readonly argv0="snap-pac"
-readonly SNAPPAC_CONFIG_FILE=/etc/snap-pac.conf
-readonly SNAPPER_CONFIG_FILE=/etc/conf.d/snapper
-if [[ -z $PPID ]] || [[ -z $(ps -q $PPID -o args=) ]]; then
-    printf "Parent process ID is empty.\n"
-    readonly pacman_cmd=""
-else
-    readonly pacman_cmd="$(ps -q $PPID -o args=)"
-fi
-readonly pre_or_post=$1
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+"""
 
-out() { printf "$1 $2\n" "${@:3}"; }
+from argparse import ArgumentParser
+from configparser import ConfigParser
+import os
+import sys
 
-error() { out "==> \033[00;31merror:\033[00m" "$@"; } >&2
 
-die() { 
-    [[ $ABORT_ON_FAIL == "no" ]] && exit 0
-    exit 1
-}
+def create_snapper_cmd(args, config):
+    chroot = os.stat("/") != os.stat("/proc/1/root/.")
+    snapper_cmd = ["snapper"]
+    if chroot:
+        snapper_cmd.append("--no-dbus")
+    snapper_cmd.append("--config")
+    snapper_cmd.append(c)
+    snapper_cmd.append("create")
+    snapper_cmd.append("--type")
+    snapper_cmd.append(args.preorpost)
+    snapper_cmd.append("--cleanup-algorithm")
+    snapper_cmd.append(config.get(x, "cleanup_algorithm"))
+    snapper_cmd.append("--print-number")
+    snapper_cmd.append("--description")
+    desc_limit = config.getint(x, "desc_limit")
+    if args.preorpost == "pre":
+        snapper_cmd.append(config.get(x, "pre_description")[:desc_limit])
+    else:
+        snapper_cmd.append(config.get(x, "post_description")[:desc_limit])
+    return snapper_cmd
 
-read_config() {
-    CONFIG_FILE="$1"
-    if [[ -f "$CONFIG_FILE" ]] && [[ -r "$CONFIG_FILE" ]]; then
-        while IFS='= ' read lhs rhs; do
-            if [[ ! $lhs =~ ^\ *# && -n $lhs ]]; then
-                rhs="${rhs%%\#*}"
-                rhs="${rhs%%*( )}"
-                rhs="${rhs%\"*}"
-                rhs="${rhs#\"*}"
-                declare -g $lhs="$rhs"
-            fi
-        done < "$CONFIG_FILE"
-    fi
-}
 
-trapkill() { 
-    error "Exited due to user intervention."
-    die
-}
+def do_snapshot(preorpost, cmd, prefile):
+    if preorpost == "pre":
+        return do_pre_snapshot(cmd, prefile)
+    else:
+        return do_post_snapshot(cmd, prefile)
 
-traperror() {
-    error "Exited due to error on line $1"
-    out "exit status:" "$2"
-    out "command:" "$3"
-    out "bash line:" "$4"
-    out "function argv0:" "$5"
-    die
-}
 
-truncate_description() {
-    desc="$@"
-    if [[ "${#desc}" -gt $DESC_LIMIT ]]; then 
-        echo "$(echo $desc | cut -c 1-$DESC_LIMIT)..."
-    else
-        echo $desc
-    fi
-}
+def do_pre_snapshot(cmd, prefile):
+    """Run snapper command, write snapshot number to file."""
+    num = os.popen(" ".join(cmd)).read().rstrip("\n")
+    with open(prefile, "w") as f:
+        f.write(num)
+    return num
 
-trap 'traperror ${LINENO} $? "$BASH_COMMAND" $BASH_LINENO "${FUNCNAME[@]}"' ERR
-trap trapkill SIGTERM SIGINT
 
-readonly -f read_config out error die trapkill traperror truncate_description
+def do_post_snapshot(cmd, prefile):
+    """Read pre snapshot number from file, run snapper, delete prefile."""
+    cmd.append("--pre-number")
+    with open(prefile, "r") as f:
+        cmd.append(f.read().rstrip("\n"))
+    num = os.popen(" ".join(cmd)).read().rstrip("\n")
+    os.remove(prefile)
+    return num
 
-SNAPPER_CONFIGS=$(awk -F'=' '/SNAPPER_CONFIGS/ {gsub(/"/, "", $2); print $2}' "$SNAPPER_CONFIG_FILE")
 
-read_config "$SNAPPAC_CONFIG_FILE"
+def get_snapper_configs(conf_file):
+    """Get the snapper configurations."""
+    with open(conf_file, "r") as f:
+        for line in f:
+            if line.startswith("SNAPPER_CONFIGS"):
+                line = line.rstrip("\n").rstrip("\"")
+                line = line.split("=")
+                line = line[1].lstrip("\"")
+                return line.split()
 
-readonly DESC_LIMIT=${DESC_LIMIT:-72}
-readonly ABORT_ON_FAIL=${ABORT_ON_FAIL:-"no"}
 
-mapfile -t packages
+def setup_config_parser(ini_file):
+    """Set up defaults for snap-pac configuration."""
+    parent_cmd = os.popen(f"ps -p {os.getppid()} -o args=").read().strip()
+    packages = " ".join([line.rstrip("\n") for line in sys.stdin])
 
-for CONFIG in $SNAPPER_CONFIGS; do
+    config = ConfigParser()
+    config["DEFAULT"] = {
+        "snapshot": False,
+        "cleanup_algorithm": "number",
+        "pre_description": "".join(["\"", parent_cmd, "\""]),
+        "post_description":  "".join(["\"", packages, "\""]),
+        "desc_limit": 72
+    }
+    config["root"] = {
+        "snapshot": True
+    }
+    config.read(ini_file)
+    return config
 
-    unset SNAPSHOT
-    unset PRE_DESCRIPTION
-    unset POST_DESCRIPTION
-    unset CLEANUP_ALGORITHM
 
-    read_config "/etc/snap-pac/$CONFIG.conf"
+if __name__ == "__main__":
 
-    if [[ $CONFIG == "root" ]]; then 
-        SNAPSHOT=${SNAPSHOT:-"yes"}
-    else
-        SNAPSHOT=${SNAPSHOT:-"no"}
-    fi
-    PRE_DESCRIPTION=${PRE_DESCRIPTION:-"$pacman_cmd"}
-    POST_DESCRIPTION=${POST_DESCRIPTION:-"${packages[*]}"}
-    CLEANUP_ALGORITHM=${CLEANUP_ALGORITHM:-"number"}
+    snap_pac_ini = "/etc/snap-pac.ini"
+    snapper_conf_file = "/etc/conf.d/snapper"
 
-    [[ $SNAPSHOT == "no" ]] && continue
+    parser = ArgumentParser()
+    parser.add_argument(dest="preorpost")
+    args = parser.parse_args()
 
-    prefile="/tmp/$argv0-pre_$CONFIG"
-    if [ "$(stat -c %d:%i /)" != "$(stat -c %d:%i /proc/1/root/.)" ]; then
-        printf "Disabling dbus in snapper call since chroot detected.\n"
-        snapper_cmd="snapper --no-dbus --config $CONFIG create --type $pre_or_post --cleanup-algorithm $CLEANUP_ALGORITHM --print-number --description"
-    else
-        snapper_cmd="snapper --config $CONFIG create --type $pre_or_post --cleanup-algorithm $CLEANUP_ALGORITHM --print-number --description"
-    fi
+    config = setup_config_parser(snap_pac_ini)
+    snapper_configs = get_snapper_configs(snapper_conf_file)
 
-    if [[ "$pre_or_post" == "pre" ]]; then
-        x=$($snapper_cmd "$(truncate_description $PRE_DESCRIPTION)")
-        printf "==> %s: $(echo $x | tee "$prefile")\n" "$CONFIG"
-    elif [[ -f $prefile && "$pre_or_post" == "post" ]]; then
-        x=$($snapper_cmd "$(truncate_description $POST_DESCRIPTION)" --pre-number "$(< "$prefile")")
-        printf "==> %s: %s\n" "$CONFIG" "$x"
-        rm -f "$prefile"
-    fi
+    if os.getenv("SNAP_PAC_SKIP", "n") not in ["y", "Y", "yes", "Yes", "YES"]:
+        for c in snapper_configs:
 
-done
+            if c in config:
+                x = c
+            else:
+                x = "DEFAULT"
 
-exit 0
+            if config.getboolean(x, "snapshot"):
+                prefile = f"/tmp/snap-pac-pre_{c}"
+                snapper_cmd = create_snapper_cmd(args, config)
+                num = do_snapshot(args.preorpost, snapper_cmd, prefile)
+                print(f"==> {c}: {num}")
+    else:
+        print("SNAP_PAC_SKIP set, so skipping snapshots.")
