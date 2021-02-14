@@ -1,6 +1,6 @@
 # snap-pac
 
-![Tests](https://github.com/wesbarnett/snap-pac/workflows/Run%20Python%20Tests/badge.svg)
+![Tests](https://github.com/wesbarnett/snap-pac/workflows/Tests/badge.svg)
 
 ## Synopsis
 
