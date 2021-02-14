@@ -108,10 +108,14 @@ def main(snap_pac_ini, snapper_conf_file, args):
         if config.getboolean(c, "snapshot"):
             prefile = f"/tmp/snap-pac-pre_{c}"
             logging.debug(f"{prefile = }")
-            snapper_cmd = create_snapper_cmd(args.preorpost, config, c, prefile)
-            logging.debug(f"{snapper_cmd = }")
-            num = do_snapshot(args.preorpost, snapper_cmd, prefile)
-            logging.info(f"==> {c}: {num}")
+            try:
+                snapper_cmd = create_snapper_cmd(args.preorpost, config, c, prefile)
+                logging.debug(f"{snapper_cmd = }")
+            except FileNotFoundError:
+                logging.error(f"File containing pre snapshot number not found.")
+            else:
+                num = do_snapshot(args.preorpost, snapper_cmd, prefile)
+                logging.info(f"==> {c}: {num}")
 
     return True
 
