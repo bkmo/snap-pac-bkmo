@@ -27,45 +27,39 @@ import sys
 logging.basicConfig(format="%(message)s", level=logging.INFO)
 
 
-def create_snapper_cmd(args, config, section):
-    chroot = os.stat("/") != os.stat("/proc/1/root/.")
+def create_snapper_cmd(preorpost, config, section, prefile):
+    """Populate the snapper command."""
+    try:
+        chroot = os.stat("/") != os.stat("/proc/1/root/.")
+    except PermissionError:
+        logging.warning("Unable to detect if in chroot. Run script as root.")
+        chroot = False
     snapper_cmd = ["snapper"]
     if chroot:
         snapper_cmd.append("--no-dbus")
     snapper_cmd.append(f"--config {section} create")
-    snapper_cmd.append(f"--type {args.preorpost}")
+    snapper_cmd.append(f"--type {preorpost}")
     snapper_cmd.append(f"--cleanup-algorithm {config.get(section, 'cleanup_algorithm')}")
     snapper_cmd.append("--print-number")
     desc_limit = config.getint(section, "desc_limit")
-    if args.preorpost == "pre":
+    if preorpost == "pre":
         snapper_cmd.append(f"--description {config.get(section, 'pre_description')[:desc_limit]}")
     else:
         snapper_cmd.append(f"--description {config.get(section, 'post_description')[:desc_limit]}")
+        with open(prefile, "r") as f:
+            pre_number = f.read().rstrip("\n")
+            snapper_cmd.append(f"--pre-number {pre_number}")
+        os.remove(prefile)
     return snapper_cmd
 
 
 def do_snapshot(preorpost, cmd, prefile):
-    if preorpost == "pre":
-        return do_pre_snapshot(cmd, prefile)
-    else:
-        return do_post_snapshot(cmd, prefile)
-
-
-def do_pre_snapshot(cmd, prefile):
-    """Run snapper command, write snapshot number to file."""
+    """Run the actual snapper command and save snapshot number if pre snapshot."""
     num = os.popen(" ".join(cmd)).read().rstrip("\n")
-    with open(prefile, "w") as f:
-        f.write(num)
+    if preorpost == "pre":
+        with open(prefile, "w") as f:
+            f.write(num)
     return num
-
-
-def do_post_snapshot(cmd, prefile):
-    """Read pre snapshot number from file, run snapper, delete prefile."""
-    with open(prefile, "r") as f:
-        pre_number = f.read().rstrip("\n")
-        cmd.append(f"--pre-number {pre_number}")
-    os.remove(prefile)
-    return os.popen(" ".join(cmd)).read().rstrip("\n")
 
 
 def get_snapper_configs(conf_file):
@@ -77,10 +71,8 @@ def get_snapper_configs(conf_file):
                 return line[1].lstrip("\"").split()
 
 
-def setup_config_parser(ini_file):
+def setup_config_parser(ini_file, parent_cmd, packages):
     """Set up defaults for snap-pac configuration."""
-    parent_cmd = os.popen(f"ps -p {os.getppid()} -o args=").read().strip()
-    packages = " ".join([line.rstrip("\n") for line in sys.stdin])
 
     config = ConfigParser()
     config["DEFAULT"] = {
@@ -98,11 +90,14 @@ def setup_config_parser(ini_file):
 
 
 def main(snap_pac_ini, snapper_conf_file, args):
-    config = setup_config_parser(snap_pac_ini)
-    snapper_configs = get_snapper_configs(snapper_conf_file)
 
     if os.getenv("SNAP_PAC_SKIP", "n") in ["y", "Y", "yes", "Yes", "YES"]:
-        return
+        return False
+
+    parent_cmd = os.popen(f"ps -p {os.getppid()} -o args=").read().strip()
+    packages = " ".join([line.rstrip("\n") for line in sys.stdin])
+    config = setup_config_parser(snap_pac_ini, parent_cmd, packages)
+    snapper_configs = get_snapper_configs(snapper_conf_file)
 
     for c in snapper_configs:
 
@@ -113,10 +108,12 @@ def main(snap_pac_ini, snapper_conf_file, args):
         if config.getboolean(c, "snapshot"):
             prefile = f"/tmp/snap-pac-pre_{c}"
             logging.debug(f"{prefile = }")
-            snapper_cmd = create_snapper_cmd(args, config, c)
+            snapper_cmd = create_snapper_cmd(args.preorpost, config, c, prefile)
             logging.debug(f"{snapper_cmd = }")
             num = do_snapshot(args.preorpost, snapper_cmd, prefile)
             logging.info(f"==> {c}: {num}")
+
+    return True
 
 
 if __name__ == "__main__":
