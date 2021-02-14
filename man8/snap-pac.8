@@ -31,72 +31,11 @@ but your setup has to be properly configured to use it. The exact procedure
 depends on your specific setup. Be careful.
 
 .SH CONFIGURATION
-Configuration is done via configuration files. The defaults of the
-following should be suitable for most users, so you may not need to do
-any configuration at all. Follow the pattern of bash shell variables
-(VAR=setting) in each configuration file below. Comments can be added
-by adding \fI#\fR before the comment. Example configuration files are
-located at \fI/etc/snap-pac.conf.example\fR and
-\fI/etc/snap-pac/root.conf.example\fR.
+Configuration is done via Python ini configuration files. The defaults of the
+should be suitable for most users, so you may not need to do any configuration at all.
+By default only the "root" snapper configuration is snapshotted.
 
-The following settings can be changed in the main snap-pac configuration file
-\fI/etc/snap-pac.conf\fR:
-
-\fBABORT_ON_FAIL=\fR\fB\fIyes\fR\fR\fB or \fR\fB\fIno\fR\fR
-.RS 4
-When set to "yes" this causes pacman to abort a transaction if the snap-pac pre
-hook fails.  This prevents an upgrade/installation/removal from occurring if a
-pre snapshot cannot be performed.
-
-Default is "no".
-.RE
-
-\fBDESC_LIMIT=\fR\fB\fIinteger\fR\fR
-.RS 4
-Number of characters to limit length of descriptions used for snapper.
-
-Default is "72".
-.RE
-
-The following are possible settings used on each specific snapper
-configuration you have. To use them, first create the folder
-\fI/etc/snap-pac\fR if it does not already exist. Then create a file
-for the snapper configuration file you want these settings to apply
-to. For example, for the snapper configuration named \fIroot\fR,
-create the file \fI/etc/snap-pac/root.conf\fR. \fIsnap-pac\fR requires
-and expects configuration files to end in \fI.conf\fR.
-
-\fBSNAPSHOT=\fR\fB\fIyes\fR\fR\fB or \fR\fB\fIno\fR\fR
-.RS 4
-Perform pacman pre/post snapshots for this configuration. In other
-words, if you want snapper to run before and after a pacman
-transaction, set this to "yes".
-
-Default is "no", except for the root configuration which is "yes".
-.RE
-
-.BR CLEANUP_ALGORITHM
-.RS 4
-\fBsnapper\fR algorithm used in cleaning up the pacman pre/post snapshots. See
-\fBsnapper\fR(8) for a list of valid options.
-
-Default is "number". 
-.RE
-
-\fBPRE_DESCRIPTION=\fR\fB\fIstring\fR\fR
-.RS 4
-\fBsnapper\fR description used for the pacman pre snapshot.
-
-Default is the parent program, usually \fBpacman\fR, that called the snapshot script.  
-.RE
-
-\fBPOST_DESCRIPTION=\fR\fB\fIstring\fR\fR
-.RS 4
-\fBsnapper\fR description used for the pacman post snapshot.
-
-Default is the list of packages that were installed/upgraded/removed
-during the transaction.
-.RE
+A commented example configuration files is located at \fI/etc/snap-pac.ini.example\fR.
 
 .SH ENVIRONMENT VARIABLES
 
