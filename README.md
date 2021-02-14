@@ -1,5 +1,7 @@
 # snap-pac
 
+![Tests](https://github.com/wesbarnett/snap-pac/workflows/Run%20Python%20Tests/badge.svg)
+
 ## Synopsis
 
 This is a set of pacman hooks and script that automatically causes snapper to
