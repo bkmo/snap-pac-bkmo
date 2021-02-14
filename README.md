@@ -20,6 +20,13 @@ fingerprint is `8535CEF3F3C38EE69555BF67E4B5E45AA3B8C5C3`.
 Starting with release 2.2, the tarballs are signed with my key with fingerprint `F7B2
 8C61 944F E30D ABEE  B0B0 1070 BCC9 8C18 BD66`.
 
+## Configuration
+
+An commented example configuration file is located at `extras/snap-pac.ini` which is
+installed to `/etc/snap-pac.ini.example`. By default only the snapper configuration
+named `root` has snapshots taken before and after pacman transactions. See the example
+configuration file for how to add other snapper configurations.
+
 ## Documentation
 
 Run `man 8 snap-pac` after installation.
