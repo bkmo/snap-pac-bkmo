@@ -27,9 +27,9 @@ logging.basicConfig(format="%(message)s", level=logging.INFO)
 
 class SnapperCmd:
 
-    def __init__(self, config, snapshot_type, cleanup_algorithm, description="", dbus=False, pre_number=None):
+    def __init__(self, config, snapshot_type, cleanup_algorithm, description="", nodbus=False, pre_number=None):
         self.cmd = ["snapper"]
-        if dbus:
+        if nodbus:
             self.cmd.append("--no-dbus")
         self.cmd.append(f"--config {config} create")
         self.cmd.append(f"--type {snapshot_type}")

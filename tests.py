@@ -52,6 +52,13 @@ def test_snapper_cmd_post():
     assert str(snapper_cmd) == cmd
 
 
+def test_snapper_cmd_post_nodbus():
+    snapper_cmd = SnapperCmd("root", "post", "number", "bar", True, 1234)
+    cmd = "snapper --no-dbus --config root create --type post --cleanup-algorithm number --print-number"
+    cmd += " --description \"bar\" --pre-number 1234"
+    assert str(snapper_cmd) == cmd
+
+
 def test_get_snapper_configs():
     with tempfile.NamedTemporaryFile("w", delete=False) as f:
         f.write("## Path: System/Snapper\n")
