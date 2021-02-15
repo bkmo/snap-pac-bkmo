@@ -4,7 +4,7 @@ import os
 
 import pytest
 
-from snap_pac import create_snapper_cmd, get_snapper_configs, main, setup_config_parser
+from scripts.snap_pac import create_snapper_cmd, get_snapper_configs, main, setup_config_parser
 
 
 @pytest.fixture
