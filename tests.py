@@ -4,7 +4,10 @@ import os
 
 import pytest
 
-from scripts.snap_pac import SnapperCmd, get_snapper_configs, main, setup_config_parser
+from scripts.snap_pac import (
+   SnapperCmd, get_pre_number, get_snapper_configs, main, setup_config_parser,
+   write_pre_number, get_description
+)
 
 
 @pytest.fixture
@@ -13,17 +16,27 @@ def config():
     config["DEFAULT"] = {
         "snapshot": False,
         "cleanup_algorithm": "number",
-        "pre_description": "\"foo\"",
-        "post_description":  "\"bar\"",
+        "pre_description": "foo",
+        "post_description":  "bar",
         "desc_limit": 72
     }
     config["root"] = {
         "snapshot": True
     }
     config["home"] = {
-        "snapshot": True
+        "snapshot": True,
+        "desc_limit": 3,
+        "post_description": "a really long description"
     }
     return config
+
+
+@pytest.fixture
+def prefile():
+    with tempfile.NamedTemporaryFile("w", delete=False) as f:
+        f.write("1234")
+        name = f.name
+    return name
 
 
 def test_snapper_cmd_pre():
@@ -59,7 +72,30 @@ def test_skip_snap_pac():
 def test_setup_config_parser(config):
     with tempfile.NamedTemporaryFile("w", delete=False) as f:
         f.write("[home]\n")
-        f.write("snapshot = True")
+        f.write("snapshot = True\n")
+        f.write("desc_limit = 3\n")
+        f.write("post_description = a really long description\n")
         name = f.name
     config2 = setup_config_parser(name, "foo", "bar")
     assert config == config2
+
+
+def test_get_pre_number_pre(prefile):
+    assert get_pre_number("pre", prefile) is None
+
+
+def test_get_pre_number_post(prefile):
+    assert get_pre_number("post", prefile) == "1234"
+
+
+def test_write_pre_number(prefile):
+    write_pre_number("5678", prefile)
+    assert get_pre_number("post", prefile) == "5678"
+
+
+def test_get_pre_description(config):
+    assert get_description("pre", config, "home") == "foo"
+
+
+def test_get_post_description(config):
+    assert get_description("post", config, "home") == "a r"
