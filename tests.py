@@ -4,7 +4,7 @@ import os
 
 import pytest
 
-from scripts.snap_pac import create_snapper_cmd, get_snapper_configs, main, setup_config_parser
+from scripts.snap_pac import SnapperCmd, get_snapper_configs, main, setup_config_parser
 
 
 @pytest.fixture
@@ -26,19 +26,17 @@ def config():
     return config
 
 
-def test_create_snapper_pre_cmd(config):
-    snapper_cmd = create_snapper_cmd("pre", config, "root", "/tmp/somefile")
+def test_snapper_cmd_pre():
+    snapper_cmd = SnapperCmd("root", "pre", "number", "foo")
     cmd = "snapper --config root create --type pre --cleanup-algorithm number --print-number --description \"foo\""
-    assert " ".join(snapper_cmd) == cmd
+    assert str(snapper_cmd) == cmd
 
 
-def test_create_snapper_post_cmd(config):
-    with tempfile.NamedTemporaryFile("w", delete=False) as f:
-        f.write("1234")
-    snapper_cmd = create_snapper_cmd("post", config, "root", f.name)
+def test_snapper_cmd_post():
+    snapper_cmd = SnapperCmd("root", "post", "number", "bar", False, 1234)
     cmd = "snapper --config root create --type post --cleanup-algorithm number --print-number"
     cmd += " --description \"bar\" --pre-number 1234"
-    assert " ".join(snapper_cmd) == cmd
+    assert str(snapper_cmd) == cmd
 
 
 def test_get_snapper_configs():
