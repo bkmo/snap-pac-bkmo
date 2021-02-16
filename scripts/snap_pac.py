@@ -14,9 +14,7 @@
 # You should have received a copy of the GNU General Public License along
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-"""
-Script for taking pre/post snapshots; run from pacman hooks.
-"""
+"""Script for taking pre/post snapshots; run from pacman hooks."""
 
 from argparse import ArgumentParser
 from configparser import ConfigParser
@@ -27,39 +25,30 @@ import sys
 logging.basicConfig(format="%(message)s", level=logging.INFO)
 
 
-def create_snapper_cmd(preorpost, config, section, prefile):
-    """Populate the snapper command."""
-    try:
-        chroot = os.stat("/") != os.stat("/proc/1/root/.")
-    except PermissionError:
-        logging.warning("Unable to detect if in chroot. Run script as root.")
-        chroot = False
-    snapper_cmd = ["snapper"]
-    if chroot:
-        snapper_cmd.append("--no-dbus")
-    snapper_cmd.append(f"--config {section} create")
-    snapper_cmd.append(f"--type {preorpost}")
-    snapper_cmd.append(f"--cleanup-algorithm {config.get(section, 'cleanup_algorithm')}")
-    snapper_cmd.append("--print-number")
-    desc_limit = config.getint(section, "desc_limit")
-    if preorpost == "pre":
-        snapper_cmd.append(f"--description {config.get(section, 'pre_description')[:desc_limit]}")
-    else:
-        snapper_cmd.append(f"--description {config.get(section, 'post_description')[:desc_limit]}")
-        with open(prefile, "r") as f:
-            pre_number = f.read().rstrip("\n")
-            snapper_cmd.append(f"--pre-number {pre_number}")
-        os.remove(prefile)
-    return snapper_cmd
+class SnapperCmd:
 
+    def __init__(self, config, snapshot_type, cleanup_algorithm, description="", nodbus=False, pre_number=None):
+        self.cmd = ["snapper"]
+        if nodbus:
+            self.cmd.append("--no-dbus")
+        self.cmd.append(f"--config {config} create")
+        self.cmd.append(f"--type {snapshot_type}")
+        self.cmd.append(f"--cleanup-algorithm {cleanup_algorithm}")
+        self.cmd.append("--print-number")
+        if description:
+            self.cmd.append(f"--description \"{description}\"")
+        if snapshot_type == "post":
+            if pre_number is not None:
+                self.cmd.append(f"--pre-number {pre_number}")
+            else:
+                raise ValueError("snapshot type specified as 'post' but no pre snapshot number passed.")
+        print(self.__str__())
 
-def do_snapshot(preorpost, cmd, prefile):
-    """Run the actual snapper command and save snapshot number if pre snapshot."""
-    num = os.popen(" ".join(cmd)).read().rstrip("\n")
-    if preorpost == "pre":
-        with open(prefile, "w") as f:
-            f.write(num)
-    return num
+    def __call__(self):
+        return os.popen(self.__str__()).read().rstrip("\n")
+
+    def __str__(self):
+        return " ".join(self.cmd)
 
 
 def get_snapper_configs(conf_file):
@@ -78,8 +67,8 @@ def setup_config_parser(ini_file, parent_cmd, packages):
     config["DEFAULT"] = {
         "snapshot": False,
         "cleanup_algorithm": "number",
-        "pre_description": "".join(["\"", parent_cmd, "\""]),
-        "post_description":  "".join(["\"", packages, "\""]),
+        "pre_description": parent_cmd,
+        "post_description": packages,
         "desc_limit": 72
     }
     config["root"] = {
@@ -87,6 +76,31 @@ def setup_config_parser(ini_file, parent_cmd, packages):
     }
     config.read(ini_file)
     return config
+
+
+def get_description(preorpost, config, section):
+    desc_limit = config.getint(section, "desc_limit")
+    if preorpost == "pre":
+        return config.get(section, "pre_description")[:desc_limit]
+    else:
+        return config.get(section, "post_description")[:desc_limit]
+
+
+def get_pre_number(preorpost, prefile):
+    if preorpost == "pre":
+        pre_number = None
+    else:
+        try:
+            with open(prefile, "r") as f:
+                pre_number = f.read().rstrip("\n")
+        except FileNotFoundError:
+            logging.error("prefile not found")
+    return pre_number
+
+
+def write_pre_number(num, prefile):
+    with open(prefile, "w") as f:
+        f.write(num)
 
 
 def main(snap_pac_ini, snapper_conf_file, args):
@@ -98,6 +112,7 @@ def main(snap_pac_ini, snapper_conf_file, args):
     packages = " ".join([line.rstrip("\n") for line in sys.stdin])
     config = setup_config_parser(snap_pac_ini, parent_cmd, packages)
     snapper_configs = get_snapper_configs(snapper_conf_file)
+    chroot = os.stat("/") != os.stat("/proc/1/root/.")
 
     for c in snapper_configs:
 
@@ -105,18 +120,21 @@ def main(snap_pac_ini, snapper_conf_file, args):
             config.add_section(c)
 
         logging.debug(f"{c = }")
+
         if config.getboolean(c, "snapshot"):
             prefile = f"/tmp/snap-pac-pre_{c}"
             logging.debug(f"{prefile = }")
-            try:
-                snapper_cmd = create_snapper_cmd(args.preorpost, config, c, prefile)
-                logging.debug(f"{snapper_cmd = }")
-            except FileNotFoundError:
-                logging.error(f"Error: File containing pre snapshot number not found for \"{c}\" configuration. "
-                              "If you are installing snap-pac for the first time, this is normal and can be ignored.")
-            else:
-                num = do_snapshot(args.preorpost, snapper_cmd, prefile)
-                logging.info(f"==> {c}: {num}")
+
+            cleanup_algorithm = config.get(c, "cleanup_algorithm")
+            description = get_description(args.preorpost, config, c)
+            pre_number = get_pre_number(args.preorpost, prefile)
+
+            snapper_cmd = SnapperCmd(c, args.preorpost, cleanup_algorithm, description, chroot, pre_number)
+            num = snapper_cmd()
+            logging.info(f"==> {c}: {num}")
+
+            if args.preorpost == "pre":
+                write_pre_number(num, prefile)
 
     return True
 

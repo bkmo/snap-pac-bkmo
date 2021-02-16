@@ -17,6 +17,8 @@ jobs:
         with:
           python-version: 3.9
       - name: Install dependencies
-        run: python -m pip install --upgrade pip pytest
-      - name: Run tests with pytest
-        run: pytest -v tests.py
+        run: python -m pip install --upgrade pip pytest flake8
+      - name: Run linter
+        run: flake8 --max-line-length=120 scripts/
+      - name: Run tests
+        run: pytest -v
