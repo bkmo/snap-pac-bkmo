@@ -39,24 +39,24 @@ def prefile():
     return name
 
 
-def test_snapper_cmd_pre():
-    snapper_cmd = SnapperCmd("root", "pre", "number", "foo")
-    cmd = "snapper --config root create --type pre --cleanup-algorithm number --print-number --description \"foo\""
-    assert str(snapper_cmd) == cmd
-
-
-def test_snapper_cmd_post():
-    snapper_cmd = SnapperCmd("root", "post", "number", "bar", False, 1234)
-    cmd = "snapper --config root create --type post --cleanup-algorithm number --print-number"
-    cmd += " --description \"bar\" --pre-number 1234"
-    assert str(snapper_cmd) == cmd
-
-
-def test_snapper_cmd_post_nodbus():
-    snapper_cmd = SnapperCmd("root", "post", "number", "bar", True, 1234)
-    cmd = "snapper --no-dbus --config root create --type post --cleanup-algorithm number --print-number"
-    cmd += " --description \"bar\" --pre-number 1234"
-    assert str(snapper_cmd) == cmd
+@pytest.mark.parametrize("snapper_cmd, actual_cmd", [
+    (
+        SnapperCmd("root", "pre", "number", "foo"),
+        "snapper --config root create --type pre --cleanup-algorithm number --print-number --description \"foo\""
+    ),
+    (
+        SnapperCmd("root", "post", "number", "bar", False, 1234),
+        "snapper --config root create --type post --cleanup-algorithm number --print-number"
+        " --description \"bar\" --pre-number 1234"
+    ),
+    (
+        SnapperCmd("root", "post", "number", "bar", True, 1234),
+        "snapper --no-dbus --config root create --type post --cleanup-algorithm number --print-number"
+        " --description \"bar\" --pre-number 1234"
+    )
+])
+def test_snapper_cmd(snapper_cmd, actual_cmd):
+    assert str(snapper_cmd) == actual_cmd
 
 
 def test_get_snapper_configs():
@@ -100,9 +100,6 @@ def test_write_pre_number(prefile):
     assert get_pre_number("post", prefile) == "5678"
 
 
-def test_get_pre_description(config):
-    assert get_description("pre", config, "home") == "foo"
-
-
-def test_get_post_description(config):
-    assert get_description("post", config, "home") == "a r"
+@pytest.mark.parametrize("snapshot_type, description", [("pre", "foo"), ("post", "a r")])
+def test_get_description(snapshot_type, description, config):
+    assert get_description(snapshot_type, config, "home") == description
