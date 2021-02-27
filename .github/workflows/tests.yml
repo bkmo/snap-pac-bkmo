@@ -21,4 +21,4 @@ jobs:
       - name: Run linter
         run: flake8 --max-line-length=120 scripts/
       - name: Run tests
-        run: pytest -v
+        run: python -m pytest -v
