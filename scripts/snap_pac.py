@@ -42,7 +42,6 @@ class SnapperCmd:
                 self.cmd.append(f"--pre-number {pre_number}")
             else:
                 raise ValueError("snapshot type specified as 'post' but no pre snapshot number passed.")
-        print(self.__str__())
 
     def __call__(self):
         return os.popen(self.__str__()).read().rstrip("\n")
