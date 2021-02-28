@@ -19,6 +19,7 @@
 from argparse import ArgumentParser
 from configparser import ConfigParser
 import logging
+from pathlib import Path
 import os
 import sys
 
@@ -91,18 +92,12 @@ def get_pre_number(snapshot_type, prefile):
         pre_number = None
     else:
         try:
-            with open(prefile, "r") as f:
-                pre_number = f.read().rstrip("\n")
+            pre_number = prefile.read_text()
         except FileNotFoundError:
             raise FileNotFoundError(f"prefile {prefile} not found. Ensure you have run the pre snapshot first.")
         else:
-            os.remove(prefile)
+            prefile.unlink()
     return pre_number
-
-
-def write_pre_number(num, prefile):
-    with open(prefile, "w") as f:
-        f.write(num)
 
 
 def main(snap_pac_ini, snapper_conf_file, args):
@@ -125,7 +120,7 @@ def main(snap_pac_ini, snapper_conf_file, args):
         logging.debug(f"{snapper_config = }")
 
         if config.getboolean(snapper_config, "snapshot"):
-            prefile = f"/tmp/snap-pac-pre_{snapper_config}"
+            prefile = "/tmp" / Path(f"snap-pac-pre_{snapper_config}")
             logging.debug(f"{prefile = }")
 
             cleanup_algorithm = config.get(snapper_config, "cleanup_algorithm")
@@ -138,7 +133,7 @@ def main(snap_pac_ini, snapper_conf_file, args):
             logging.info(f"==> {snapper_config}: {num}")
 
             if args.type == "pre":
-                write_pre_number(num, prefile)
+                prefile.write_text(num)
 
     return True
 
