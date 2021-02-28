@@ -100,6 +100,11 @@ def test_write_pre_number(prefile):
     assert get_pre_number("post", prefile) == "5678"
 
 
+def test_no_prefile():
+    with pytest.raises(FileNotFoundError):
+        get_pre_number("post", "/tmp/foo-pre-file-not-found")
+
+
 @pytest.mark.parametrize("snapshot_type, description", [("pre", "foo"), ("post", "a r")])
 def test_get_description(snapshot_type, description, config):
     assert get_description(snapshot_type, config, "home") == description

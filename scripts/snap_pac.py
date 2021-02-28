@@ -22,6 +22,7 @@ import logging
 import os
 import sys
 
+
 logging.basicConfig(format="%(message)s", level=logging.INFO)
 
 
@@ -92,8 +93,9 @@ def get_pre_number(snapshot_type, prefile):
         try:
             with open(prefile, "r") as f:
                 pre_number = f.read().rstrip("\n")
+                os.remove(prefile)
         except FileNotFoundError:
-            logging.error("prefile not found")
+            raise FileNotFoundError(f"prefile {prefile} not found. Ensure you have run the pre snapshot first.")
     return pre_number
 
 
@@ -108,29 +110,31 @@ def main(snap_pac_ini, snapper_conf_file, args):
         return False
 
     parent_cmd = os.popen(f"ps -p {os.getppid()} -o args=").read().strip()
+    logging.debug("Getting list of packages from standard input...")
     packages = " ".join([line.rstrip("\n") for line in sys.stdin])
     config = setup_config_parser(snap_pac_ini, parent_cmd, packages)
     snapper_configs = get_snapper_configs(snapper_conf_file)
     chroot = os.stat("/") != os.stat("/proc/1/root/.")
 
-    for c in snapper_configs:
+    for snapper_config in snapper_configs:
 
-        if c not in config:
-            config.add_section(c)
+        if snapper_config not in config:
+            config.add_section(snapper_config)
 
-        logging.debug(f"{c = }")
+        logging.debug(f"{snapper_config = }")
 
-        if config.getboolean(c, "snapshot"):
-            prefile = f"/tmp/snap-pac-pre_{c}"
+        if config.getboolean(snapper_config, "snapshot"):
+            prefile = f"/tmp/snap-pac-pre_{snapper_config}"
             logging.debug(f"{prefile = }")
 
-            cleanup_algorithm = config.get(c, "cleanup_algorithm")
-            description = get_description(args.type, config, c)
+            cleanup_algorithm = config.get(snapper_config, "cleanup_algorithm")
+            description = get_description(args.type, config, snapper_config)
             pre_number = get_pre_number(args.type, prefile)
 
-            snapper_cmd = SnapperCmd(c, args.type, cleanup_algorithm, description, chroot, pre_number)
+            snapper_cmd = SnapperCmd(snapper_config, args.type, cleanup_algorithm, description, chroot, pre_number)
+            logging.debug(f"{str(snapper_cmd) = }")
             num = snapper_cmd()
-            logging.info(f"==> {c}: {num}")
+            logging.info(f"==> {snapper_config}: {num}")
 
             if args.type == "pre":
                 write_pre_number(num, prefile)
