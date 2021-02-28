@@ -1,12 +1,13 @@
 from configparser import ConfigParser
 import tempfile
+from pathlib import Path
 import os
 
 import pytest
 
 from scripts.snap_pac import (
    SnapperCmd, get_pre_number, get_snapper_configs, main, setup_config_parser,
-   write_pre_number, get_description
+   get_description
 )
 
 
@@ -36,7 +37,7 @@ def prefile():
     with tempfile.NamedTemporaryFile("w", delete=False) as f:
         f.write("1234")
         name = f.name
-    return name
+    return Path(name)
 
 
 @pytest.mark.parametrize("snapper_cmd, actual_cmd", [
@@ -95,14 +96,9 @@ def test_get_pre_number_post(prefile):
     assert get_pre_number("post", prefile) == "1234"
 
 
-def test_write_pre_number(prefile):
-    write_pre_number("5678", prefile)
-    assert get_pre_number("post", prefile) == "5678"
-
-
 def test_no_prefile():
     with pytest.raises(FileNotFoundError):
-        get_pre_number("post", "/tmp/foo-pre-file-not-found")
+        get_pre_number("post", Path("/tmp/foo-pre-file-not-found"))
 
 
 @pytest.mark.parametrize("snapshot_type, description", [("pre", "foo"), ("post", "a r")])
