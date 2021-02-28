@@ -69,7 +69,7 @@ def test_get_snapper_configs():
         f.write("# List of snapper configurations.\n")
         f.write("SNAPPER_CONFIGS=\"home root foo bar\"\n")
         name = f.name
-    assert get_snapper_configs(name) == ["home", "root", "foo", "bar"]
+    assert get_snapper_configs(Path(name)) == ["home", "root", "foo", "bar"]
 
 
 def test_skip_snap_pac():

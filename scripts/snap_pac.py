@@ -22,6 +22,7 @@ import logging
 from pathlib import Path
 import os
 import sys
+import tempfile
 
 
 logging.basicConfig(format="%(message)s", level=logging.INFO)
@@ -54,11 +55,10 @@ class SnapperCmd:
 
 def get_snapper_configs(conf_file):
     """Get the snapper configurations."""
-    with open(conf_file, "r") as f:
-        for line in f:
-            if line.startswith("SNAPPER_CONFIGS"):
-                line = line.rstrip("\n").rstrip("\"").split("=")
-                return line[1].lstrip("\"").split()
+    for line in conf_file.read_text().split("\n"):
+        if line.startswith("SNAPPER_CONFIGS"):
+            line = line.rstrip("\n").rstrip("\"").split("=")
+            return line[1].lstrip("\"").split()
 
 
 def setup_config_parser(ini_file, parent_cmd, packages):
@@ -117,7 +117,7 @@ def main(snap_pac_ini, snapper_conf_file, args):
             config.add_section(snapper_config)
 
         if config.getboolean(snapper_config, "snapshot"):
-            prefile = "/tmp" / Path(f"snap-pac-pre_{snapper_config}")
+            prefile = tempfile.gettempdir() / Path(f"snap-pac-pre_{snapper_config}")
 
             cleanup_algorithm = config.get(snapper_config, "cleanup_algorithm")
             description = get_description(args.type, config, snapper_config)
@@ -135,8 +135,8 @@ def main(snap_pac_ini, snapper_conf_file, args):
 
 if __name__ == "__main__":
 
-    snap_pac_ini = "/etc/snap-pac.ini"
-    snapper_conf_file = "/etc/conf.d/snapper"
+    snap_pac_ini = Path("/etc/snap-pac.ini")
+    snapper_conf_file = Path("/etc/conf.d/snapper")
 
     parser = ArgumentParser(description="Script for taking pre/post snapper snapshots. Used with pacman hooks.")
     parser.add_argument(dest="type", choices=["pre", "post"])
