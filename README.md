@@ -16,18 +16,26 @@ Install the `snap-pac` package using pacman.
 Alternatively [download the latest release] and signature , verify the download, and
 then run `make install`.
 
-I have signed the release tarball and commits with my PGP key. The key's
-fingerprint is `8535CEF3F3C38EE69555BF67E4B5E45AA3B8C5C3`.
+I have signed the release tarball and commits with my PGP key.  Starting with release
+2.2, the tarballs are signed with my key with fingerprint
+`F7B28C61944FE30DABEEB0B01070BCC98C18BD66`.
 
-Starting with release 2.2, the tarballs are signed with my key with fingerprint `F7B2
-8C61 944F E30D ABEE  B0B0 1070 BCC9 8C18 BD66`.
+For previous releases, the key's fingerprint was
+`8535CEF3F3C38EE69555BF67E4B5E45AA3B8C5C3`.
 
 ## Configuration
 
-An commented example configuration file is located at `extras/snap-pac.ini` which is
-installed to `/etc/snap-pac.ini.example`. By default only the snapper configuration
-named `root` has snapshots taken before and after pacman transactions. See the example
-configuration file for how to add other snapper configurations.
+Most likely, configuration is not needed. By default, the snapper configuration named
+`root` will have pre/post snapshots taken for every pacman transaction.
+
+To configure, copy the example configuration file:
+
+```bash
+cp /etc/snap-pac.ini{.example,}
+```
+
+Then edit with your favorite editor. The file is commented and should be
+self-explanatory.
 
 ## Documentation
 
