@@ -93,9 +93,10 @@ def get_pre_number(snapshot_type, prefile):
         try:
             with open(prefile, "r") as f:
                 pre_number = f.read().rstrip("\n")
-                os.remove(prefile)
         except FileNotFoundError:
             raise FileNotFoundError(f"prefile {prefile} not found. Ensure you have run the pre snapshot first.")
+        else:
+            os.remove(prefile)
     return pre_number
 
 
