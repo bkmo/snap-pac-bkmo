@@ -106,7 +106,6 @@ def main(snap_pac_ini, snapper_conf_file, args):
         return False
 
     parent_cmd = os.popen(f"ps -p {os.getppid()} -o args=").read().strip()
-    logging.debug("Getting list of packages from standard input...")
     packages = " ".join([line.rstrip("\n") for line in sys.stdin])
     config = setup_config_parser(snap_pac_ini, parent_cmd, packages)
     snapper_configs = get_snapper_configs(snapper_conf_file)
@@ -117,18 +116,14 @@ def main(snap_pac_ini, snapper_conf_file, args):
         if snapper_config not in config:
             config.add_section(snapper_config)
 
-        logging.debug(f"{snapper_config = }")
-
         if config.getboolean(snapper_config, "snapshot"):
             prefile = "/tmp" / Path(f"snap-pac-pre_{snapper_config}")
-            logging.debug(f"{prefile = }")
 
             cleanup_algorithm = config.get(snapper_config, "cleanup_algorithm")
             description = get_description(args.type, config, snapper_config)
             pre_number = get_pre_number(args.type, prefile)
 
             snapper_cmd = SnapperCmd(snapper_config, args.type, cleanup_algorithm, description, chroot, pre_number)
-            logging.debug(f"{str(snapper_cmd) = }")
             num = snapper_cmd()
             logging.info(f"==> {snapper_config}: {num}")
 
@@ -141,9 +136,7 @@ def main(snap_pac_ini, snapper_conf_file, args):
 if __name__ == "__main__":
 
     snap_pac_ini = "/etc/snap-pac.ini"
-    logging.debug(f"{snap_pac_ini = }")
     snapper_conf_file = "/etc/conf.d/snapper"
-    logging.debug(f"{snapper_conf_file = }")
 
     parser = ArgumentParser(description="Script for taking pre/post snapper snapshots. Used with pacman hooks.")
     parser.add_argument(dest="type", choices=["pre", "post"])
