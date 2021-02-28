@@ -77,16 +77,16 @@ def setup_config_parser(ini_file, parent_cmd, packages):
     return config
 
 
-def get_description(preorpost, config, section):
+def get_description(type, config, section):
     desc_limit = config.getint(section, "desc_limit")
-    if preorpost == "pre":
+    if type == "pre":
         return config.get(section, "pre_description")[:desc_limit]
     else:
         return config.get(section, "post_description")[:desc_limit]
 
 
-def get_pre_number(preorpost, prefile):
-    if preorpost == "pre":
+def get_pre_number(type, prefile):
+    if type == "pre":
         pre_number = None
     else:
         try:
@@ -104,7 +104,7 @@ def write_pre_number(num, prefile):
 
 def main(snap_pac_ini, snapper_conf_file, args):
 
-    if os.getenv("SNAP_PAC_SKIP", "n") in ["y", "Y", "yes", "Yes", "YES"]:
+    if os.getenv("SNAP_PAC_SKIP", "n").lower() in ["y", "yes", "true", "1"]:
         return False
 
     parent_cmd = os.popen(f"ps -p {os.getppid()} -o args=").read().strip()
@@ -125,14 +125,14 @@ def main(snap_pac_ini, snapper_conf_file, args):
             logging.debug(f"{prefile = }")
 
             cleanup_algorithm = config.get(c, "cleanup_algorithm")
-            description = get_description(args.preorpost, config, c)
-            pre_number = get_pre_number(args.preorpost, prefile)
+            description = get_description(args.type, config, c)
+            pre_number = get_pre_number(args.type, prefile)
 
-            snapper_cmd = SnapperCmd(c, args.preorpost, cleanup_algorithm, description, chroot, pre_number)
+            snapper_cmd = SnapperCmd(c, args.type, cleanup_algorithm, description, chroot, pre_number)
             num = snapper_cmd()
             logging.info(f"==> {c}: {num}")
 
-            if args.preorpost == "pre":
+            if args.type == "pre":
                 write_pre_number(num, prefile)
 
     return True
@@ -145,11 +145,8 @@ if __name__ == "__main__":
     snapper_conf_file = "/etc/conf.d/snapper"
     logging.debug(f"{snapper_conf_file = }")
 
-    parser = ArgumentParser()
-    parser.add_argument(dest="preorpost")
+    parser = ArgumentParser(description="Script for taking pre/post snapper snapshots. Used with pacman hooks.")
+    parser.add_argument(dest="type", choices=["pre", "post"])
     args = parser.parse_args()
-
-    if args.preorpost not in ["pre", "post"]:
-        raise ValueError("preorpost must be 'pre' or 'post'")
 
     main(snap_pac_ini, snapper_conf_file, args)
