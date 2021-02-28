@@ -77,16 +77,16 @@ def setup_config_parser(ini_file, parent_cmd, packages):
     return config
 
 
-def get_description(type, config, section):
+def get_description(snapshot_type, config, section):
     desc_limit = config.getint(section, "desc_limit")
-    if type == "pre":
+    if snapshot_type == "pre":
         return config.get(section, "pre_description")[:desc_limit]
     else:
         return config.get(section, "post_description")[:desc_limit]
 
 
-def get_pre_number(type, prefile):
-    if type == "pre":
+def get_pre_number(snapshot_type, prefile):
+    if snapshot_type == "pre":
         pre_number = None
     else:
         try:
