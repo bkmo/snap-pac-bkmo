@@ -1,6 +1,7 @@
 # snap-pac
 
 ![Tests](https://github.com/wesbarnett/snap-pac/workflows/Tests/badge.svg)
+![Docs](https://github.com/wesbarnett/snap-pac/workflows/Docs/badge.svg)
 
 ## Synopsis
 
