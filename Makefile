@@ -29,3 +29,6 @@ install:
 	@install -Dm644 man8/* -t $(SHARE_DIR)/man/man8/
 	@install -Dm644 README.md -t $(SHARE_DIR)/doc/$(PKGNAME)/
 	@install -Dm644 extra/snap-pac.ini $(DESTDIR)/etc/snap-pac.ini.example
+
+test:
+	@python -m pytest -v .
