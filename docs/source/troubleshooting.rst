@@ -20,4 +20,4 @@ The pre/post snaphots are taken while pacman is running, so this is expected.  F
 the instructions pacman gives you (*e.g.*, removing the lock file). You can add the
 database lock file to a snapper filter so that snapper  won't consider it when
 performing snapper diff, snapper status, snapper undochange, etc. See the Filters
-section in `snapper(8) <http://snapper.io/manpages/snapper.html>`_ for more information.
+section in :manpage:`snapper(8)` for more information.

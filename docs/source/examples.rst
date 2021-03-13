@@ -67,9 +67,8 @@ Here is what changed during the transaction:
 	+..... /usr/share/doc/nano/fr/nanorc.5.html
 	+..... /usr/share/doc/nano/fr/rnano.1.html
 
-The above output is truncated, but it continues. See the `snapper(8)
-<http://snapper.io/manpages/snapper.html>`_ to for what each symbol means. You can also
-do ``snapper diff`` in the same way.
+The above output is truncated, but it continues. See :manpage:`snapper(8)` to for what each
+symbol means. You can also do ``snapper diff`` in the same way.
 
 Then, to undo the pacman transaction:
 
