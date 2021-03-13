@@ -53,12 +53,12 @@ html_static_path = ['_static']
 
 html_theme_options = {
     'badge_branch': 'main',
+    'description': 'pacman hooks that use snapper to create pre/post btrfs snapshots',
     'fixed_sidebar': True,
     'github_banner': True,
     'github_user': 'wesbarnett',
     'github_repo': 'snap-pac',
-    'github_type': 'star',
-    'show_related': True
+    'github_type': 'star'
 }
 
 man_pages = [("index", "snap-pac", "Pacman hooks that use snapper to create pre/post btrfs snapshots like openSUSE's YaST", "Wes Barnett", "8")]
