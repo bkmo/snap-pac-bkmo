@@ -32,7 +32,7 @@ logging.basicConfig(format="%(message)s", level=logging.INFO)
 class SnapperCmd:
 
     def __init__(self, config, snapshot_type, cleanup_algorithm, description="",
-                 nodbus=False, pre_number=None, important=False):
+                 nodbus=False, pre_number=None, userdata=""):
         self.cmd = ["snapper"]
         if nodbus:
             self.cmd.append("--no-dbus")
@@ -42,8 +42,8 @@ class SnapperCmd:
         self.cmd.append("--print-number")
         if description:
             self.cmd.append(f"--description \"{description}\"")
-        if important:
-            self.cmd.append("--userdata \"important=yes\"")
+        if userdata:
+            self.cmd.append(f"--userdata \"{userdata}\"")
         if snapshot_type == "post":
             if pre_number is not None:
                 self.cmd.append(f"--pre-number {pre_number}")
@@ -76,7 +76,8 @@ def setup_config_parser(ini_file, parent_cmd, packages):
         "post_description": " ".join(packages),
         "desc_limit": 72,
         "important_packages": [],
-        "important_commands": []
+        "important_commands": [],
+        "userdata": set()
     }
     config["root"] = {
         "snapshot": True
@@ -116,6 +117,13 @@ def check_important_packages(config, snapper_config, packages):
     return any(x in important_packages for x in packages)
 
 
+def get_userdata(config, snapper_config, important):
+    userdata = set(json.loads(config.get(snapper_config, "userdata")))
+    if important:
+        userdata.add("important=yes")
+    return ",".join(sorted(list(userdata)))
+
+
 def main(snap_pac_ini, snapper_conf_file, args):
 
     if os.getenv("SNAP_PAC_SKIP", "n").lower() in ["y", "yes", "true", "1"]:
@@ -142,8 +150,10 @@ def main(snap_pac_ini, snapper_conf_file, args):
             important = (check_important_commands(config, snapper_config, parent_cmd) or
                          check_important_packages(config, snapper_config, packages))
 
+            userdata = get_userdata(config, snapper_config, important)
+
             snapper_cmd = SnapperCmd(snapper_config, args.type, cleanup_algorithm,
-                                     description, chroot, pre_number, important)
+                                     description, chroot, pre_number, userdata)
             num = snapper_cmd()
             logging.info(f"==> {snapper_config}: {num}")
 

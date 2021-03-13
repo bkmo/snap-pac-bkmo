@@ -7,7 +7,7 @@ import pytest
 
 from scripts.snap_pac import (
    SnapperCmd, check_important_commands, check_important_packages, get_pre_number, get_snapper_configs,
-   main, setup_config_parser, get_description
+   get_userdata, main, setup_config_parser, get_description
 )
 
 
@@ -21,7 +21,8 @@ def config():
         "post_description":  "bar",
         "desc_limit": 72,
         "important_packages": [],
-        "important_commands": []
+        "important_commands": [],
+        "userdata": set()
     }
     config["root"] = {
         "snapshot": True
@@ -58,9 +59,14 @@ def prefile():
         " --description \"bar\" --pre-number 1234"
     ),
     (
-        SnapperCmd("root", "post", "number", "bar", False, 1234, True),
+        SnapperCmd("root", "post", "number", "bar", False, 1234, "important=yes"),
         "snapper --config root create --type post --cleanup-algorithm number --print-number"
         " --description \"bar\" --userdata \"important=yes\" --pre-number 1234"
+    ),
+    (
+        SnapperCmd("root", "post", "number", "bar", False, 1234, "foo=bar,important=yes"),
+        "snapper --config root create --type post --cleanup-algorithm number --print-number"
+        " --description \"bar\" --userdata \"foo=bar,important=yes\" --pre-number 1234"
     )
 ])
 def test_snapper_cmd(snapper_cmd, actual_cmd):
@@ -133,3 +139,23 @@ def test_important_packages():
     config = setup_config_parser(name, "pacman -S", packages)
     important = check_important_packages(config, "root", packages)
     assert important
+
+
+def test_load_userdata():
+    with tempfile.NamedTemporaryFile("w", delete=False) as f:
+        f.write("[DEFAULT]\n")
+        f.write("userdata = [\"foo=bar\", \"requestid=42\"]\n")
+        name = f.name
+    config = setup_config_parser(name, "pacman -Syu", ["bar"])
+    userdata = get_userdata(config, "root", False)
+    assert userdata == "foo=bar,requestid=42"
+
+
+def test_load_userdata_and_important():
+    with tempfile.NamedTemporaryFile("w", delete=False) as f:
+        f.write("[DEFAULT]\n")
+        f.write("userdata = [\"foo=bar\", \"requestid=42\"]\n")
+        name = f.name
+    config = setup_config_parser(name, "pacman -Syu", ["bar"])
+    userdata = get_userdata(config, "root", True)
+    assert userdata == "foo=bar,important=yes,requestid=42"
