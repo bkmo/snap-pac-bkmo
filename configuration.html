@@ -48,7 +48,24 @@ By default only the <code class="docutils literal notranslate"><span class="pre"
 self-explanatory.</p>
 <p>Each section corresponds with a snapper configuration. Add additional sections to add
 other snapper configurations to be snapshotted. By default, only the root configuration
-is snapshotted.</p>
+is snapshotted. Additionally you can add a section named <code class="docutils literal notranslate"><span class="pre">DEFAULT</span></code> with options that
+apply to all snapper configurations unless overridden in a later section.</p>
+<p>Each section can have the following entries:</p>
+<p><strong>desc_limit</strong> - integer; maximum length of description string before being truncated.
+Default: 72</p>
+<p><strong>important_packages</strong> - list of strings; names of packages that if involved in a pacman
+transaction will add <code class="docutils literal notranslate"><span class="pre">important=yes</span></code> to the snapper userdata for the pair of
+snapshots. Default: []</p>
+<p><strong>important_commands</strong> - list of strings; parent commands that will add
+<code class="docutils literal notranslate"><span class="pre">important=yes</span></code> to the snapper userdata for the pair of snapshots. Default: []</p>
+<p><strong>pre_description</strong> - string; description for the pre snapshot. Default: the parent
+command that called the pacman hook.</p>
+<p><strong>post_description</strong> - string; description for the post snapshot. Default: space
+separated list of packages that were installed, upgraded, or removed.</p>
+<p><strong>snapshot</strong> - boolean; whether or not to snapshot the configuration. Default: True for
+<code class="docutils literal notranslate"><span class="pre">root</span></code> configuration; False otherwise.</p>
+<p><strong>userdata</strong> - list of strings; key-value pairs that will be added to the userdata for
+the pair of snapshots. Default: []</p>
 <div class="section" id="environment-variables">
 <h2>Environment Variables<a class="headerlink" href="#environment-variables" title="Permalink to this headline">¶</a></h2>
 <p>To temporarily prevent snapshots from being performed for a single pacman
