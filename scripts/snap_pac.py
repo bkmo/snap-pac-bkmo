@@ -113,8 +113,6 @@ def check_important_commands(config, snapper_config, parent_cmd):
 
 def check_important_packages(config, snapper_config, packages):
     important_packages = json.loads(config.get(snapper_config, "important_packages"))
-    print(important_packages)
-    print(packages)
     return any(x in important_packages for x in packages)
 
 
