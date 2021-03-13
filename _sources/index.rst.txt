@@ -3,17 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to snap-pac's documentation!
-====================================
-
-.. toctree::
-   :maxdepth: 2
-
-   installation
-   configuration
-   examples
-   troubleshooting
-   faq
+snap-pac
+========
 
 This is a set of `pacman <https://archlinux.org/pacman/>`_ hooks and script that causes
 `snapper <http://snapper.io/>`_ to automatically take a pre and post snapshot before and
@@ -29,9 +20,8 @@ are output to the screen and to the pacman log for each snapper configuration du
 pacman transaction, so that the user can easily find which changes he or she may want to
 revert.
 
-To undo changes from a pacman transaction, use ``snapper undochange``. See the `snapper
-documentation <http://snapper.io/documentation.html>`_ for more details as well as
-examples.
+To undo changes from a pacman transaction, use ``snapper undochange``. See the :manpage:`snapper(8)`
+for more details as well as examples.
 
 If you have severe breakage—like snapper is gone for some reason and you can't get it
 back—you'll have to resort to more extreme methods, such as taking a snapshot of the pre
@@ -39,3 +29,12 @@ snapshot and making it the default subvolume or mounting it as /. Most likely yo
 need to use a live USB to get into a chroot environment to do any of these things.
 Snapper has a ``snapper rollback`` feature, but your setup has to be properly configured to
 use it. The exact procedure depends on your specific setup. Be careful.
+
+.. toctree::
+   :maxdepth: 1
+
+   installation
+   configuration
+   examples
+   troubleshooting
+   faq

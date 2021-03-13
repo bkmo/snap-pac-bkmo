@@ -26,28 +26,21 @@ apply to all snapper configurations unless overridden in a later section.
 
 Each section can have the following entries:
 
-**desc_limit** - integer; maximum length of description string before being truncated.
-Default: 72
-
-**important_packages** - list of strings; names of packages that if involved in a pacman
-transaction will add ``important=yes`` to the snapper userdata for the pair of
-snapshots. Default: []
-
-**important_commands** - list of strings; parent commands that will add
-``important=yes`` to the snapper userdata for the pair of snapshots. Default: []
-
-**pre_description** - string; description for the pre snapshot. Default: the parent
-command that called the pacman hook.
-
-**post_description** - string; description for the post snapshot. Default: space
-separated list of packages that were installed, upgraded, or removed.
-
-**snapshot** - boolean; whether or not to snapshot the configuration. Default: True for
-``root`` configuration; False otherwise.
-
-**userdata** - list of strings; key-value pairs that will be added to the userdata for
-the pair of snapshots. Default: []
-
+* ``desc_limit`` - integer; maximum length of description string before being truncated.
+  Default: 72
+* ``important_packages`` - list of strings; names of packages that if involved in a pacman
+  transaction will add ``important=yes`` to the snapper userdata for the pair of
+  snapshots. Default: []
+* ``important_commands`` - list of strings; parent commands that will add
+  ``important=yes`` to the snapper userdata for the pair of snapshots. Default: []
+* ``pre_description`` - string; description for the pre snapshot. Default: the parent
+  command that called the pacman hook.
+* ``post_description`` - string; description for the post snapshot. Default: space
+  separated list of packages that were installed, upgraded, or removed.
+* ``snapshot`` - boolean; whether or not to snapshot the configuration. Default: True for
+  ``root`` configuration; False otherwise.
+* ``userdata`` - list of strings; key-value pairs that will be added to the userdata for
+  the pair of snapshots. Default: []
 
 Environment Variables
 ---------------------

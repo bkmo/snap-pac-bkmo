@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Welcome to snap-pac’s documentation! &#8212; snap-pac  documentation</title>
+    <title>snap-pac &#8212; snap-pac  documentation</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -22,69 +22,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head><body>
-  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          
-
-          <div class="body" role="main">
-            
-  <div class="section" id="welcome-to-snap-pac-s-documentation">
-<h1>Welcome to snap-pac’s documentation!<a class="headerlink" href="#welcome-to-snap-pac-s-documentation" title="Permalink to this headline">¶</a></h1>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="configuration.html#environment-variables">Environment Variables</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Example</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a><ul class="simple">
-</ul>
-</li>
-</ul>
-</div>
-<p>This is a set of <a class="reference external" href="https://archlinux.org/pacman/">pacman</a> hooks and script that causes
-<a class="reference external" href="http://snapper.io/">snapper</a> to automatically take a pre and post snapshot before and
-after pacman transactions, similar to how <a class="reference external" href="https://yast.opensuse.org/">YaST</a> does with
-OpenSuse. This provides a simple way to undo changes to a system after a pacman
-transaction.</p>
-<p>Because these are pacman hooks, it doesn’t matter how you call pacman—whether
-directly, through an AUR helper, or using an alias—snapper will create the snapshots
-when pacman installs, upgrades, or removes a package. The pacman command used is
-logged in the snapper description for the snapshots. Additionally the snapshot numbers
-are output to the screen and to the pacman log for each snapper configuration during the
-pacman transaction, so that the user can easily find which changes he or she may want to
-revert.</p>
-<p>To undo changes from a pacman transaction, use <code class="docutils literal notranslate"><span class="pre">snapper</span> <span class="pre">undochange</span></code>. See the <a class="reference external" href="http://snapper.io/documentation.html">snapper
-documentation</a> for more details as well as
-examples.</p>
-<p>If you have severe breakage—like snapper is gone for some reason and you can’t get it
-back—you’ll have to resort to more extreme methods, such as taking a snapshot of the pre
-snapshot and making it the default subvolume or mounting it as /. Most likely you’ll
-need to use a live USB to get into a chroot environment to do any of these things.
-Snapper has a <code class="docutils literal notranslate"><span class="pre">snapper</span> <span class="pre">rollback</span></code> feature, but your setup has to be properly configured to
-use it. The exact procedure depends on your specific setup. Be careful.</p>
-</div>
-
-
-          </div>
-          
-        </div>
-      </div>
+  <div class="document">
+    
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
 <h1 class="logo"><a href="#">snap-pac</a></h1>
 
 
 
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=wesbarnett&repo=snap-pac&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
 
 
 
@@ -127,8 +79,52 @@ use it. The exact procedure depends on your specific setup. Be careful.</p>
 
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="snap-pac">
+<h1>snap-pac<a class="headerlink" href="#snap-pac" title="Permalink to this headline">¶</a></h1>
+<p>This is a set of <a class="reference external" href="https://archlinux.org/pacman/">pacman</a> hooks and script that causes
+<a class="reference external" href="http://snapper.io/">snapper</a> to automatically take a pre and post snapshot before and
+after pacman transactions, similar to how <a class="reference external" href="https://yast.opensuse.org/">YaST</a> does with
+OpenSuse. This provides a simple way to undo changes to a system after a pacman
+transaction.</p>
+<p>Because these are pacman hooks, it doesn’t matter how you call pacman—whether
+directly, through an AUR helper, or using an alias—snapper will create the snapshots
+when pacman installs, upgrades, or removes a package. The pacman command used is
+logged in the snapper description for the snapshots. Additionally the snapshot numbers
+are output to the screen and to the pacman log for each snapper configuration during the
+pacman transaction, so that the user can easily find which changes he or she may want to
+revert.</p>
+<p>To undo changes from a pacman transaction, use <code class="docutils literal notranslate"><span class="pre">snapper</span> <span class="pre">undochange</span></code>. See the <em class="manpage"><a class="manpage reference external" href="https://man.archlinux.org/man/snapper.8">snapper(8)</a></em>
+for more details as well as examples.</p>
+<p>If you have severe breakage—like snapper is gone for some reason and you can’t get it
+back—you’ll have to resort to more extreme methods, such as taking a snapshot of the pre
+snapshot and making it the default subvolume or mounting it as /. Most likely you’ll
+need to use a live USB to get into a chroot environment to do any of these things.
+Snapper has a <code class="docutils literal notranslate"><span class="pre">snapper</span> <span class="pre">rollback</span></code> feature, but your setup has to be properly configured to
+use it. The exact procedure depends on your specific setup. Be careful.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
     <div class="footer">
       &copy;2021, Wes Barnett, PhD.
       
@@ -141,6 +137,10 @@ use it. The exact procedure depends on your specific setup. Be careful.</p>
           rel="nofollow">Page source</a>
     </div>
 
+    
+    <a href="https://github.com/wesbarnett/snap-pac" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
     
 
     

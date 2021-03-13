@@ -23,44 +23,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head><body>
-  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          
-
-          <div class="body" role="main">
-            
-  <div class="section" id="troubleshooting">
-<h1>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h1>
-<div class="toctree-wrapper compound">
-</div>
-<p><strong>snap-pac is only taking snapshots of the root configuration.</strong></p>
-<p>That’s the default behavior. See <a class="reference internal" href="configuration.html"><span class="doc">Configuration</span></a>.</p>
-<p><strong>No snapshots are being taken when I run pacman.</strong></p>
-<p>No snapper configurations are set up for snap-pac’s pacman hooks. By default snap-pac
-will take snapshots for the root configuration and any other configuration which has
-SNAPSHOT set to yes in its configuration file. See <a class="reference internal" href="configuration.html"><span class="doc">Configuration</span></a>.</p>
-<p><strong>After restoring snapshot from snap-pac, the pacman database is locked.</strong></p>
-<p>The pre/post snaphots are taken while pacman is running, so this is expected.  Follow
-the instructions pacman gives you (<em>e.g.</em>, removing the lock file). You can add the
-database lock file to a snapper filter so that snapper  won’t consider it when
-performing snapper diff, snapper status, snapper undochange, etc. See the Filters
-section in <a class="reference external" href="http://snapper.io/manpages/snapper.html">snapper(8)</a> for more information.</p>
-</div>
-
-
-          </div>
-          
-        </div>
-      </div>
+  <div class="document">
+    
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
 <h1 class="logo"><a href="index.html">snap-pac</a></h1>
 
 
 
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=wesbarnett&repo=snap-pac&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
 
 
 
@@ -71,9 +48,7 @@ section in <a class="reference external" href="http://snapper.io/manpages/snappe
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Example</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Troubleshooting</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Troubleshooting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
 </ul>
 
@@ -106,8 +81,37 @@ section in <a class="reference external" href="http://snapper.io/manpages/snappe
 
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="troubleshooting">
+<h1>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<p><strong>snap-pac is only taking snapshots of the root configuration.</strong></p>
+<p>That’s the default behavior. See <a class="reference internal" href="configuration.html"><span class="doc">Configuration</span></a>.</p>
+<p><strong>No snapshots are being taken when I run pacman.</strong></p>
+<p>No snapper configurations are set up for snap-pac’s pacman hooks. By default snap-pac
+will take snapshots for the root configuration and any other configuration which has
+SNAPSHOT set to yes in its configuration file. See <a class="reference internal" href="configuration.html"><span class="doc">Configuration</span></a>.</p>
+<p><strong>After restoring snapshot from snap-pac, the pacman database is locked.</strong></p>
+<p>The pre/post snaphots are taken while pacman is running, so this is expected.  Follow
+the instructions pacman gives you (<em>e.g.</em>, removing the lock file). You can add the
+database lock file to a snapper filter so that snapper  won’t consider it when
+performing snapper diff, snapper status, snapper undochange, etc. See the Filters
+section in <em class="manpage"><a class="manpage reference external" href="https://man.archlinux.org/man/snapper.8">snapper(8)</a></em> for more information.</p>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
     <div class="footer">
       &copy;2021, Wes Barnett, PhD.
       
@@ -120,6 +124,10 @@ section in <a class="reference external" href="http://snapper.io/manpages/snappe
           rel="nofollow">Page source</a>
     </div>
 
+    
+    <a href="https://github.com/wesbarnett/snap-pac" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
     
 
     

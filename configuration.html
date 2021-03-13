@@ -23,64 +23,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head><body>
-  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          
-
-          <div class="body" role="main">
-            
-  <div class="section" id="configuration">
-<h1>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h1>
-<div class="toctree-wrapper compound">
-</div>
-<p>Configuration  is  done  via  Python  ini  configuration files. The defaults
-should be suitable for most users, so you may not need to do any configuration at all.
-By default only the <code class="docutils literal notranslate"><span class="pre">root</span></code> snapper configuration is snapshotted.</p>
-<p>A commented example configuration files is located at <code class="docutils literal notranslate"><span class="pre">/etc/snap-pac.ini.example</span></code>.</p>
-<p>To configure, copy the example configuration file:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cp /etc/snap-pac.ini<span class="o">{</span>.example,<span class="o">}</span>
-</pre></div>
-</div>
-<p>Then edit with your favorite editor. The file is commented and should be
-self-explanatory.</p>
-<p>Each section corresponds with a snapper configuration. Add additional sections to add
-other snapper configurations to be snapshotted. By default, only the root configuration
-is snapshotted. Additionally you can add a section named <code class="docutils literal notranslate"><span class="pre">DEFAULT</span></code> with options that
-apply to all snapper configurations unless overridden in a later section.</p>
-<p>Each section can have the following entries:</p>
-<p><strong>desc_limit</strong> - integer; maximum length of description string before being truncated.
-Default: 72</p>
-<p><strong>important_packages</strong> - list of strings; names of packages that if involved in a pacman
-transaction will add <code class="docutils literal notranslate"><span class="pre">important=yes</span></code> to the snapper userdata for the pair of
-snapshots. Default: []</p>
-<p><strong>important_commands</strong> - list of strings; parent commands that will add
-<code class="docutils literal notranslate"><span class="pre">important=yes</span></code> to the snapper userdata for the pair of snapshots. Default: []</p>
-<p><strong>pre_description</strong> - string; description for the pre snapshot. Default: the parent
-command that called the pacman hook.</p>
-<p><strong>post_description</strong> - string; description for the post snapshot. Default: space
-separated list of packages that were installed, upgraded, or removed.</p>
-<p><strong>snapshot</strong> - boolean; whether or not to snapshot the configuration. Default: True for
-<code class="docutils literal notranslate"><span class="pre">root</span></code> configuration; False otherwise.</p>
-<p><strong>userdata</strong> - list of strings; key-value pairs that will be added to the userdata for
-the pair of snapshots. Default: []</p>
-<div class="section" id="environment-variables">
-<h2>Environment Variables<a class="headerlink" href="#environment-variables" title="Permalink to this headline">¶</a></h2>
-<p>To temporarily prevent snapshots from being performed for a single pacman
-command, set the environment variable <code class="docutils literal notranslate"><span class="pre">SNAP_PAC_SKIP</span></code>. For example:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo <span class="nv">SNAP_PAC_SKIP</span><span class="o">=</span>y pacman -Syu
-</pre></div>
-</div>
-</div>
-</div>
-
-
-          </div>
-          
-        </div>
-      </div>
+  <div class="document">
+    
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
 <h1 class="logo"><a href="index.html">snap-pac</a></h1>
@@ -90,15 +34,19 @@ command, set the environment variable <code class="docutils literal notranslate"
 
 
 
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=wesbarnett&repo=snap-pac&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
 
 
 <h3>Navigation</h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Configuration</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#environment-variables">Environment Variables</a></li>
-</ul>
-</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
@@ -133,8 +81,65 @@ command, set the environment variable <code class="docutils literal notranslate"
 
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="configuration">
+<h1>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<p>Configuration  is  done  via  Python  ini  configuration files. The defaults
+should be suitable for most users, so you may not need to do any configuration at all.
+By default only the <code class="docutils literal notranslate"><span class="pre">root</span></code> snapper configuration is snapshotted.</p>
+<p>A commented example configuration files is located at <code class="docutils literal notranslate"><span class="pre">/etc/snap-pac.ini.example</span></code>.</p>
+<p>To configure, copy the example configuration file:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cp /etc/snap-pac.ini<span class="o">{</span>.example,<span class="o">}</span>
+</pre></div>
+</div>
+<p>Then edit with your favorite editor. The file is commented and should be
+self-explanatory.</p>
+<p>Each section corresponds with a snapper configuration. Add additional sections to add
+other snapper configurations to be snapshotted. By default, only the root configuration
+is snapshotted. Additionally you can add a section named <code class="docutils literal notranslate"><span class="pre">DEFAULT</span></code> with options that
+apply to all snapper configurations unless overridden in a later section.</p>
+<p>Each section can have the following entries:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">desc_limit</span></code> - integer; maximum length of description string before being truncated.
+Default: 72</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">important_packages</span></code> - list of strings; names of packages that if involved in a pacman
+transaction will add <code class="docutils literal notranslate"><span class="pre">important=yes</span></code> to the snapper userdata for the pair of
+snapshots. Default: []</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">important_commands</span></code> - list of strings; parent commands that will add
+<code class="docutils literal notranslate"><span class="pre">important=yes</span></code> to the snapper userdata for the pair of snapshots. Default: []</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pre_description</span></code> - string; description for the pre snapshot. Default: the parent
+command that called the pacman hook.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">post_description</span></code> - string; description for the post snapshot. Default: space
+separated list of packages that were installed, upgraded, or removed.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">snapshot</span></code> - boolean; whether or not to snapshot the configuration. Default: True for
+<code class="docutils literal notranslate"><span class="pre">root</span></code> configuration; False otherwise.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">userdata</span></code> - list of strings; key-value pairs that will be added to the userdata for
+the pair of snapshots. Default: []</p></li>
+</ul>
+<div class="section" id="environment-variables">
+<h2>Environment Variables<a class="headerlink" href="#environment-variables" title="Permalink to this headline">¶</a></h2>
+<p>To temporarily prevent snapshots from being performed for a single pacman
+command, set the environment variable <code class="docutils literal notranslate"><span class="pre">SNAP_PAC_SKIP</span></code>. For example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo <span class="nv">SNAP_PAC_SKIP</span><span class="o">=</span>y pacman -Syu
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
     <div class="footer">
       &copy;2021, Wes Barnett, PhD.
       
@@ -147,6 +152,10 @@ command, set the environment variable <code class="docutils literal notranslate"
           rel="nofollow">Page source</a>
     </div>
 
+    
+    <a href="https://github.com/wesbarnett/snap-pac" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
     
 
     
