@@ -19,7 +19,9 @@ def config():
         "cleanup_algorithm": "number",
         "pre_description": "foo",
         "post_description":  "bar",
-        "desc_limit": 72
+        "desc_limit": 72,
+        "important_packages": [],
+        "important_commands": []
     }
     config["root"] = {
         "snapshot": True
