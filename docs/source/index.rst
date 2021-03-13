@@ -6,15 +6,6 @@
 snap-pac
 ========
 
-.. toctree::
-   :maxdepth: 1
-
-   installation
-   configuration
-   examples
-   troubleshooting
-   faq
-
 This is a set of `pacman <https://archlinux.org/pacman/>`_ hooks and script that causes
 `snapper <http://snapper.io/>`_ to automatically take a pre and post snapshot before and
 after pacman transactions, similar to how `YaST <https://yast.opensuse.org/>`_ does with
@@ -38,3 +29,12 @@ snapshot and making it the default subvolume or mounting it as /. Most likely yo
 need to use a live USB to get into a chroot environment to do any of these things.
 Snapper has a ``snapper rollback`` feature, but your setup has to be properly configured to
 use it. The exact procedure depends on your specific setup. Be careful.
+
+.. toctree::
+   :maxdepth: 1
+
+   installation
+   configuration
+   examples
+   troubleshooting
+   faq
