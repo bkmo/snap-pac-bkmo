@@ -77,7 +77,7 @@ def setup_config_parser(ini_file, parent_cmd, packages):
         "desc_limit": 72,
         "important_packages": [],
         "important_commands": [],
-        "userdata": set()
+        "userdata": []
     }
     config["root"] = {
         "snapshot": True
