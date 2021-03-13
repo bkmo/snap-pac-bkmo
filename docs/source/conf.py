@@ -50,3 +50,15 @@ html_theme = 'alabaster'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+html_theme_options = {
+    'badge_branch': 'main',
+    'fixed_sidebar': True,
+    'github_banner': True,
+    'github_user': 'wesbarnett',
+    'github_repo': 'snap-pac',
+    'github_type': 'star',
+    'show_related': True
+}
+
+man_pages = [("index", "snap-pac", "Pacman hooks that use snapper to create pre/post btrfs snapshots like openSUSE's YaST", "Wes Barnett", "8")]
