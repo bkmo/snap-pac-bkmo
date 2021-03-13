@@ -74,7 +74,7 @@ def setup_config_parser(ini_file, parent_cmd, packages):
         "cleanup_algorithm": "number",
         "pre_description": parent_cmd,
         "post_description": " ".join(packages),
-        "desc_limit": 72
+        "desc_limit": 72,
         "important_packages": [],
         "important_commands": []
     }
