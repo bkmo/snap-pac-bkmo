@@ -18,6 +18,7 @@
 
 from argparse import ArgumentParser
 from configparser import ConfigParser
+import json
 import logging
 from pathlib import Path
 import os
@@ -30,7 +31,8 @@ logging.basicConfig(format="%(message)s", level=logging.INFO)
 
 class SnapperCmd:
 
-    def __init__(self, config, snapshot_type, cleanup_algorithm, description="", nodbus=False, pre_number=None):
+    def __init__(self, config, snapshot_type, cleanup_algorithm, description="",
+                 nodbus=False, pre_number=None, important=False):
         self.cmd = ["snapper"]
         if nodbus:
             self.cmd.append("--no-dbus")
@@ -40,6 +42,8 @@ class SnapperCmd:
         self.cmd.append("--print-number")
         if description:
             self.cmd.append(f"--description \"{description}\"")
+        if important:
+            self.cmd.append("--userdata \"important=yes\"")
         if snapshot_type == "post":
             if pre_number is not None:
                 self.cmd.append(f"--pre-number {pre_number}")
@@ -69,7 +73,7 @@ def setup_config_parser(ini_file, parent_cmd, packages):
         "snapshot": False,
         "cleanup_algorithm": "number",
         "pre_description": parent_cmd,
-        "post_description": packages,
+        "post_description": " ".join(packages),
         "desc_limit": 72
     }
     config["root"] = {
@@ -100,13 +104,25 @@ def get_pre_number(snapshot_type, prefile):
     return pre_number
 
 
+def check_important_commands(config, snapper_config, parent_cmd):
+    important_commands = json.loads(config.get(snapper_config, "important_commands"))
+    return parent_cmd in important_commands
+
+
+def check_important_packages(config, snapper_config, packages):
+    important_packages = json.loads(config.get(snapper_config, "important_packages"))
+    print(important_packages)
+    print(packages)
+    return any(x in important_packages for x in packages)
+
+
 def main(snap_pac_ini, snapper_conf_file, args):
 
     if os.getenv("SNAP_PAC_SKIP", "n").lower() in ["y", "yes", "true", "1"]:
         return False
 
     parent_cmd = os.popen(f"ps -p {os.getppid()} -o args=").read().strip()
-    packages = " ".join([line.rstrip("\n") for line in sys.stdin])
+    packages = [line.rstrip("\n") for line in sys.stdin]
     config = setup_config_parser(snap_pac_ini, parent_cmd, packages)
     snapper_configs = get_snapper_configs(snapper_conf_file)
     chroot = os.stat("/") != os.stat("/proc/1/root/.")
@@ -123,7 +139,11 @@ def main(snap_pac_ini, snapper_conf_file, args):
             description = get_description(args.type, config, snapper_config)
             pre_number = get_pre_number(args.type, prefile)
 
-            snapper_cmd = SnapperCmd(snapper_config, args.type, cleanup_algorithm, description, chroot, pre_number)
+            important = (check_important_commands(config, snapper_config, parent_cmd) or
+                         check_important_packages(config, snapper_config, packages))
+
+            snapper_cmd = SnapperCmd(snapper_config, args.type, cleanup_algorithm,
+                                     description, chroot, pre_number, important)
             num = snapper_cmd()
             logging.info(f"==> {snapper_config}: {num}")
 

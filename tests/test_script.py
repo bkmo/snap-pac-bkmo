@@ -6,8 +6,8 @@ import os
 import pytest
 
 from scripts.snap_pac import (
-   SnapperCmd, get_pre_number, get_snapper_configs, main, setup_config_parser,
-   get_description
+   SnapperCmd, check_important_commands, check_important_packages, get_pre_number, get_snapper_configs,
+   main, setup_config_parser, get_description
 )
 
 
@@ -54,6 +54,11 @@ def prefile():
         SnapperCmd("root", "post", "number", "bar", True, 1234),
         "snapper --no-dbus --config root create --type post --cleanup-algorithm number --print-number"
         " --description \"bar\" --pre-number 1234"
+    ),
+    (
+        SnapperCmd("root", "post", "number", "bar", False, 1234, True),
+        "snapper --config root create --type post --cleanup-algorithm number --print-number"
+        " --description \"bar\" --userdata \"important=yes\" --pre-number 1234"
     )
 ])
 def test_snapper_cmd(snapper_cmd, actual_cmd):
@@ -84,7 +89,7 @@ def test_setup_config_parser(config):
         f.write("desc_limit = 3\n")
         f.write("post_description = a really long description\n")
         name = f.name
-    config2 = setup_config_parser(name, "foo", "bar")
+    config2 = setup_config_parser(name, "foo", ["bar"])
     assert config == config2
 
 
@@ -104,3 +109,25 @@ def test_no_prefile():
 @pytest.mark.parametrize("snapshot_type, description", [("pre", "foo"), ("post", "a r")])
 def test_get_description(snapshot_type, description, config):
     assert get_description(snapshot_type, config, "home") == description
+
+
+def test_important_commands():
+    parent_cmd = "pacman -Syu"
+    with tempfile.NamedTemporaryFile("w", delete=False) as f:
+        f.write("[DEFAULT]\n")
+        f.write("important_commands = [\"pacman -Syu\"]\n")
+        name = f.name
+    config = setup_config_parser(name, parent_cmd, ["bar"])
+    important = check_important_commands(config, "root", parent_cmd)
+    assert important
+
+
+def test_important_packages():
+    packages = ["bar", "linux", "vim"]
+    with tempfile.NamedTemporaryFile("w", delete=False) as f:
+        f.write("[DEFAULT]\n")
+        f.write("important_packages = [\"linux\"]\n")
+        name = f.name
+    config = setup_config_parser(name, "pacman -S", packages)
+    important = check_important_packages(config, "root", packages)
+    assert important
