@@ -62,3 +62,4 @@ html_theme_options = {
 }
 
 man_pages = [("index", "snap-pac", "Pacman hooks that use snapper to create pre/post btrfs snapshots like openSUSE's YaST", "Wes Barnett", "8")]
+manpages_url = 'https://man.archlinux.org/man/{page}.{section}'

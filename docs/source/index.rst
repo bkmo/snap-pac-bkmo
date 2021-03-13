@@ -7,7 +7,7 @@ snap-pac
 ========
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    installation
    configuration
@@ -29,9 +29,8 @@ are output to the screen and to the pacman log for each snapper configuration du
 pacman transaction, so that the user can easily find which changes he or she may want to
 revert.
 
-To undo changes from a pacman transaction, use ``snapper undochange``. See the `snapper
-documentation <http://snapper.io/documentation.html>`_ for more details as well as
-examples.
+To undo changes from a pacman transaction, use ``snapper undochange``. See the :manpage:`snapper(8)`
+for more details as well as examples.
 
 If you have severe breakage—like snapper is gone for some reason and you can't get it
 back—you'll have to resort to more extreme methods, such as taking a snapshot of the pre
