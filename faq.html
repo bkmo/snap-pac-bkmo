@@ -5,15 +5,16 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Index &#8212; snap-pac  documentation</title>
+    <title>FAQ &#8212; snap-pac  documentation</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <link rel="index" title="Index" href="#" />
+    <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Troubleshooting" href="troubleshooting.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -30,11 +31,40 @@
 
           <div class="body" role="main">
             
+  <div class="section" id="faq">
+<h1>FAQ<a class="headerlink" href="#faq" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<p><strong>Does snap-pac backup non-btrfs /boot partitions?</strong></p>
+<p>No, but you can add a hook that does it for you. It would be something like the following:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[Trigger]
+Operation = Upgrade
+Operation = Install
+Operation = Remove
+Type = Package
+Target = linux
 
-<h1 id="index">Index</h1>
+[Action]
+Description = Backing up /boot...
+When = PreTransaction
+Exec = /usr/bin/rsync -avzq --delete /boot /.bootbackup
+</pre></div>
+</div>
+<p><strong>How do I link old kernel modules automatically when the kernel is upgraded?</strong></p>
+<p>This behavior is no longer a part of this package. Use a pacman hook like the following:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[Trigger]
+Operation = Upgrade
+Operation = Install
+Operation = Remove
+Type = Package
+Target = linux
 
-<div class="genindex-jumpbox">
- 
+[Action]
+Description = Symlinking old kernel modules...
+When = PostTransaction
+Exec = /usr/bin/bash -c &quot;find /usr/lib/modules -xtype l -delete; ln -sv /.snapshots/$(snapper -c root list | awk &#39;END{print $1}&#39;)/snapshot/usr/lib/modules/$(uname -r) /usr/lib/modules/&quot;
+</pre></div>
+</div>
 </div>
 
 
@@ -54,18 +84,21 @@
 
 
 <h3>Navigation</h3>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">FAQ</a><ul class="simple">
+</ul>
+</li>
 </ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="troubleshooting.html" title="previous chapter">Troubleshooting</a></li>
   </ul></li>
 </ul>
 </div>
@@ -98,6 +131,9 @@
       Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.2</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
+      |
+      <a href="_sources/faq.rst.txt"
+          rel="nofollow">Page source</a>
     </div>
 
     

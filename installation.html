@@ -5,15 +5,17 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Index &#8212; snap-pac  documentation</title>
+    <title>Installation &#8212; snap-pac  documentation</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <link rel="index" title="Index" href="#" />
+    <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Configuration" href="configuration.html" />
+    <link rel="prev" title="Welcome to snap-pac’s documentation!" href="index.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -30,11 +32,26 @@
 
           <div class="body" role="main">
             
-
-<h1 id="index">Index</h1>
-
-<div class="genindex-jumpbox">
- 
+  <div class="section" id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<p>Install the <code class="docutils literal notranslate"><span class="pre">snap-pac</span></code> package using pacman:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pacman -S snap-pac
+</pre></div>
+</div>
+<p>Alternatively download the <a class="reference external" href="https://github.com/wesbarnett/snap-pac/releases">latest release and signature</a>. Then, verify the download:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gpg --verify snap-pac-&lt;version&gt;.tar.gz.sig
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">&lt;version&gt;</span></code> is the version number you downloaded.</p>
+<p>Finally, run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make install
+</pre></div>
+</div>
+<p>I have signed the release tarball and commits with my PGP key. Starting with release
+2.2, the tarballs are signed with my key with fingerprint
+<code class="docutils literal notranslate"><span class="pre">F7B28C61944FE30DABEEB0B01070BCC98C18BD66</span></code>.</p>
+<p>For previous releases, the key’s fingerprint was
+<code class="docutils literal notranslate"><span class="pre">8535CEF3F3C38EE69555BF67E4B5E45AA3B8C5C3</span></code>.</p>
 </div>
 
 
@@ -54,8 +71,8 @@
 
 
 <h3>Navigation</h3>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
@@ -66,6 +83,8 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to snap-pac’s documentation!</a></li>
+      <li>Next: <a href="configuration.html" title="next chapter">Configuration</a></li>
   </ul></li>
 </ul>
 </div>
@@ -98,6 +117,9 @@
       Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.2</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
+      |
+      <a href="_sources/installation.rst.txt"
+          rel="nofollow">Page source</a>
     </div>
 
     

@@ -14,6 +14,7 @@
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Installation" href="installation.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -33,15 +34,44 @@
   <div class="section" id="welcome-to-snap-pac-s-documentation">
 <h1>Welcome to snap-pac’s documentation!<a class="headerlink" href="#welcome-to-snap-pac-s-documentation" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
-</div>
-</div>
-<div class="section" id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
-<ul class="simple">
-<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
-<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
-<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#environment-variables">Environment Variables</a></li>
 </ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Example</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a><ul class="simple">
+</ul>
+</li>
+</ul>
+</div>
+<p>This is a set of <a class="reference external" href="https://archlinux.org/pacman/">pacman</a> hooks and script that causes
+<a class="reference external" href="http://snapper.io/">snapper</a> to automatically take a pre and post snapshot before and
+after pacman transactions, similar to how <a class="reference external" href="https://yast.opensuse.org/">YaST</a> does with
+OpenSuse. This provides a simple way to undo changes to a system after a pacman
+transaction.</p>
+<p>Because these are pacman hooks, it doesn’t matter how you call pacman—whether
+directly, through an AUR helper, or using an alias—snapper will create the snapshots
+when pacman installs, upgrades, or removes a package. The pacman command used is
+logged in the snapper description for the snapshots. Additionally the snapshot numbers
+are output to the screen and to the pacman log for each snapper configuration during the
+pacman transaction, so that the user can easily find which changes he or she may want to
+revert.</p>
+<p>To undo changes from a pacman transaction, use <code class="docutils literal notranslate"><span class="pre">snapper</span> <span class="pre">undochange</span></code>. See the <a class="reference external" href="http://snapper.io/documentation.html">snapper
+documentation</a> for more details as well as
+examples.</p>
+<p>If you have severe breakage—like snapper is gone for some reason and you can’t get it
+back—you’ll have to resort to more extreme methods, such as taking a snapshot of the pre
+snapshot and making it the default subvolume or mounting it as /. Most likely you’ll
+need to use a live USB to get into a chroot environment to do any of these things.
+Snapper has a <code class="docutils literal notranslate"><span class="pre">snapper</span> <span class="pre">rollback</span></code> feature, but your setup has to be properly configured to
+use it. The exact procedure depends on your specific setup. Be careful.</p>
 </div>
 
 
@@ -61,11 +91,19 @@
 
 
 <h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
+</ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="installation.html" title="next chapter">Installation</a></li>
   </ul></li>
 </ul>
 </div>
