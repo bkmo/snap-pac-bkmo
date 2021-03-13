@@ -40,11 +40,11 @@ self-explanatory.
 
 ## Documentation
 
-Run `man 8 snap-pac` after installation.
+See the [documentation here](https://wesbarnett.github.io/snap-pac/).
 
 ## Troubleshooting
 
-After reviewing the man page, [check the issues page] and file a new issue if your
+After reviewing the documentation, [check the issues page] and file a new issue if your
 problem is not covered.
 
 [download the latest release]: https://github.com/wesbarnett/snap-pac/releases
