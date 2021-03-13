@@ -22,7 +22,7 @@ def config():
         "desc_limit": 72,
         "important_packages": [],
         "important_commands": [],
-        "userdata": set()
+        "userdata": []
     }
     config["root"] = {
         "snapshot": True
