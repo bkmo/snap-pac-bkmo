@@ -40,7 +40,8 @@ self-explanatory.
 
 ## Documentation
 
-See the [documentation here](https://wesbarnett.github.io/snap-pac/).
+See the [documentation here](https://wesbarnett.github.io/snap-pac/) or `man 8 snap-pac`
+after installation.
 
 ## Troubleshooting
 
