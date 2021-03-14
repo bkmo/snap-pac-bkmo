@@ -36,10 +36,12 @@ class SnapperCmd:
         self.cmd = ["snapper"]
         if nodbus:
             self.cmd.append("--no-dbus")
-        self.cmd.append(f"--config {config} create")
-        self.cmd.append(f"--type {snapshot_type}")
-        self.cmd.append(f"--cleanup-algorithm {cleanup_algorithm}")
-        self.cmd.append("--print-number")
+        self.cmd.extend([
+            f"--config {config} create",
+            f"--type {snapshot_type}",
+            f"--cleanup-algorithm {cleanup_algorithm}",
+            "--print-number"
+        ])
         if description:
             self.cmd.append(f"--description \"{description}\"")
         if userdata:
@@ -88,10 +90,7 @@ def setup_config_parser(ini_file, parent_cmd, packages):
 
 def get_description(snapshot_type, config, section):
     desc_limit = config.getint(section, "desc_limit")
-    if snapshot_type == "pre":
-        return config.get(section, "pre_description")[:desc_limit]
-    else:
-        return config.get(section, "post_description")[:desc_limit]
+    return config.get(section, f"{snapshot_type}_description")[:desc_limit]
 
 
 def get_pre_number(snapshot_type, prefile):
