@@ -42,3 +42,16 @@ For testing, ``pytest`` is required. To run the tests do:
 .. code-block:: bash
 
    make test
+
+
+Documentation
+-------------
+
+To build the documentation, ``sphinx`` is required. To build the documentation you can
+do:
+
+.. code-block:: bash
+
+   sphinx-build docs/source docs/build
+
+The resulting html documentation will then be located at ``docs/build/index.html``.
