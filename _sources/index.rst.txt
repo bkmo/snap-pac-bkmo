@@ -20,6 +20,38 @@ are output to the screen and to the pacman log for each snapper configuration du
 pacman transaction, so that the user can easily find which changes he or she may want to
 revert.
 
+.. code-block:: none
+   :caption: When you run pacman, the snapper pre/post snapshots are created automatically. For a fuller example see :doc:`examples`.
+   :emphasize-lines: 17,18,25,26
+
+   $ sudo pacman -S vim
+   resolving dependencies...
+   looking for conflicting packages...
+
+   Packages (1) vim-8.2.2489-1
+
+   Total Installed Size:  3.79 MiB
+   Net Upgrade Size:      0.00 MiB
+
+   :: Proceed with installation? [Y/n]
+   (1/1) checking keys in keyring                     [############] 100%
+   (1/1) checking package integrity                   [############] 100%
+   (1/1) loading package files                        [############] 100%
+   (1/1) checking for file conflicts                  [############] 100%
+   (1/1) checking available disk space                [############] 100%
+   :: Running pre-transaction hooks...
+   (1/1) Performing snapper pre snapshots for the following configurations...
+   ==> root: 7394
+   :: Processing package changes...
+   (1/1) installing vim                               [############] 100%
+   :: Running post-transaction hooks...
+   (1/4) Arming ConditionNeedsUpdate...
+   (2/4) Updating icon theme caches...
+   (3/4) Updating the desktop file MIME type cache...
+   (4/4) Performing snapper post snapshots for the following configurations...
+   ==> root: 7395
+
+
 To undo changes from a pacman transaction, use ``snapper undochange``. See the :manpage:`snapper(8)`
 for more details as well as examples.
 

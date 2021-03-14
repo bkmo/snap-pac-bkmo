@@ -102,6 +102,37 @@ logged in the snapper description for the snapshots. Additionally the snapshot n
 are output to the screen and to the pacman log for each snapper configuration during the
 pacman transaction, so that the user can easily find which changes he or she may want to
 revert.</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">When you run pacman, the snapper pre/post snapshots are created automatically. For a fuller example see <a class="reference internal" href="examples.html"><span class="doc">Example</span></a>.</span><a class="headerlink" href="#id1" title="Permalink to this code">¶</a></div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ sudo pacman -S vim
+resolving dependencies...
+looking for conflicting packages...
+
+Packages (1) vim-8.2.2489-1
+
+Total Installed Size:  3.79 MiB
+Net Upgrade Size:      0.00 MiB
+
+:: Proceed with installation? [Y/n]
+(1/1) checking keys in keyring                     [############] 100%
+(1/1) checking package integrity                   [############] 100%
+(1/1) loading package files                        [############] 100%
+(1/1) checking for file conflicts                  [############] 100%
+(1/1) checking available disk space                [############] 100%
+:: Running pre-transaction hooks...
+<span class="hll">(1/1) Performing snapper pre snapshots for the following configurations...
+</span><span class="hll">==&gt; root: 7394
+</span>:: Processing package changes...
+(1/1) installing vim                               [############] 100%
+:: Running post-transaction hooks...
+(1/4) Arming ConditionNeedsUpdate...
+(2/4) Updating icon theme caches...
+(3/4) Updating the desktop file MIME type cache...
+<span class="hll">(4/4) Performing snapper post snapshots for the following configurations...
+</span><span class="hll">==&gt; root: 7395
+</span></pre></div>
+</div>
+</div>
 <p>To undo changes from a pacman transaction, use <code class="docutils literal notranslate"><span class="pre">snapper</span> <span class="pre">undochange</span></code>. See the <em class="manpage"><a class="manpage reference external" href="https://man.archlinux.org/man/snapper.8">snapper(8)</a></em>
 for more details as well as examples.</p>
 <p>If you have severe breakage—like snapper is gone for some reason and you can’t get it
