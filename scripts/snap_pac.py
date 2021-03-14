@@ -123,7 +123,7 @@ def get_userdata(config, snapper_config, important):
     return ",".join(sorted(list(userdata)))
 
 
-def main(snap_pac_ini, snapper_conf_file, args):
+def main(snap_pac_ini, snapper_conf_file, snapshot_type):
 
     if os.getenv("SNAP_PAC_SKIP", "n").lower() in ["y", "yes", "true", "1"]:
         return False
@@ -143,20 +143,20 @@ def main(snap_pac_ini, snapper_conf_file, args):
             prefile = tempfile.gettempdir() / Path(f"snap-pac-pre_{snapper_config}")
 
             cleanup_algorithm = config.get(snapper_config, "cleanup_algorithm")
-            description = get_description(args.type, config, snapper_config)
-            pre_number = get_pre_number(args.type, prefile)
+            description = get_description(snapshot_type, config, snapper_config)
+            pre_number = get_pre_number(snapshot_type, prefile)
 
             important = (check_important_commands(config, snapper_config, parent_cmd) or
                          check_important_packages(config, snapper_config, packages))
 
             userdata = get_userdata(config, snapper_config, important)
 
-            snapper_cmd = SnapperCmd(snapper_config, args.type, cleanup_algorithm,
+            snapper_cmd = SnapperCmd(snapper_config, snapshot_type, cleanup_algorithm,
                                      description, chroot, pre_number, userdata)
             num = snapper_cmd()
             logging.info(f"==> {snapper_config}: {num}")
 
-            if args.type == "pre":
+            if snapshot_type == "pre":
                 prefile.write_text(num)
 
     return True
@@ -164,11 +164,10 @@ def main(snap_pac_ini, snapper_conf_file, args):
 
 if __name__ == "__main__":
 
-    snap_pac_ini = Path("/etc/snap-pac.ini")
-    snapper_conf_file = Path("/etc/conf.d/snapper")
-
     parser = ArgumentParser(description="Script for taking pre/post snapper snapshots. Used with pacman hooks.")
     parser.add_argument(dest="type", choices=["pre", "post"])
+    parser.add_argument("--ini", dest="snap_pac_ini", type=Path, default=Path("/etc/snap-pac.ini"))
+    parser.add_argument("--conf", dest="snapper_conf_file", type=Path, default=Path("/etc/conf.d/snapper"))
     args = parser.parse_args()
 
-    main(snap_pac_ini, snapper_conf_file, args)
+    main(args.snap_pac_ini, args.snapper_conf_file, args.type)
