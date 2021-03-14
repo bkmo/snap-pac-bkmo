@@ -28,3 +28,17 @@ I have signed the release tarball and commits with my PGP key. Starting with rel
 
 For previous releases, the key's fingerprint was
 ``8535CEF3F3C38EE69555BF67E4B5E45AA3B8C5C3``.
+
+Dependencies
+------------
+
+``python``, ``pacman``, and ``snapper`` are all required.
+
+Testing
+-------
+
+For testing, ``pytest`` is required. To run the tests do:
+
+.. code-block:: bash
+
+   make test
