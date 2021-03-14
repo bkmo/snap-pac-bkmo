@@ -42,8 +42,60 @@ Each section can have the following entries:
 * ``userdata`` - list of strings; key-value pairs that will be added to the userdata for
   the pair of snapshots. Default: []
 
+Examples
+--------
+
+Turn off snapshots for ``root`` configuration and turn on for ``home`` configuration:
+
+.. code-block:: ini
+
+   [root]
+   snapshot = False
+
+   [home]
+   snapshot = True
+
+
+Set the snapper to add the userdata ``important=yes`` for every snapshot in the ``root``
+configuration when a system upgrade is performed:
+
+.. code-block:: ini
+
+   [root]
+   important_commands = ["pacman -Syu"]
+
+Set the snapper to add the userdata ``important=yes`` for every snapshot in the ``root``
+configuration when a pacman transaction handles the packages ``linux`` and ``linux-lts``:
+
+.. code-block:: ini
+
+   [root]
+   important_packages = ["linux", "linux-lts"]
+
+Here's a fuller example, with several options set for different configurations. In this
+case the ``root`` configuration snapshot will have ``important=yes`` when ``linux`` and
+``linux-lts`` packages are part of the transaction. Additionally when full system
+upgrades are performed ``root`` snapshots will be marked ``important=yes``. Note that
+you don't have to add ``snapshot = True`` for the ``root`` configuration since that is
+the default.
+
+This file also turns one snapshots for the ``home`` snapper configuration and adds the
+userdata ``requestid=42,user=arthur`` to all snapshots for that configuration.
+Additionally he post snapshot description is overridden.
+
+.. code-block:: ini
+
+   [root]
+   important_packages = ["linux", "linux-lts"]
+   important_commands = ["pacman -Syu"]
+
+   [home]
+   snapshot = True
+   userdata = ["requestid=42", "user=arthur"]
+   post_description = "pacman transaction post snapshot"
+
 Environment Variables
----------------------
+=====================
 
 To temporarily prevent snapshots from being performed for a single pacman
 command, set the environment variable ``SNAP_PAC_SKIP``. For example:
