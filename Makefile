@@ -20,7 +20,7 @@ PREFIX ?= /usr
 
 SHARE_DIR = $(DESTDIR)$(PREFIX)/share
 
-.PHONY: install
+.PHONY: install test docs
 
 install:
 	@install -Dm755 scripts/snap_pac.py $(SHARE_DIR)/libalpm/scripts/snap-pac
@@ -32,3 +32,8 @@ install:
 
 test:
 	@python -m pytest -v .
+
+docs:
+	@sphinx-build -a docs/source docs/build
+	@rm -r man8
+	@cd docs && make man && mv build/man ../man8

@@ -1,6 +1,6 @@
 .\" Man page generated from reStructuredText.
 .
-.TH "SNAP-PAC" "8" "Mar 13, 2021" "" "snap-pac"
+.TH "SNAP-PAC" "8" "Mar 14, 2021" "" "snap-pac"
 .SH NAME
 snap-pac \- Pacman hooks that use snapper to create pre/post btrfs snapshots like openSUSE's YaST
 .
@@ -30,7 +30,6 @@ level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
 .\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
 .in \\n[rst2man-indent\\n[rst2man-indent-level]]u
 ..
-
 .SH DESCRIPTION
 .sp
 This is a set of \fI\%pacman\fP hooks and script that causes
@@ -46,6 +45,43 @@ logged in the snapper description for the snapshots. Additionally the snapshot n
 are output to the screen and to the pacman log for each snapper configuration during the
 pacman transaction, so that the user can easily find which changes he or she may want to
 revert.
+.sp
+When you run pacman, the snapper pre/post snapshots are created automatically. For a fuller example see examples\&.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ sudo pacman \-S vim
+resolving dependencies...
+looking for conflicting packages...
+
+Packages (1) vim\-8.2.2489\-1
+
+Total Installed Size:  3.79 MiB
+Net Upgrade Size:      0.00 MiB
+
+:: Proceed with installation? [Y/n]
+(1/1) checking keys in keyring                     [############] 100%
+(1/1) checking package integrity                   [############] 100%
+(1/1) loading package files                        [############] 100%
+(1/1) checking for file conflicts                  [############] 100%
+(1/1) checking available disk space                [############] 100%
+:: Running pre\-transaction hooks...
+(1/1) Performing snapper pre snapshots for the following configurations...
+==> root: 7394
+:: Processing package changes...
+(1/1) installing vim                               [############] 100%
+:: Running post\-transaction hooks...
+(1/4) Arming ConditionNeedsUpdate...
+(2/4) Updating icon theme caches...
+(3/4) Updating the desktop file MIME type cache...
+(4/4) Performing snapper post snapshots for the following configurations...
+==> root: 7395
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
 .sp
 To undo changes from a pacman transaction, use \fBsnapper undochange\fP\&. See the \fBsnapper(8)\fP
 for more details as well as examples.
@@ -102,6 +138,38 @@ I have signed the release tarball and commits with my PGP key. Starting with rel
 .sp
 For previous releases, the key\(aqs fingerprint was
 \fB8535CEF3F3C38EE69555BF67E4B5E45AA3B8C5C3\fP\&.
+.SS Dependencies
+.sp
+\fBpython\fP, \fBpacman\fP, and \fBsnapper\fP are all required.
+.SS Testing
+.sp
+For testing, \fBpytest\fP is required. To run the tests do:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+make test
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SS Documentation
+.sp
+To build the documentation, \fBsphinx\fP is required. To build the documentation you can
+do:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+sphinx\-build docs/source docs/build
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+The resulting html documentation will then be located at \fBdocs/build/index.html\fP\&.
 .SH CONFIGURATION
 .sp
 Configuration  is  done  via  Python  ini  configuration files. The defaults
@@ -155,7 +223,80 @@ separated list of packages that were installed, upgraded, or removed.
 \fBuserdata\fP \- list of strings; key\-value pairs that will be added to the userdata for
 the pair of snapshots. Default: []
 .UNINDENT
-.SS Environment Variables
+.SS Examples
+.sp
+Turn off snapshots for \fBroot\fP configuration and turn on for \fBhome\fP configuration:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+[root]
+snapshot = False
+
+[home]
+snapshot = True
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Set the snapper to add the userdata \fBimportant=yes\fP for every snapshot in the \fBroot\fP
+configuration when a system upgrade is performed:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+[root]
+important_commands = ["pacman \-Syu"]
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Set the snapper to add the userdata \fBimportant=yes\fP for every snapshot in the \fBroot\fP
+configuration when a pacman transaction handles the packages \fBlinux\fP and \fBlinux\-lts\fP:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+[root]
+important_packages = ["linux", "linux\-lts"]
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Here\(aqs a fuller example, with several options set for different configurations. In this
+case the \fBroot\fP configuration snapshot will have \fBimportant=yes\fP when \fBlinux\fP and
+\fBlinux\-lts\fP packages are part of the transaction. Additionally when full system
+upgrades are performed \fBroot\fP snapshots will be marked \fBimportant=yes\fP\&. Note that
+you don\(aqt have to add \fBsnapshot = True\fP for the \fBroot\fP configuration since that is
+the default.
+.sp
+This file also turns one snapshots for the \fBhome\fP snapper configuration and adds the
+userdata \fBrequestid=42,user=arthur\fP to all snapshots for that configuration.
+Additionally he post snapshot description is overridden.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+[root]
+important_packages = ["linux", "linux\-lts"]
+important_commands = ["pacman \-Syu"]
+
+[home]
+snapshot = True
+userdata = ["requestid=42", "user=arthur"]
+post_description = "pacman transaction post snapshot"
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SH ENVIRONMENT VARIABLES
 .sp
 To temporarily prevent snapshots from being performed for a single pacman
 command, set the environment variable \fBSNAP_PAC_SKIP\fP\&. For example:
