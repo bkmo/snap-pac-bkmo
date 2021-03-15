@@ -165,9 +165,15 @@ def main(snap_pac_ini, snapper_conf_file, snapshot_type):
 if __name__ == "__main__":
 
     parser = ArgumentParser(description="Script for taking pre/post snapper snapshots. Used with pacman hooks.")
-    parser.add_argument(dest="type", choices=["pre", "post"])
-    parser.add_argument("--ini", dest="snap_pac_ini", type=Path, default=Path("/etc/snap-pac.ini"))
-    parser.add_argument("--conf", dest="snapper_conf_file", type=Path, default=Path("/etc/conf.d/snapper"))
+    parser.add_argument(dest="type", choices=["pre", "post"], help="snapper snapshot type")
+    parser.add_argument(
+        "--ini", dest="snap_pac_ini", type=Path,
+        default=Path("/etc/snap-pac.ini"), help="snap-pac ini file path"
+    )
+    parser.add_argument(
+        "--conf", dest="snapper_conf_file", type=Path,
+        default=Path("/etc/conf.d/snapper"), help="snapper configuration file path"
+    )
     args = parser.parse_args()
 
     main(args.snap_pac_ini, args.snapper_conf_file, args.type)
