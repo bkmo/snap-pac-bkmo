@@ -133,7 +133,7 @@ def main(snap_pac_ini, snapper_conf_file, snapshot_type):
     config = setup_config_parser(snap_pac_ini, parent_cmd, packages)
     snapper_configs = get_snapper_configs(snapper_conf_file)
     chroot = os.stat("/") != os.stat("/proc/1/root/.")
-    tmpdir = tempfile.gettempdir(
+    tmpdir = tempfile.gettempdir()
 
     for snapper_config in snapper_configs:
 
