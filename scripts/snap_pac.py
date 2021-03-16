@@ -133,6 +133,7 @@ def main(snap_pac_ini, snapper_conf_file, snapshot_type):
     config = setup_config_parser(snap_pac_ini, parent_cmd, packages)
     snapper_configs = get_snapper_configs(snapper_conf_file)
     chroot = os.stat("/") != os.stat("/proc/1/root/.")
+    tmpdir = tempfile.gettempdir(
 
     for snapper_config in snapper_configs:
 
@@ -140,7 +141,7 @@ def main(snap_pac_ini, snapper_conf_file, snapshot_type):
             config.add_section(snapper_config)
 
         if config.getboolean(snapper_config, "snapshot"):
-            prefile = tempfile.gettempdir() / Path(f"snap-pac-pre_{snapper_config}")
+            prefile = tmpdir / Path(f"snap-pac-pre_{snapper_config}")
 
             cleanup_algorithm = config.get(snapper_config, "cleanup_algorithm")
             description = get_description(snapshot_type, config, snapper_config)
