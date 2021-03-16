@@ -6,8 +6,8 @@ import os
 import pytest
 
 from scripts.snap_pac import (
-   SnapperCmd, check_important_commands, check_important_packages, get_pre_number, get_snapper_configs,
-   get_userdata, main, setup_config_parser, get_description
+   SnapperCmd, check_important_commands, check_important_packages, check_skip, get_pre_number, get_snapper_configs,
+   get_userdata, setup_config_parser, get_description
 )
 
 
@@ -87,7 +87,7 @@ def test_get_snapper_configs():
 
 def test_skip_snap_pac():
     os.environ["SNAP_PAC_SKIP"] = "y"
-    assert main("foo", "bar", "yep") is False
+    assert check_skip() is True
 
 
 def test_setup_config_parser(config):

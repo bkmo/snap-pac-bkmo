@@ -123,17 +123,38 @@ def get_userdata(config, snapper_config, important):
     return ",".join(sorted(list(userdata)))
 
 
-def main(snap_pac_ini, snapper_conf_file, snapshot_type):
+def check_skip():
+    return os.getenv("SNAP_PAC_SKIP", "n").lower() in ["y", "yes", "true", "1"]
 
-    if os.getenv("SNAP_PAC_SKIP", "n").lower() in ["y", "yes", "true", "1"]:
-        return False
+
+if __name__ == "__main__":
+
+    if check_skip():
+        logging.warning("snapper snapshots skipped")
+        quit()
+
+    parser = ArgumentParser(description="Script for taking pre/post snapper snapshots. Used with pacman hooks.")
+    parser.add_argument(dest="type", choices=["pre", "post"], help="snapper snapshot type")
+    parser.add_argument(
+        "--ini", dest="snap_pac_ini", type=Path,
+        default=Path("/etc/snap-pac.ini"), help="snap-pac ini file path"
+    )
+    parser.add_argument(
+        "--conf", dest="snapper_conf_file", type=Path,
+        default=Path("/etc/conf.d/snapper"), help="snapper configuration file path"
+    )
+    args = parser.parse_args()
+
+    snapshot_type = args.type
+    snapper_conf_file = args.snapper_conf_file
+    snap_pac_ini = args.snap_pac_ini
 
     parent_cmd = os.popen(f"ps -p {os.getppid()} -o args=").read().strip()
     packages = [line.rstrip("\n") for line in sys.stdin]
     config = setup_config_parser(snap_pac_ini, parent_cmd, packages)
     snapper_configs = get_snapper_configs(snapper_conf_file)
     chroot = os.stat("/") != os.stat("/proc/1/root/.")
-    tmpdir = tempfile.gettempdir()
+    tmpdir = Path(tempfile.gettempdir())
 
     for snapper_config in snapper_configs:
 
@@ -141,7 +162,7 @@ def main(snap_pac_ini, snapper_conf_file, snapshot_type):
             config.add_section(snapper_config)
 
         if config.getboolean(snapper_config, "snapshot"):
-            prefile = tmpdir / Path(f"snap-pac-pre_{snapper_config}")
+            prefile = tmpdir / f"snap-pac-pre_{snapper_config}"
 
             cleanup_algorithm = config.get(snapper_config, "cleanup_algorithm")
             description = get_description(snapshot_type, config, snapper_config)
@@ -159,22 +180,3 @@ def main(snap_pac_ini, snapper_conf_file, snapshot_type):
 
             if snapshot_type == "pre":
                 prefile.write_text(num)
-
-    return True
-
-
-if __name__ == "__main__":
-
-    parser = ArgumentParser(description="Script for taking pre/post snapper snapshots. Used with pacman hooks.")
-    parser.add_argument(dest="type", choices=["pre", "post"], help="snapper snapshot type")
-    parser.add_argument(
-        "--ini", dest="snap_pac_ini", type=Path,
-        default=Path("/etc/snap-pac.ini"), help="snap-pac ini file path"
-    )
-    parser.add_argument(
-        "--conf", dest="snapper_conf_file", type=Path,
-        default=Path("/etc/conf.d/snapper"), help="snapper configuration file path"
-    )
-    args = parser.parse_args()
-
-    main(args.snap_pac_ini, args.snapper_conf_file, args.type)
