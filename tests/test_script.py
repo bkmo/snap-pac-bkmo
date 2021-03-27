@@ -4,7 +4,10 @@ import os
 
 import pytest
 
-from scripts.snap_pac import SnapperCmd, ConfigProcessor, check_skip, get_pre_number, get_snapper_configs
+from scripts.snap_pac import (
+    SnapperCmd, ConfigProcessor, check_skip, get_pre_number, get_snapper_configs,
+    ProcessedConfig
+)
 
 
 @pytest.fixture
@@ -65,28 +68,27 @@ def test_skip_snap_pac():
 @pytest.mark.parametrize("section, command, packages, snapshot_type, result", [
     (
         "root", "foo", ["bar"], "pre",
-        {"description": "foo", "cleanup_algorithm": "number", "userdata": "", "snapshot": True}
+        ProcessedConfig("foo", "number", "", True)
     ),
     (
         "root", "pacman -Syu", [], "pre",
-        {"description": "pacman -Syu", "cleanup_algorithm": "number", "userdata": "important=yes", "snapshot": True}
+        ProcessedConfig("pacman -Syu", "number", "important=yes", True)
     ),
     (
         "mail", "pacman -Syu", [], "pre",
-        {"description": "pacman -Syu", "cleanup_algorithm": "number", "userdata": "", "snapshot": False}
+        ProcessedConfig("pacman -Syu", "number", "", False)
     ),
     (
         "home", "pacman -Syu", [], "pre",
-        {"description": "pac", "cleanup_algorithm": "number", "userdata": "foo=bar,requestid=42", "snapshot": True}
+        ProcessedConfig("pac", "number", "foo=bar,requestid=42", True)
     ),
     (
         "home", "pacman -Syu", [], "post",
-        {"description": "a r", "cleanup_algorithm": "number", "userdata": "foo=bar,requestid=42", "snapshot": True}
+        ProcessedConfig("a r", "number", "foo=bar,requestid=42", True)
     ),
     (
         "myconfig", "pacman -S linux", ["linux"], "post",
-        {"description": "linux", "cleanup_algorithm": "timeline",
-         "userdata": "foo=bar,important=yes,requestid=42", "snapshot": True}
+        ProcessedConfig("linux", "timeline", "foo=bar,important=yes,requestid=42", True)
     ),
 ])
 def test_config_processor(section, command, packages, snapshot_type, result):

@@ -17,6 +17,7 @@
 """Script for taking pre/post snapshots; run from pacman hooks."""
 
 from argparse import ArgumentParser
+from collections import namedtuple
 from configparser import ConfigParser
 import json
 import logging
@@ -57,6 +58,12 @@ class SnapperCmd:
 
     def __str__(self):
         return " ".join(self.cmd)
+
+
+ProcessedConfig = namedtuple(
+    "ProcessedConfig",
+    ["description", "cleanup_algorithm", "userdata", "snapshot"]
+)
 
 
 class ConfigProcessor:
@@ -119,12 +126,12 @@ class ConfigProcessor:
     def __call__(self, section):
         if section not in self.config:
             self.config.add_section(section)
-        return {
-            "description": self.get_description(section),
-            "cleanup_algorithm": self.get_cleanup_algorithm(section),
-            "userdata": self.get_userdata(section),
-            "snapshot": self.config.getboolean(section, "snapshot")
-        }
+        return ProcessedConfig(
+            self.get_description(section),
+            self.get_cleanup_algorithm(section),
+            self.get_userdata(section),
+            self.config.getboolean(section, "snapshot")
+        )
 
 
 def get_snapper_configs(conf_file):
@@ -181,12 +188,12 @@ if __name__ == "__main__":
 
     for snapper_config in snapper_configs:
 
-        data = config_processor(snapper_config)
-        if data["snapshot"]:
+        processed_config = config_processor(snapper_config)
+        if processed_config["snapshot"]:
             prefile = tmpdir / f"snap-pac-pre_{snapper_config}"
             pre_number = get_pre_number(snapshot_type, prefile)
-            snapper_cmd = SnapperCmd(snapper_config, snapshot_type, data["cleanup_algorithm"],
-                                     data["description"], chroot, pre_number, data["userdata"])
+            snapper_cmd = SnapperCmd(snapper_config, snapshot_type, processed_config["cleanup_algorithm"],
+                                     processed_config["description"], chroot, pre_number, processed_config["userdata"])
             num = snapper_cmd()
             logging.info(f"==> {snapper_config}: {num}")
 
