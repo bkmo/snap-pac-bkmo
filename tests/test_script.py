@@ -104,7 +104,7 @@ def test_config_processor(section, command, packages, snapshot_type, result):
         f.write("important_packages = [\"linux\", \"linux-lts\"]\n")
         f.write("userdata = [\"foo=bar\", \"requestid=42\"]\n")
         name = f.name
-    config_processor = ConfigProcessor(name, command, packages, snapshot_type)
+    config_processor = ConfigProcessor(name, snapshot_type, command, packages)
     assert config_processor(section) == result
 
 

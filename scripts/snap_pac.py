@@ -61,11 +61,19 @@ class SnapperCmd:
 
 class ConfigProcessor:
 
-    def __init__(self, ini_file, parent_cmd, packages, snapshot_type):
+    def __init__(self, ini_file, snapshot_type, parent_cmd=None, packages=None):
         """Set up defaults for snap-pac configuration."""
 
-        self.parent_cmd = parent_cmd
-        self.packages = packages
+        if parent_cmd is None:
+            self.parent_cmd = os.popen(f"ps -p {os.getppid()} -o args=").read().strip()
+        else:
+            self.parent_cmd = parent_cmd
+
+        if packages is None:
+            self.packages = [line.rstrip("\n") for line in sys.stdin]
+        else:
+            self.packages = packages
+
         self.snapshot_type = snapshot_type
 
         self.config = ConfigParser()
@@ -166,9 +174,7 @@ if __name__ == "__main__":
     snapper_conf_file = args.snapper_conf_file
     snap_pac_ini = args.snap_pac_ini
 
-    parent_cmd = os.popen(f"ps -p {os.getppid()} -o args=").read().strip()
-    packages = [line.rstrip("\n") for line in sys.stdin]
-    config_processor = ConfigProcessor(snap_pac_ini, parent_cmd, packages, snapshot_type)
+    config_processor = ConfigProcessor(snap_pac_ini, snapshot_type)
     snapper_configs = get_snapper_configs(snapper_conf_file)
     chroot = os.stat("/") != os.stat("/proc/1/root/.")
     tmpdir = Path(tempfile.gettempdir())
