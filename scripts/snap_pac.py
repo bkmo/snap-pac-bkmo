@@ -87,8 +87,8 @@ class ConfigProcessor:
         self.config["DEFAULT"] = {
             "snapshot": False,
             "cleanup_algorithm": "number",
-            "pre_description": parent_cmd,
-            "post_description": " ".join(packages),
+            "pre_description": self.parent_cmd,
+            "post_description": " ".join(self.packages),
             "desc_limit": 72,
             "important_packages": [],
             "important_commands": [],
