@@ -1,38 +1,10 @@
-from configparser import ConfigParser
 import tempfile
 from pathlib import Path
 import os
 
 import pytest
 
-from scripts.snap_pac import (
-   SnapperCmd, check_important_commands, check_important_packages, check_skip, get_pre_number, get_snapper_configs,
-   get_userdata, setup_config_parser, get_description
-)
-
-
-@pytest.fixture
-def config():
-    config = ConfigParser()
-    config["DEFAULT"] = {
-        "snapshot": False,
-        "cleanup_algorithm": "number",
-        "pre_description": "foo",
-        "post_description":  "bar",
-        "desc_limit": 72,
-        "important_packages": [],
-        "important_commands": [],
-        "userdata": []
-    }
-    config["root"] = {
-        "snapshot": True
-    }
-    config["home"] = {
-        "snapshot": True,
-        "desc_limit": 3,
-        "post_description": "a really long description"
-    }
-    return config
+from scripts.snap_pac import SnapperCmd, ConfigProcessor, check_skip, get_pre_number, get_snapper_configs
 
 
 @pytest.fixture
@@ -90,15 +62,50 @@ def test_skip_snap_pac():
     assert check_skip() is True
 
 
-def test_setup_config_parser(config):
+@pytest.mark.parametrize("section, command, packages, snapshot_type, result", [
+    (
+        "root", "foo", ["bar"], "pre",
+        {"description": "foo", "cleanup_algorithm": "number", "userdata": "", "snapshot": True}
+    ),
+    (
+        "root", "pacman -Syu", [], "pre",
+        {"description": "pacman -Syu", "cleanup_algorithm": "number", "userdata": "important=yes", "snapshot": True}
+    ),
+    (
+        "mail", "pacman -Syu", [], "pre",
+        {"description": "pacman -Syu", "cleanup_algorithm": "number", "userdata": "", "snapshot": False}
+    ),
+    (
+        "home", "pacman -Syu", [], "pre",
+        {"description": "pac", "cleanup_algorithm": "number", "userdata": "foo=bar,requestid=42", "snapshot": True}
+    ),
+    (
+        "home", "pacman -Syu", [], "post",
+        {"description": "a r", "cleanup_algorithm": "number", "userdata": "foo=bar,requestid=42", "snapshot": True}
+    ),
+    (
+        "myconfig", "pacman -S linux", ["linux"], "post",
+        {"description": "linux", "cleanup_algorithm": "timeline",
+         "userdata": "foo=bar,important=yes,requestid=42", "snapshot": True}
+    ),
+])
+def test_config_processor(section, command, packages, snapshot_type, result):
     with tempfile.NamedTemporaryFile("w", delete=False) as f:
+        f.write("[root]\n")
+        f.write("important_commands = [\"pacman -Syu\"]\n\n")
         f.write("[home]\n")
         f.write("snapshot = True\n")
         f.write("desc_limit = 3\n")
         f.write("post_description = a really long description\n")
+        f.write("userdata = [\"foo=bar\", \"requestid=42\"]\n\n")
+        f.write("[myconfig]\n")
+        f.write("snapshot = True\n")
+        f.write("cleanup_algorithm = timeline\n")
+        f.write("important_packages = [\"linux\", \"linux-lts\"]\n")
+        f.write("userdata = [\"foo=bar\", \"requestid=42\"]\n")
         name = f.name
-    config2 = setup_config_parser(name, "foo", ["bar"])
-    assert config == config2
+    config_processor = ConfigProcessor(name, command, packages, snapshot_type)
+    assert config_processor(section) == result
 
 
 def test_get_pre_number_pre(prefile):
@@ -112,50 +119,3 @@ def test_get_pre_number_post(prefile):
 def test_no_prefile():
     with pytest.raises(FileNotFoundError):
         get_pre_number("post", Path("/tmp/foo-pre-file-not-found"))
-
-
-@pytest.mark.parametrize("snapshot_type, description", [("pre", "foo"), ("post", "a r")])
-def test_get_description(snapshot_type, description, config):
-    assert get_description(snapshot_type, config, "home") == description
-
-
-def test_important_commands():
-    parent_cmd = "pacman -Syu"
-    with tempfile.NamedTemporaryFile("w", delete=False) as f:
-        f.write("[DEFAULT]\n")
-        f.write("important_commands = [\"pacman -Syu\"]\n")
-        name = f.name
-    config = setup_config_parser(name, parent_cmd, ["bar"])
-    important = check_important_commands(config, "root", parent_cmd)
-    assert important
-
-
-def test_important_packages():
-    packages = ["bar", "linux", "vim"]
-    with tempfile.NamedTemporaryFile("w", delete=False) as f:
-        f.write("[DEFAULT]\n")
-        f.write("important_packages = [\"linux\"]\n")
-        name = f.name
-    config = setup_config_parser(name, "pacman -S", packages)
-    important = check_important_packages(config, "root", packages)
-    assert important
-
-
-def test_load_userdata():
-    with tempfile.NamedTemporaryFile("w", delete=False) as f:
-        f.write("[DEFAULT]\n")
-        f.write("userdata = [\"foo=bar\", \"requestid=42\"]\n")
-        name = f.name
-    config = setup_config_parser(name, "pacman -Syu", ["bar"])
-    userdata = get_userdata(config, "root", False)
-    assert userdata == "foo=bar,requestid=42"
-
-
-def test_load_userdata_and_important():
-    with tempfile.NamedTemporaryFile("w", delete=False) as f:
-        f.write("[DEFAULT]\n")
-        f.write("userdata = [\"foo=bar\", \"requestid=42\"]\n")
-        name = f.name
-    config = setup_config_parser(name, "pacman -Syu", ["bar"])
-    userdata = get_userdata(config, "root", True)
-    assert userdata == "foo=bar,important=yes,requestid=42"

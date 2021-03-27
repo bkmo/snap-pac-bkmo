@@ -59,38 +59,72 @@ class SnapperCmd:
         return " ".join(self.cmd)
 
 
+class ConfigProcessor:
+
+    def __init__(self, ini_file, parent_cmd, packages, snapshot_type):
+        """Set up defaults for snap-pac configuration."""
+
+        self.parent_cmd = parent_cmd
+        self.packages = packages
+        self.snapshot_type = snapshot_type
+
+        self.config = ConfigParser()
+        self.config["DEFAULT"] = {
+            "snapshot": False,
+            "cleanup_algorithm": "number",
+            "pre_description": parent_cmd,
+            "post_description": " ".join(packages),
+            "desc_limit": 72,
+            "important_packages": [],
+            "important_commands": [],
+            "userdata": []
+        }
+        self.config["root"] = {
+            "snapshot": True
+        }
+        self.config.read(ini_file)
+
+    def get_cleanup_algorithm(self, section):
+        return self.config.get(section, "cleanup_algorithm")
+
+    def get_description(self, section):
+        desc_limit = self.config.getint(section, "desc_limit")
+        return self.config.get(section, f"{self.snapshot_type}_description")[:desc_limit]
+
+    def check_important_commands(self, section):
+        return self.parent_cmd in json.loads(self.config.get(section, "important_commands"))
+
+    def check_important_packages(self, section):
+        important_packages = json.loads(self.config.get(section, "important_packages"))
+        return any(x in important_packages for x in self.packages)
+
+    def check_important(self, section):
+        return (self.check_important_commands(section) or
+                self.check_important_packages(section))
+
+    def get_userdata(self, section):
+        userdata = set(json.loads(self.config.get(section, "userdata")))
+        if self.check_important(section):
+            userdata.add("important=yes")
+        return ",".join(sorted(list(userdata)))
+
+    def __call__(self, section):
+        if section not in self.config:
+            self.config.add_section(section)
+        return {
+            "description": self.get_description(section),
+            "cleanup_algorithm": self.get_cleanup_algorithm(section),
+            "userdata": self.get_userdata(section),
+            "snapshot": self.config.getboolean(section, "snapshot")
+        }
+
+
 def get_snapper_configs(conf_file):
     """Get the snapper configurations."""
     for line in conf_file.read_text().split("\n"):
         if line.startswith("SNAPPER_CONFIGS"):
             line = line.rstrip("\n").rstrip("\"").split("=")
             return line[1].lstrip("\"").split()
-
-
-def setup_config_parser(ini_file, parent_cmd, packages):
-    """Set up defaults for snap-pac configuration."""
-
-    config = ConfigParser()
-    config["DEFAULT"] = {
-        "snapshot": False,
-        "cleanup_algorithm": "number",
-        "pre_description": parent_cmd,
-        "post_description": " ".join(packages),
-        "desc_limit": 72,
-        "important_packages": [],
-        "important_commands": [],
-        "userdata": []
-    }
-    config["root"] = {
-        "snapshot": True
-    }
-    config.read(ini_file)
-    return config
-
-
-def get_description(snapshot_type, config, section):
-    desc_limit = config.getint(section, "desc_limit")
-    return config.get(section, f"{snapshot_type}_description")[:desc_limit]
 
 
 def get_pre_number(snapshot_type, prefile):
@@ -104,23 +138,6 @@ def get_pre_number(snapshot_type, prefile):
         else:
             prefile.unlink()
     return pre_number
-
-
-def check_important_commands(config, snapper_config, parent_cmd):
-    important_commands = json.loads(config.get(snapper_config, "important_commands"))
-    return parent_cmd in important_commands
-
-
-def check_important_packages(config, snapper_config, packages):
-    important_packages = json.loads(config.get(snapper_config, "important_packages"))
-    return any(x in important_packages for x in packages)
-
-
-def get_userdata(config, snapper_config, important):
-    userdata = set(json.loads(config.get(snapper_config, "userdata")))
-    if important:
-        userdata.add("important=yes")
-    return ",".join(sorted(list(userdata)))
 
 
 def check_skip():
@@ -151,30 +168,19 @@ if __name__ == "__main__":
 
     parent_cmd = os.popen(f"ps -p {os.getppid()} -o args=").read().strip()
     packages = [line.rstrip("\n") for line in sys.stdin]
-    config = setup_config_parser(snap_pac_ini, parent_cmd, packages)
+    config_processor = ConfigProcessor(snap_pac_ini, parent_cmd, packages, snapshot_type)
     snapper_configs = get_snapper_configs(snapper_conf_file)
     chroot = os.stat("/") != os.stat("/proc/1/root/.")
     tmpdir = Path(tempfile.gettempdir())
 
     for snapper_config in snapper_configs:
 
-        if snapper_config not in config:
-            config.add_section(snapper_config)
-
-        if config.getboolean(snapper_config, "snapshot"):
+        data = config_processor(snapper_config)
+        if data["snapshot"]:
             prefile = tmpdir / f"snap-pac-pre_{snapper_config}"
-
-            cleanup_algorithm = config.get(snapper_config, "cleanup_algorithm")
-            description = get_description(snapshot_type, config, snapper_config)
             pre_number = get_pre_number(snapshot_type, prefile)
-
-            important = (check_important_commands(config, snapper_config, parent_cmd) or
-                         check_important_packages(config, snapper_config, packages))
-
-            userdata = get_userdata(config, snapper_config, important)
-
-            snapper_cmd = SnapperCmd(snapper_config, snapshot_type, cleanup_algorithm,
-                                     description, chroot, pre_number, userdata)
+            snapper_cmd = SnapperCmd(snapper_config, snapshot_type, data["cleanup_algorithm"],
+                                     data["description"], chroot, pre_number, data["userdata"])
             num = snapper_cmd()
             logging.info(f"==> {snapper_config}: {num}")
 
