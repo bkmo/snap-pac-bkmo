@@ -4,15 +4,7 @@ import os
 
 import pytest
 
-from scripts.snap_pac import SnapperCmd, ConfigProcessor, check_skip, get_pre_number, get_snapper_configs
-
-
-@pytest.fixture
-def prefile():
-    with tempfile.NamedTemporaryFile("w", delete=False) as f:
-        f.write("1234")
-        name = f.name
-    return Path(name)
+from scripts.snap_pac import check_skip, ConfigProcessor, get_snapper_configs, Prefile, SnapperCmd
 
 
 @pytest.mark.parametrize("snapper_cmd, actual_cmd", [
@@ -108,14 +100,19 @@ def test_config_processor(section, command, packages, snapshot_type, result):
     assert config_processor(section) == result
 
 
-def test_get_pre_number_pre(prefile):
-    assert get_pre_number("pre", prefile) is None
+def test_prefile_read_none():
+    prefile = Prefile("root", "pre")
+    assert prefile.read() is None
 
 
-def test_get_pre_number_post(prefile):
-    assert get_pre_number("post", prefile) == "1234"
+def test_prefile_read():
+    prefile = Prefile("root", "pre")
+    prefile.write("1234")
+    prefile = Prefile("root", "post")
+    assert prefile.read() == "1234"
 
 
 def test_no_prefile():
+    prefile = Prefile("foo-pre-file-not-found", "post")
     with pytest.raises(FileNotFoundError):
-        get_pre_number("post", Path("/tmp/foo-pre-file-not-found"))
+        prefile.read()
