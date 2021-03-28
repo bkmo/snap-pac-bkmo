@@ -156,6 +156,19 @@ make test
 .UNINDENT
 .SS Documentation
 .sp
+Typically, you will not need to build the documentation on your own and can simply
+access it by visiting the \fI\%online documentation\fP or by accessing the manpage:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+man 8 snap\-pac
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
 To build the documentation, \fBsphinx\fP is required. To build the documentation you can
 do:
 .INDENT 0.0
@@ -163,13 +176,14 @@ do:
 .sp
 .nf
 .ft C
-sphinx\-build docs/source docs/build
+make docs
 .ft P
 .fi
 .UNINDENT
 .UNINDENT
 .sp
 The resulting html documentation will then be located at \fBdocs/build/index.html\fP\&.
+Additionally, this generates the manpage which will be located under \fBman8\fP\&.
 .SH CONFIGURATION
 .sp
 Configuration  is  done  via  Python  ini  configuration files. The defaults

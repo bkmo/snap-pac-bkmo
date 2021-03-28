@@ -47,6 +47,14 @@ For testing, ``pytest`` is required. To run the tests do:
 Documentation
 -------------
 
+Typically, you will not need to build the documentation on your own and can simply
+access it by visiting the `online documentation
+<https://wesbarnett.github.io/snap-pac/>`_ or by accessing the manpage:
+
+.. code-block:: bash
+
+   man 8 snap-pac
+
 To build the documentation, ``sphinx`` is required. To build the documentation you can
 do:
 
