@@ -52,6 +52,7 @@ do:
 
 .. code-block:: bash
 
-   sphinx-build docs/source docs/build
+   make docs
 
 The resulting html documentation will then be located at ``docs/build/index.html``.
+Additionally, this generates the manpage which will be located under ``man8``.

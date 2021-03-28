@@ -35,5 +35,5 @@ test:
 
 docs:
 	@sphinx-build -a docs/source docs/build
-	@rm -r man8
-	@cd docs && make man && mv build/man ../man8
+	@cd docs && make man
+	@awk 'NR==33{print ".SH DESCRIPTION"}7' docs/build/man/snap-pac.8 > man8/snap-pac.8
