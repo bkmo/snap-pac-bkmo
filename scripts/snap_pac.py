@@ -162,12 +162,7 @@ def check_skip():
     return os.getenv("SNAP_PAC_SKIP", "n").lower() in ["y", "yes", "true", "1"]
 
 
-if __name__ == "__main__":
-
-    if check_skip():
-        logging.warning("snapper snapshots skipped")
-        quit()
-
+def parse_args():
     parser = ArgumentParser(description="Script for taking pre/post snapper snapshots. Used with pacman hooks.")
     parser.add_argument(dest="type", choices=["pre", "post"], help="snapper snapshot type")
     parser.add_argument(
@@ -178,24 +173,26 @@ if __name__ == "__main__":
         "--conf", dest="snapper_conf_file", type=Path,
         default=Path("/etc/conf.d/snapper"), help="snapper configuration file path"
     )
-    args = parser.parse_args()
+    return parser.parse_args()
 
-    snapshot_type = args.type
-    snapper_conf_file = args.snapper_conf_file
-    snap_pac_ini = args.snap_pac_ini
 
-    config_processor = ConfigProcessor(snap_pac_ini, snapshot_type)
-    snapper_configs = get_snapper_configs(snapper_conf_file)
+if __name__ == "__main__":
+
+    if check_skip():
+        logging.warning("snapper snapshots skipped")
+        quit()
+
+    args = parse_args()
+    config_processor = ConfigProcessor(args.snap_pac_ini, args.type)
     chroot = os.stat("/") != os.stat("/proc/1/root/.")
 
-    for snapper_config in snapper_configs:
+    for snapper_config in get_snapper_configs(args.snapper_conf_file):
 
         data = config_processor(snapper_config)
         if data["snapshot"]:
-            prefile = Prefile(snapper_config, snapshot_type)
+            prefile = Prefile(snapper_config, args.type)
             pre_number = prefile.read()
-            snapper_cmd = SnapperCmd(snapper_config, snapshot_type, data["cleanup_algorithm"],
-                                     data["description"], chroot, pre_number, data["userdata"])
-            num = snapper_cmd()
+            num = SnapperCmd(snapper_config, args.type, data["cleanup_algorithm"],
+                             data["description"], chroot, pre_number, data["userdata"])()
             logging.info(f"==> {snapper_config}: {num}")
             prefile.write(num)
