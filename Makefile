@@ -22,7 +22,7 @@ SHARE_DIR = $(DESTDIR)$(PREFIX)/share
 
 .PHONY: install test docs
 
-install:
+install: man
 	@install -Dm755 scripts/snap_pac.py $(SHARE_DIR)/libalpm/scripts/snap-pac
 	@install -Dm644 hooks/* -t $(SHARE_DIR)/libalpm/hooks/
 	@install -Dm644 LICENSE -t $(SHARE_DIR)/licenses/$(PKGNAME)/
@@ -33,7 +33,10 @@ install:
 test:
 	@python -m pytest -v .
 
-docs:
-	@sphinx-build -a docs/source docs/build
+man:
 	@cd docs && make man
+	@mkdir -p man8
 	@awk 'NR==33{print ".SH DESCRIPTION"}7' docs/build/man/snap-pac.8 > man8/snap-pac.8
+
+docs: man
+	@sphinx-build -a docs/source docs/build
