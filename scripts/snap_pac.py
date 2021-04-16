@@ -150,7 +150,8 @@ class Prefile:
             try:
                 pre_number = self.file.read_text()
             except FileNotFoundError:
-                raise FileNotFoundError(f"prefile {self.file} not found. Ensure you have run the pre snapshot first.")
+                pre_number = None
+                logging.warning(f"prefile {self.file} not found. Ensure you have run the pre snapshot first.")
             else:
                 self.file.unlink()
         return pre_number
