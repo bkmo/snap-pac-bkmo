@@ -10,27 +10,32 @@ from scripts.snap_pac import check_skip, ConfigProcessor, get_snapper_configs, P
 @pytest.mark.parametrize("snapper_cmd, actual_cmd", [
     (
         SnapperCmd("root", "pre", "number", "foo"),
-        "snapper --config root create --type pre --cleanup-algorithm number --print-number --description \"foo\""
+        "snapper --config root create --cleanup-algorithm number --print-number --description \"foo\" --type pre"
     ),
     (
         SnapperCmd("root", "post", "number", "bar", False, 1234),
-        "snapper --config root create --type post --cleanup-algorithm number --print-number"
-        " --description \"bar\" --pre-number 1234"
+        "snapper --config root create --cleanup-algorithm number --print-number"
+        " --description \"bar\" --pre-number 1234 --type post"
     ),
     (
         SnapperCmd("root", "post", "number", "bar", True, 1234),
-        "snapper --no-dbus --config root create --type post --cleanup-algorithm number --print-number"
-        " --description \"bar\" --pre-number 1234"
+        "snapper --no-dbus --config root create --cleanup-algorithm number --print-number"
+        " --description \"bar\" --pre-number 1234 --type post"
     ),
     (
         SnapperCmd("root", "post", "number", "bar", False, 1234, "important=yes"),
-        "snapper --config root create --type post --cleanup-algorithm number --print-number"
-        " --description \"bar\" --userdata \"important=yes\" --pre-number 1234"
+        "snapper --config root create --cleanup-algorithm number --print-number"
+        " --description \"bar\" --userdata \"important=yes\" --pre-number 1234 --type post"
     ),
     (
         SnapperCmd("root", "post", "number", "bar", False, 1234, "foo=bar,important=yes"),
-        "snapper --config root create --type post --cleanup-algorithm number --print-number"
-        " --description \"bar\" --userdata \"foo=bar,important=yes\" --pre-number 1234"
+        "snapper --config root create --cleanup-algorithm number --print-number"
+        " --description \"bar\" --userdata \"foo=bar,important=yes\" --pre-number 1234 --type post"
+    ),
+    (
+        SnapperCmd("root", "post", "number", "bar", False, None, "foo=bar,important=yes"),
+        "snapper --config root create --cleanup-algorithm number --print-number"
+        " --description \"bar\" --userdata \"foo=bar,important=yes\" --type single"
     )
 ])
 def test_snapper_cmd(snapper_cmd, actual_cmd):
@@ -114,5 +119,4 @@ def test_prefile_read():
 
 def test_no_prefile():
     prefile = Prefile("foo-pre-file-not-found", "post")
-    with pytest.raises(FileNotFoundError):
-        prefile.read()
+    assert prefile.read() is None

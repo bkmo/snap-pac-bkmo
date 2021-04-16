@@ -38,7 +38,6 @@ class SnapperCmd:
             self.cmd.append("--no-dbus")
         self.cmd.extend([
             f"--config {config} create",
-            f"--type {snapshot_type}",
             f"--cleanup-algorithm {cleanup_algorithm}",
             "--print-number"
         ])
@@ -50,7 +49,11 @@ class SnapperCmd:
             if pre_number is not None:
                 self.cmd.append(f"--pre-number {pre_number}")
             else:
-                raise ValueError("snapshot type specified as 'post' but no pre snapshot number passed.")
+                logging.debug("snapshot type specified as 'post' but no pre snapshot number, "
+                              "so setting snapshot type to 'single'. If installing "
+                              "snap-pac this is normal.")
+                snapshot_type = "single"
+        self.cmd.append(f"--type {snapshot_type}")
 
     def __call__(self):
         return os.popen(self.__str__()).read().rstrip("\n")
@@ -148,7 +151,9 @@ class Prefile:
             try:
                 pre_number = self.file.read_text()
             except FileNotFoundError:
-                raise FileNotFoundError(f"prefile {self.file} not found. Ensure you have run the pre snapshot first.")
+                pre_number = None
+                logging.debug(f"prefile {self.file} not found. Ensure you have run the pre snapshot first. "
+                              "If installing snap-pac this is normal.")
             else:
                 self.file.unlink()
         return pre_number
