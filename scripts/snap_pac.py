@@ -49,8 +49,9 @@ class SnapperCmd:
             if pre_number is not None:
                 self.cmd.append(f"--pre-number {pre_number}")
             else:
-                logging.warning("snapshot type specified as 'post' but no pre snapshot number passed.")
-                logging.warning("setting snapshot type to 'single'.")
+                logging.debug("snapshot type specified as 'post' but no pre snapshot number, "
+                              "so setting snapshot type to 'single'. If installing "
+                              "snap-pac this is normal.")
                 snapshot_type = "single"
         self.cmd.append(f"--type {snapshot_type}")
 
@@ -151,7 +152,8 @@ class Prefile:
                 pre_number = self.file.read_text()
             except FileNotFoundError:
                 pre_number = None
-                logging.warning(f"prefile {self.file} not found. Ensure you have run the pre snapshot first.")
+                logging.debug(f"prefile {self.file} not found. Ensure you have run the pre snapshot first. "
+                              "If installing snap-pac this is normal.")
             else:
                 self.file.unlink()
         return pre_number
