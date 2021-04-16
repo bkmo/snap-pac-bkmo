@@ -119,5 +119,4 @@ def test_prefile_read():
 
 def test_no_prefile():
     prefile = Prefile("foo-pre-file-not-found", "post")
-    with pytest.raises(FileNotFoundError):
-        prefile.read()
+    assert prefile.read() is None
