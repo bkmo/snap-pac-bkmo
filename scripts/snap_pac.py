@@ -38,7 +38,6 @@ class SnapperCmd:
             self.cmd.append("--no-dbus")
         self.cmd.extend([
             f"--config {config} create",
-            f"--type {snapshot_type}",
             f"--cleanup-algorithm {cleanup_algorithm}",
             "--print-number"
         ])
@@ -50,7 +49,10 @@ class SnapperCmd:
             if pre_number is not None:
                 self.cmd.append(f"--pre-number {pre_number}")
             else:
-                raise ValueError("snapshot type specified as 'post' but no pre snapshot number passed.")
+                logging.warning("snapshot type specified as 'post' but no pre snapshot number passed.")
+                logging.warning("setting snapshot type to 'single'.")
+                snapshot_type = "single"
+        self.cmd.append(f"--type {snapshot_type}")
 
     def __call__(self):
         return os.popen(self.__str__()).read().rstrip("\n")
