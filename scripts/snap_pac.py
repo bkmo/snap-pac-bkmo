@@ -56,8 +56,7 @@ class SnapperCmd:
         self.cmd.append(f"--type {snapshot_type}")
 
     def __call__(self):
-        print(str(self.cmd))
-        return os.popen(self.__str__()).read().rstrip("\n")
+        return os.popen(self.__str__()).read()
 
     def __str__(self):
         return " ".join(self.cmd)
@@ -150,7 +149,7 @@ class Prefile:
             pre_number = None
         else:
             try:
-                pre_number = self.file.read_text()
+                pre_number = self.file.read_text().rstrip("\n")
             except FileNotFoundError:
                 pre_number = None
                 logging.debug(f"prefile {self.file} not found. Ensure you have run the pre snapshot first. "
