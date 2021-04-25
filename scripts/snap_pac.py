@@ -56,6 +56,7 @@ class SnapperCmd:
         self.cmd.append(f"--type {snapshot_type}")
 
     def __call__(self):
+        print(str(self.cmd))
         return os.popen(self.__str__()).read().rstrip("\n")
 
     def __str__(self):
