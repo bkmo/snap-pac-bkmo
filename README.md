@@ -5,10 +5,12 @@
 
 ## Synopsis
 
-This is a set of pacman hooks and script that automatically causes snapper to
-perform a pre and post snapshot before and after pacman transactions, similar to
-how YaST does with OpenSuse. This provides a simple way to undo changes to a
-system after a pacman transaction.
+This is a set of [pacman](https://wiki.archlinux.org/index.php/Pacman) hooks and script
+that automatically causes [snapper](http://snapper.io/) to perform a pre and post
+snapshot before and after pacman transactions, similar to how YaST does with OpenSuse.
+This provides a simple way to undo changes to a system after a pacman transaction.
+
+For more information, [see the documentation](https://wesbarnett.github.io/).
 
 ## Installation
 

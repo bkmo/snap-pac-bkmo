@@ -62,6 +62,13 @@ need to use a live USB to get into a chroot environment to do any of these thing
 Snapper has a ``snapper rollback`` feature, but your setup has to be properly configured to
 use it. The exact procedure depends on your specific setup. Be careful.
 
+Note that the pre transaction hooks occur before the pacman transaction but after the
+pacman database is synced, if applicable. In other words, if you run `pacman -Syu` and
+roll back the upgrade according to the above instructions, you will not have rolled back
+the pacman database to the previous state. Thus, if, after upgrading and rolling back
+the upgrade, you then install a package, it will possibly be a partial upgrade, which is
+unsupported.
+
 .. toctree::
    :maxdepth: 1
 
