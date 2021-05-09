@@ -36,7 +36,7 @@ test:
 man:
 	@cd docs && make man
 	@mkdir -p man8
-	@awk 'NR==33{print ".SH DESCRIPTION"}7' docs/build/man/snap-pac.8 > man8/snap-pac.8
+	@awk 'NR==33{print ".SH DESCRIPTION"}7' docs/build/man/8/snap-pac.8 > man8/snap-pac.8
 
 docs: man
 	@sphinx-build -a docs/source docs/build
