@@ -22,6 +22,11 @@ No, but you can add a hook that does it for you. It would be something like the 
 	When = PreTransaction
 	Exec = /usr/bin/rsync -avzq --delete /boot /.bootbackup
 
+Note that you will probably want to name the file with a numbered prefix less than
+``05`` so that it is run before the snap-pac pre snapshot takes place. That will ensure
+that the snapshot taken will have the boot partition back-up corresponding with the
+state of the system. For example, you could name it ``04-backupboot.hook``.
+
 
 **How do I link old kernel modules automatically when the kernel is upgraded?**
 
