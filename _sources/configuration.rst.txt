@@ -8,15 +8,9 @@ Configuration  is  done  via  Python  ini  configuration files. The defaults
 should be suitable for most users, so you may not need to do any configuration at all.
 By default only the ``root`` snapper configuration is snapshotted.
 
-A commented example configuration files is located at ``/etc/snap-pac.ini.example``.
+A commented example configuration files is located at ``/etc/snap-pac.ini``.
 
-To configure, copy the example configuration file:
-
-.. code-block:: bash
-
-    cp /etc/snap-pac.ini{.example,}
-
-Then edit with your favorite editor. The file is commented and should be
+Edit with your favorite editor. The file is commented and should be
 self-explanatory.
 
 Each section corresponds with a snapper configuration. Add additional sections to add
