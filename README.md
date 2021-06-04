@@ -10,7 +10,7 @@ that automatically causes [snapper](http://snapper.io/) to perform a pre and pos
 snapshot before and after pacman transactions, similar to how YaST does with OpenSuse.
 This provides a simple way to undo changes to a system after a pacman transaction.
 
-For more information, [see the documentation](https://wesbarnett.github.io/).
+For more information, [see the documentation](https://wesbarnett.github.io/snap-pac/).
 
 ## Installation
 
