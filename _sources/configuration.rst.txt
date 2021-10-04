@@ -75,7 +75,7 @@ the default.
 
 This file also turns one snapshots for the ``home`` snapper configuration and adds the
 userdata ``requestid=42,user=arthur`` to all snapshots for that configuration.
-Additionally he post snapshot description is overridden.
+Additionally the post snapshot description is overridden.
 
 .. code-block:: ini
 
