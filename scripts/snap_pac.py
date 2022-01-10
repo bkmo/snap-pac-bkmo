@@ -103,7 +103,8 @@ class ConfigProcessor:
         return self.config.get(section, f"{self.snapshot_type}_description")[:desc_limit]
 
     def check_important_commands(self, section):
-        return self.parent_cmd in json.loads(self.config.get(section, "important_commands"))
+        important_commands = json.loads(self.config.get(section, "important_commands"))
+        return any(self.parent_cmd.startswith(x) for x in important_commands)
 
     def check_important_packages(self, section):
         important_packages = json.loads(self.config.get(section, "important_packages"))
