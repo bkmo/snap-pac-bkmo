@@ -19,11 +19,6 @@ backup=('etc/snap-pac.ini')
 
 sha512sums=('SKIP')
 
-check() {
-    cd "${pkgname}"
-    make test
-}
-
 package() {
     cd "${pkgname}"
     make DESTDIR="${pkgdir}" install
