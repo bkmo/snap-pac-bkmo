@@ -14,7 +14,7 @@ makedepends=('python-sphinx')
 checkdepends=('python-pytest')
 conflicts=('snap-pac')
 replaces=('snap-pac')
-source=("${pkgname}-${pkgver}.tar.gz::${url}/archives/refs/tags/${pkgver}/${pkgname}-${pkgver}.tar.gz")
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archives/refs/tags/${pkgname}-${pkgver}.tar.gz")
 backup=('etc/snap-pac.ini')
 
 sha512sums=('SKIP')
