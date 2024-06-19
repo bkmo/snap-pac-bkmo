@@ -19,7 +19,7 @@
 [Trigger]
 Operation = Remove
 Type = Package
-Target = snap-pac-bkmo
+Target = snap-pac
 
 [Action]
 Description = You are removing snap-pac. No post transaction snapshots will be taken.
