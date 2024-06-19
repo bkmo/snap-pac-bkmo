@@ -3,7 +3,7 @@
 # Contributor: Wes Barnett <wes at wbarnett dot us>
 
 pkgname=snap-pac-bkmo
-pkgver=3.0.1.r12.gbaafb62
+pkgver=3.0.1.1
 pkgrel=1
 pkgdesc="Pacman hooks that use snapper to create pre/post btrfs snapshots like openSUSE's YaST"
 arch=('any')
@@ -18,11 +18,6 @@ backup=('etc/snap-pac.ini')
 
 source=("git+$url")
 md5sums=('SKIP')
-
-pkgver() {
-  cd $pkgname
-  printf "$(git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g')"
-}
 
 package() {
   cd $pkgname
