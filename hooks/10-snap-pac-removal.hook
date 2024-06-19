@@ -19,10 +19,10 @@
 [Trigger]
 Operation = Remove
 Type = Package
-Target = snap-pac
+Target = snap-pac-bkmo
 
 [Action]
 Description = You are removing snap-pac. No post transaction snapshots will be taken.
-Depends = snap-pac
+Depends = snap-pac-bkmo
 When = PreTransaction
 Exec = /usr/bin/bash -c "rm -f /tmp/snap-pac-pre_*"
