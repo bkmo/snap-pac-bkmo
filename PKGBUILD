@@ -14,12 +14,17 @@ makedepends=('python-sphinx')
 checkdepends=('python-pytest')
 conflicts=('snap-pac')
 replaces=('snap-pac')
-source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz")
 backup=('etc/snap-pac.ini')
 
-sha512sums=('SKIP')
+source=("git+$url")
+md5sums=('SKIP')
+
+pkgver() {
+  cd snap-pac
+  printf "$(git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g')"
+}
 
 package() {
-    cd "${pkgname}"
-    make DESTDIR="${pkgdir}" install
+  cd snap-pac
+  make DESTDIR="$pkgdir/" install
 }
