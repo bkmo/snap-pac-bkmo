@@ -3,7 +3,7 @@
 # Contributor: Wes Barnett <wes at wbarnett dot us>
 
 pkgname=snap-pac-bkmo
-pkgver=3.0.1.1
+pkgver=3.0.1.2
 pkgrel=1
 pkgdesc="Pacman hooks that use snapper to create pre/post btrfs snapshots like openSUSE's YaST"
 arch=('any')
@@ -14,7 +14,7 @@ makedepends=('python-sphinx')
 checkdepends=('python-pytest')
 conflicts=('snap-pac')
 replaces=('snap-pac')
-source=("${pkgname}-${pkgver}.tar.gz::${url}/archives/refs/tags/${pkgname}-${pkgver}.tar.gz")
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archives/refs/tags/${pkgver}.tar.gz")
 backup=('etc/snap-pac.ini')
 
 sha512sums=('SKIP')
