@@ -3,7 +3,7 @@
 # Contributor: Wes Barnett <wes at wbarnett dot us>
 
 pkgname=snap-pac-bkmo
-pkgver=3.0.1.1
+pkgver=3.0.2
 pkgrel=1
 pkgdesc="Pacman hooks that use snapper to create pre/post btrfs snapshots like openSUSE's YaST"
 arch=('any')
