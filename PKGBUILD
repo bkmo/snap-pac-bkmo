@@ -16,7 +16,7 @@ conflicts=('snap-pac')
 replaces=('snap-pac')
 backup=('etc/snap-pac.ini')
 
-source=("https://github.com/bkmo/snap-pac-bkmo/archive/refs/tags/3.0.1.1.tar.gz")
+source=("$url/archive/refs/tags/$pkgver.tar.gz")
 md5sums=('SKIP')
 
 package() {
